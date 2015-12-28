@@ -1,0 +1,19 @@
+{
+  "name": "trello-kanban",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "private": true,
+  "dependencies": {
+    "auto-reload-brunch": "1.8.0",
+    "babel": "5.8.23",
+    "babel-brunch": "5.1.2",
+    "brunch": "2.0.4",
+    "javascript-brunch": "1.7.1",
+    "sass-brunch": "1.9.1"
+  }
+}

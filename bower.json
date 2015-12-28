@@ -1,0 +1,19 @@
+{
+  "name": "trello-kanban",
+  "version": "0.0.0",
+  "authors": [
+    "Nicolas Carlo <nicolascarlo.espeon@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "rxjs": "~4.0.1",
+    "jquery": "~2.1.4"
+  }
+}
