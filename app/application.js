@@ -1,23 +1,27 @@
 import Cycle from '@cycle/core';
 import {makeDOMDriver, h} from '@cycle/dom';
+import trelloSinkDriver from 'drivers/trello';
+import logDriver from 'drivers/log';
+
+function buttonView ( state$ ) {
+  return state$
+    .map( state => h( 'button', { 'disabled': (state.type === 'click') }, 'Log In' ) )
+}
 
 function main ( {DOM} ) {
+  var buttonClicks$ = DOM.select( 'button' ).events( 'click' );
+
   return {
-    // My cycle.js « Hello world »
-    DOM: DOM.select( 'input' ).events( 'click' )
-      .map( ev => ev.target.checked )
-      .startWith( false )
-      .map( toggled =>
-        h( 'div', [
-          h( 'input', { type: 'checkbox' } ), 'Toggle me',
-          h( 'p', toggled ? 'ON' : 'OFF' )
-        ] )
-      )
+    DOM: buttonView( buttonClicks$.startWith( false ) ),
+    Trello: buttonClicks$,
+    log: buttonClicks$
   };
 }
 
 const drivers = {
-  DOM: makeDOMDriver( '#app' )
+  DOM: makeDOMDriver( '#app' ),
+  Trello: trelloSinkDriver,
+  log: logDriver
 };
 
 Cycle.run( main, drivers );
