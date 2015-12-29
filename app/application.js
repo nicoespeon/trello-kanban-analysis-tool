@@ -1,26 +1,39 @@
 import Cycle from '@cycle/core';
 import {makeDOMDriver, h} from '@cycle/dom';
-import trelloSinkDriver from 'drivers/trello';
+import {makeTrelloDriver} from 'drivers/trello';
 import logDriver from 'drivers/log';
 
 function buttonView ( state$ ) {
-  return state$
-    .map( state => h( 'button', { 'disabled': (state.type === 'click') }, 'Log In' ) )
+  return state$.map( () => h( 'button', 'Get actions' ) )
 }
 
-function main ( {DOM} ) {
-  var buttonClicks$ = DOM.select( 'button' ).events( 'click' );
+// TODO: export and unit test these part
+function parseTrelloActions ( actions ) {
+  return actions
+    .map( action => action.data.list.name )
+    .reduce( ( memo, list ) => {
+      const knownList = R.find( R.propEq( 'name', list ) )( memo );
+      ( knownList )
+        ? knownList.count++
+        : memo.push( { name: list, count: 1 } );
+
+      return memo;
+    }, [] );
+}
+
+function main ( {DOM, Trello} ) {
+  const buttonClicks$ = DOM.select( 'button' ).events( 'click' );
 
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    log: buttonClicks$
+    log: Trello.map( parseTrelloActions )
   };
 }
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
-  Trello: trelloSinkDriver,
+  Trello: makeTrelloDriver(),
   log: logDriver
 };
 
