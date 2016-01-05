@@ -1,4 +1,6 @@
-node_modules
-bower_components
-public
+node_modules/
+bower_components/
+public/
 .idea/
+
+npm-debug.log

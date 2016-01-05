@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/tape test/**/*.js | node_modules/.bin/tap-diff"
   },
   "author": "",
   "private": true,
@@ -15,5 +15,9 @@
     "brunch": "2.0.4",
     "javascript-brunch": "1.7.1",
     "sass-brunch": "1.9.1"
+  },
+  "devDependencies": {
+    "tape": "4.4.0",
+    "tap-diff": "0.1.0"
   }
 }
