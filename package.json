@@ -1,23 +1,30 @@
 {
   "name": "trello-kanban",
   "version": "0.0.0",
-  "description": "",
+  "description": "Analyse Kanban metrics from a Trello board",
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/tape test/**/*.js | node_modules/.bin/tap-diff"
+    "test": "node_modules/.bin/babel-tape-runner test/**/*.js",
+    "testdiff": "npm run test | node_modules/.bin/tap-diff"
   },
-  "author": "",
-  "private": true,
   "dependencies": {
-    "auto-reload-brunch": "1.8.0",
-    "babel": "5.8.23",
-    "babel-brunch": "5.1.2",
-    "brunch": "2.0.4",
-    "javascript-brunch": "1.7.1",
-    "sass-brunch": "1.9.1"
+    "@cycle/core": "6.0.3",
+    "@cycle/dom": "9.1.0",
+    "ramda": "0.19.1",
+    "rx": "4.1.0"
   },
   "devDependencies": {
-    "tape": "4.4.0",
-    "tap-diff": "0.1.0"
+    "babel": "5.8.23",
+    "babel-brunch": "5.1.2",
+    "babel-plugin-ramda": "0.1.2",
+    "babel-tape-runner": "1.2.0",
+    "brunch": "git://github.com/brunch/brunch.git#8a33ad2",
+    "auto-reload-brunch": "1.8.0",
+    "javascript-brunch": "1.7.1",
+    "sass-brunch": "1.9.1",
+    "tap-diff": "0.1.0",
+    "tape": "4.4.0"
   }
 }

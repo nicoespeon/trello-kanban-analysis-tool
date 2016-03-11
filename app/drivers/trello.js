@@ -1,3 +1,5 @@
+import Rx from 'rx';
+
 const boardId = 'LydFpONf';
 
 function trelloSinkDriver ( input$ ) {

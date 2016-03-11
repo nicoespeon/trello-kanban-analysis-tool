@@ -1,11 +1,8 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, h} from '@cycle/dom';
-import {makeTrelloDriver} from 'drivers/trello';
-import logDriver from 'drivers/log';
+import {makeDOMDriver, button} from '@cycle/dom';
 
-function buttonView ( state$ ) {
-  return state$.map( () => h( 'button', 'Get actions' ) )
-}
+import {makeTrelloDriver} from './drivers/trello';
+import logDriver from './drivers/log';
 
 // TODO: export and unit test these part
 function parseTrelloActions ( actions ) {
@@ -19,6 +16,10 @@ function parseTrelloActions ( actions ) {
 
       return memo;
     }, [] );
+}
+
+function buttonView ( state$ ) {
+  return state$.map( () => button( 'Get actions' ) )
 }
 
 function main ( {DOM, Trello} ) {
