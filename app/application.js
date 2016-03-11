@@ -4,19 +4,7 @@ import {makeDOMDriver, button} from '@cycle/dom';
 import {makeTrelloDriver} from './drivers/trello';
 import logDriver from './drivers/log';
 
-// TODO: export and unit test these part
-function parseTrelloActions ( actions ) {
-  return actions
-    .map( action => action.data.list.name )
-    .reduce( ( memo, list ) => {
-      const knownList = R.find( R.propEq( 'name', list ) )( memo );
-      ( knownList )
-        ? knownList.count++
-        : memo.push( { name: list, count: 1 } );
-
-      return memo;
-    }, [] );
-}
+import {parseCreateActions} from './models/trello';
 
 function buttonView ( state$ ) {
   return state$.map( () => button( 'Get actions' ) )
@@ -28,7 +16,7 @@ function main ( {DOM, Trello} ) {
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    log: Trello.map( parseTrelloActions )
+    log: Trello.map( parseCreateActions )
   };
 }
 
