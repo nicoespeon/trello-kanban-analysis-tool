@@ -1,6 +1,6 @@
 import {test} from 'tape';
 
-import {countCardsPerList, parseDate, mapListData, parseCreateActions} from '../app/models/trello';
+import {countCardsPerList, parseDate, sortByDate, sumNumberOfCards, mapListData, consolidateContent, parseCreateActions, consolidateActions} from '../app/models/trello';
 
 test( 'countCardsPerList', ( assert ) => {
   const expected = [
@@ -18,12 +18,21 @@ test( 'countCardsPerList', ( assert ) => {
     { name: "Icebox Énergie" }
   ] );
 
-  assert.looseEquals( expected, result, 'should correctly count the number of cards per list' );
+  assert.looseEquals( result, expected, 'should correctly count the number of cards per list' );
   assert.end();
 } );
 
-test( 'parseDate', ( assert ) => {
-  assert.equal( parseDate( '2016-03-03T14:55:54.110Z' ), '2016-03-03', 'should correctly parse an ISODate' );
+test( 'sumNumberOfCards', ( assert ) => {
+  const result = sumNumberOfCards( [
+    { numberOfCards: 1 },
+    { list: 'Backlog', numberOfCards: 3 },
+    { numberOfCards: 4 },
+    { total: 4 },
+    { numberOfCards: 0 },
+    { numberOfCards: 1 }
+  ] );
+
+  assert.equals( result, 9, 'should sum all numberOfCards from collection' );
   assert.end();
 } );
 
@@ -58,9 +67,26 @@ test( 'mapListData', ( assert ) => {
     }
   ] );
 
-  assert.looseEquals( expected, result, 'should return an array of data.list' );
+  assert.looseEquals( result, expected, 'should return an array of data.list' );
   assert.end();
 } );
+
+test('consolidateContent', (assert) => {
+  const expected = [
+    { list: 'Icebox Énergie', numberOfCards: 3 },
+    { list: 'Backlog', numberOfCards: 8 }
+  ];
+  const result = consolidateContent( [
+    { list: 'Icebox Énergie', numberOfCards: 1 },
+    { list: 'Backlog', numberOfCards: 3 },
+    { list: 'Backlog', numberOfCards: 4 },
+    { list: 'Icebox Énergie', numberOfCards: 2 },
+    { list: 'Backlog', numberOfCards: 1 }
+  ] );
+
+  assert.looseEquals(result, expected, 'should regroup contents by list, summing numberOfCards');
+  assert.end();
+});
 
 test( 'parseCreateActions', ( assert ) => {
   const expected = [
@@ -268,6 +294,79 @@ test( 'parseCreateActions', ( assert ) => {
     }
   ] );
 
-  assert.looseEquals( expected, result, 'should correctly count the number of created cards' );
+  assert.looseEquals( result, expected, 'should correctly count the number of created cards' );
+  assert.end();
+} );
+
+test( 'consolidateActions', ( assert ) => {
+  const expected = [
+    {
+      date: "2016-01-20",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-04",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-08",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 2 }
+      ]
+    },
+    {
+      date: "2016-03-02",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 2 },
+        { list: "Backlog", numberOfCards: 4 }
+      ]
+    },
+    {
+      date: "2016-03-03",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 2 },
+        { list: "Backlog", numberOfCards: 5 },
+        { list: "Icebox Énergie", numberOfCards: 1 }
+      ]
+    }
+  ];
+  const result = consolidateActions( [
+    {
+      date: "2016-02-08",
+      content: [ { list: "Backlog", numberOfCards: 1 } ]
+    },
+    {
+      date: "2016-03-03",
+      content: [
+        { list: "Backlog", numberOfCards: 1 },
+        { list: "Icebox Énergie", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-03-02",
+      content: [
+        { list: "Backlog", numberOfCards: 2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-01-20",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-04",
+      content: [ { list: "Backlog", numberOfCards: 1 } ]
+    }
+  ] );
+
+  assert.looseEquals( result, expected, 'should correctly consolidate the number of created cards' );
   assert.end();
 } );

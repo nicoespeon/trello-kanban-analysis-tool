@@ -1,14 +1,11 @@
 import R from 'ramda';
-import {countByWith, groupByWith} from '../utils/utils';
+import {countByWith, groupByWith, parseDate, sortByDate} from '../utils/utils';
 
 // countCardsPerList :: [List] -> [List]
 const countCardsPerList = countByWith(
   R.prop( 'name' ),
   ( a, b ) => ({ list: a, numberOfCards: b })
 );
-
-// parseDate :: String -> String
-const parseDate = R.compose( R.head, R.split( 'T' ) );
 
 // mapListData :: [{data: {list: a}}] -> [a]
 const mapListData = R.map( R.path( [ 'data', 'list' ] ) );
@@ -25,4 +22,33 @@ const parseCreateActions = R.compose(
   R.map( R.over( R.lensProp( 'date' ), parseDate ) )
 );
 
-export {countCardsPerList, parseDate, mapListData, parseCreateActions};
+// sumNumberOfCards :: [{numberOfCards: Number}] -> Number
+const sumNumberOfCards = R.compose(
+  R.sum,
+  R.reject( R.isNil ),
+  R.pluck( 'numberOfCards' )
+);
+
+// consolidateContent :: [{list: String, numberOfCards: Number}] -> [{list: String, numberOfCards: Number}]
+const consolidateContent = groupByWith(
+  R.prop( 'list' ),
+  ( a, b ) => ({ list: a, numberOfCards: sumNumberOfCards( b ) })
+);
+
+// consolidateActions :: [List] -> [List]
+const consolidateActions = R.compose(
+  R.tail,
+  R.scan(
+    ( a, b ) => {
+      const scanContent = R.compose(
+        consolidateContent,
+        R.concat( R.prop( 'content', a ) )
+      );
+      return R.over( R.lensProp( 'content' ), scanContent, b );
+    },
+    { content: [] }
+  ),
+  sortByDate
+);
+
+export {countCardsPerList, sumNumberOfCards, mapListData, consolidateContent, parseCreateActions, consolidateActions};

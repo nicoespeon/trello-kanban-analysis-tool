@@ -1,7 +1,7 @@
 import {test} from 'tape';
 import R from 'ramda';
 
-import {countByWith, groupByWith} from '../app/utils/utils';
+import {countByWith, groupByWith, parseDate, sortByDate} from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
   const data = [ 1.0, 1.1, 1.2, 2.0, 3.0, 2.2 ];
@@ -63,5 +63,30 @@ test( 'groupByWith', ( assert ) => {
   assert.looseEquals( expected, resultCurried1( data ), 'should work if we pass last argument later' );
   assert.looseEquals( expected, resultCurried2( fn )( data ), 'should work if we pass arguments one by one' );
 
+  assert.end();
+} );
+
+test( 'parseDate', ( assert ) => {
+  assert.equal( parseDate( '2016-03-03T14:55:54.110Z' ), '2016-03-03', 'should correctly parse an ISODate' );
+  assert.end();
+} );
+
+test( 'sortByDate', ( assert ) => {
+  const expected = [
+    { date: "2015-11-20" },
+    { date: "2016-01-01" },
+    { date: "2016-01-08" },
+    { date: "2016-04-12" },
+    { date: "2016-10-01" }
+  ];
+  const result = sortByDate( [
+    { date: "2016-01-01" },
+    { date: "2016-04-12" },
+    { date: "2015-11-20" },
+    { date: "2016-10-01" },
+    { date: "2016-01-08" }
+  ] );
+
+  assert.looseEquals( result, expected, 'should sort collection by increasing date' );
   assert.end();
 } );

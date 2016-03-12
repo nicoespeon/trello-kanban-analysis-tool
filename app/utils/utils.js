@@ -18,4 +18,10 @@ const groupByWith = R.curry( ( prop, fn, data ) => {
   )( data );
 } );
 
-export {countByWith, groupByWith};
+// parseDate :: String -> String
+const parseDate = R.compose( R.head, R.split( 'T' ) );
+
+// sortByDate :: [{date: String}] -> [{date: String}]
+const sortByDate = R.sortBy( R.prop( 'date' ) );
+
+export {countByWith, groupByWith, parseDate, sortByDate};
