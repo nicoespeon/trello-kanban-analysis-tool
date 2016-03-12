@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-// countByWith :: (a -> String) -> (String -> Number -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
+// countByWith :: (a -> String) -> (String,Number -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const countByWith = R.curry( ( prop, fn, data ) => {
   return R.compose(
     R.map( R.apply( fn ) ),
@@ -9,7 +9,7 @@ const countByWith = R.curry( ( prop, fn, data ) => {
   )( data );
 } );
 
-// groupByWith :: (a -> String) -> (String -> [a] -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
+// groupByWith :: (a -> String) -> (String,[a] -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const groupByWith = R.curry( ( prop, fn, data ) => {
   return R.compose(
     R.map( R.apply( fn ) ),
