@@ -7,7 +7,7 @@ function trelloSinkDriver ( input$ ) {
     input$.subscribe( () => {
       Trello.get(
         '/boards/' + boardId + '/actions',
-        { filter: 'createCard' },
+        { filter: 'createCard,deleteCard,updateCard:closed' },
         observer.onNext.bind( observer ),
         ( err ) => {
           console.log( 'Error when trying to retrieve board actions', err );

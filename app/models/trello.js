@@ -1,37 +1,7 @@
 import R from 'ramda';
-import {countByWith, groupByWith, parseDate, sortByDate} from '../utils/utils';
 
-// countCardsPerList :: (Number -> b) -> [{name: String}] -> [{ list: String, numberOfCards: b }]
-const countCardsPerList = R.curry( function ( fn, data ) {
-  return countByWith(
-    R.prop( 'name' ),
-    ( a, b ) => ({ list: a, numberOfCards: fn( b ) }),
-    data
-  );
-} );
-
-// mapListData :: [{data: {list: a}}] -> [a]
-const mapListData = R.map( R.path( [ 'data', 'list' ] ) );
-
-// _parseActionsWith :: (Number -> b) -> [Action] -> [List]
-function _parseActionsWith ( fn ) {
-  return R.compose(
-    groupByWith(
-      R.prop( 'date' ),
-      ( a, b ) => ({
-        date: a,
-        content: R.compose( countCardsPerList( fn ), mapListData )( b )
-      })
-    ),
-    R.map( R.over( R.lensProp( 'date' ), parseDate ) )
-  );
-}
-
-// parseCreateActions :: [Action] -> [List]
-const parseCreateActions = _parseActionsWith( R.identity );
-
-// parseDeleteActions :: [Action] -> [List]
-const parseDeleteActions = _parseActionsWith( R.negate );
+import {groupByWith, sortByDate} from '../utils/utils';
+import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
 // sumNumberOfCards :: [{numberOfCards: Number}] -> Number
 const sumNumberOfCards = R.compose(
@@ -63,18 +33,13 @@ const consolidateActions = R.compose(
 );
 
 // parseActions :: [Action] -> [List]
-const parseActions = R.compose(
-  consolidateActions,
-  parseCreateActions
-);
+function parseActions ( actions ) {
+  return consolidateActions(
+    R.concat(
+      parseCreateActionsFrom( actions ),
+      parseDeleteActionsFrom( actions )
+    )
+  );
+}
 
-export {
-  countCardsPerList,
-  sumNumberOfCards,
-  mapListData,
-  consolidateContent,
-  parseCreateActions,
-  parseDeleteActions,
-  consolidateActions,
-  parseActions
-};
+export {sumNumberOfCards, consolidateContent, consolidateActions, parseActions};

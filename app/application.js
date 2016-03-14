@@ -5,7 +5,7 @@ import R from 'ramda';
 import {makeTrelloDriver} from './drivers/trello';
 import logDriver from './drivers/log';
 
-import {parseCreateActions, consolidateActions} from './models/trello';
+import {parseActions} from './models/trello';
 
 function buttonView ( state$ ) {
   return state$.map( () => button( 'Get actions' ) )
@@ -17,7 +17,7 @@ function main ( {DOM, Trello} ) {
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    log: Trello.map( R.compose( consolidateActions, parseCreateActions ) )
+    log: Trello.map( parseActions )
   };
 }
 
