@@ -3,6 +3,7 @@ import {makeDOMDriver, button} from '@cycle/dom';
 import R from 'ramda';
 
 import {makeTrelloDriver} from './drivers/trello';
+import graphDriver from './drivers/graph';
 import logDriver from './drivers/log';
 
 import {parseActions} from './models/trello';
@@ -17,6 +18,7 @@ function main ( {DOM, Trello} ) {
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
+    graph: Trello,
     log: Trello.map( parseActions )
   };
 }
@@ -24,6 +26,7 @@ function main ( {DOM, Trello} ) {
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
   Trello: makeTrelloDriver(),
+  graph: graphDriver,
   log: logDriver
 };
 

@@ -15,8 +15,6 @@ h1 {
   }
 }
 
-.chart text {
-  fill: white;
-  font: 10px sans-serif;
-  text-anchor: middle;
+#chart svg {
+  height : 400px;
 }
