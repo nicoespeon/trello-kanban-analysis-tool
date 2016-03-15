@@ -12,16 +12,18 @@
   "dependencies": {
     "@cycle/core": "6.0.3",
     "@cycle/dom": "9.1.0",
+    "nvd3": "1.8.2",
     "ramda": "0.19.1",
     "rx": "4.1.0"
   },
   "devDependencies": {
+    "auto-reload-brunch": "1.8.0",
     "babel": "5.8.23",
     "babel-brunch": "5.1.2",
     "babel-plugin-ramda": "0.1.2",
     "babel-tape-runner": "1.2.0",
     "brunch": "git://github.com/brunch/brunch.git#8a33ad2",
-    "auto-reload-brunch": "1.8.0",
+    "css-brunch": "2.0.0",
     "javascript-brunch": "1.7.1",
     "sass-brunch": "1.9.1",
     "tap-diff": "0.1.0",
