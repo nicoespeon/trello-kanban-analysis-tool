@@ -1,6 +1,36 @@
 import {test} from 'tape';
 
-import {numberOfCardsAtDate, parseTrelloData} from '../app/models/graph';
+import {allLists, numberOfCardsAtDate, parseTrelloData} from '../app/models/graph';
+
+test( 'allLists', ( assert ) => {
+  const data = [
+    {
+      date: "2016-02-12",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 3 }
+      ]
+    },
+    {
+      date: "2016-02-04",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Icebox Énergie", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-08",
+      content: [
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 2 }
+      ]
+    }
+  ];
+
+  assert.looseEquals( allLists( data ), [ 'Card Preparation [2]', 'Backlog', 'Icebox Énergie' ], 'should return the list of all unique lists from Trello data' );
+  assert.end();
+} );
 
 test( 'numberOfCardsAtDate', ( assert ) => {
   const data = [

@@ -1,5 +1,13 @@
 import R from 'ramda';
 
+// allLists :: [List] -> [String]
+const allLists = R.compose(
+  R.uniq,
+  R.flatten,
+  R.map( R.pluck( 'list' ) ),
+  R.pluck( 'content' )
+);
+
 // numberOfCardsAtDate :: String -> String -> [List] -> Number
 const numberOfCardsAtDate = ( list, date, data ) => {
   return R.compose(
@@ -12,4 +20,4 @@ const numberOfCardsAtDate = ( list, date, data ) => {
 
 const parseTrelloData = R.identity;
 
-export {numberOfCardsAtDate, parseTrelloData};
+export {allLists, numberOfCardsAtDate, parseTrelloData};
