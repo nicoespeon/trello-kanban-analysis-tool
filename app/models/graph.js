@@ -18,6 +18,22 @@ const numberOfCardsAtDate = ( list, date, data ) => {
   )( data );
 };
 
-const parseTrelloData = R.identity;
+// parsedValueAtDate :: String -> [List] -> String -> [Date, Number]
+const parsedValueAtDate = R.curry( ( list, data, date ) => [
+  new Date( date ).getTime(),
+  numberOfCardsAtDate( list, date, data )
+] );
+
+// parseTrelloData :: [List] -> [Graph]
+const parseTrelloData = ( data ) => {
+  return R.compose(
+    R.map( ( list ) => ({
+      key: list,
+      values: R.map( parsedValueAtDate( list, data ), R.pluck( 'date', data ) )
+    }) ),
+    allLists,
+    R.defaultTo( [] )
+  )( data );
+};
 
 export {allLists, numberOfCardsAtDate, parseTrelloData};

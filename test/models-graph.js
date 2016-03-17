@@ -64,40 +64,38 @@ test( 'numberOfCardsAtDate', ( assert ) => {
   assert.end();
 } );
 
-test.skip( 'parseTrelloData', ( assert ) => {
+test( 'parseTrelloData', ( assert ) => {
   const expected = [
-    [
-      {
-        "key": "Card Preparation [2]",
-        "values": [
-          [ new Date( "2016-01-20" ).getTime(), 1 ],
-          [ new Date( "2016-02-04" ).getTime(), 1 ],
-          [ new Date( "2016-02-08" ).getTime(), 1 ],
-          [ new Date( "2016-03-02" ).getTime(), 2 ],
-          [ new Date( "2016-03-03" ).getTime(), 2 ]
-        ]
-      },
-      {
-        "key": "Backlog",
-        "values": [
-          [ new Date( "2016-01-20" ).getTime(), 0 ],
-          [ new Date( "2016-02-04" ).getTime(), 1 ],
-          [ new Date( "2016-02-08" ).getTime(), 2 ],
-          [ new Date( "2016-03-02" ).getTime(), 4 ],
-          [ new Date( "2016-03-03" ).getTime(), 5 ]
-        ]
-      },
-      {
-        "key": "Icebox Énergie",
-        "values": [
-          [ new Date( "2016-01-20" ).getTime(), 0 ],
-          [ new Date( "2016-02-04" ).getTime(), 0 ],
-          [ new Date( "2016-02-08" ).getTime(), 0 ],
-          [ new Date( "2016-03-02" ).getTime(), 0 ],
-          [ new Date( "2016-03-03" ).getTime(), 1 ]
-        ]
-      }
-    ]
+    {
+      "key": "Card Preparation [2]",
+      "values": [
+        [ new Date( "2016-01-20" ).getTime(), 1 ],
+        [ new Date( "2016-02-04" ).getTime(), 1 ],
+        [ new Date( "2016-02-08" ).getTime(), 1 ],
+        [ new Date( "2016-03-02" ).getTime(), 2 ],
+        [ new Date( "2016-03-03" ).getTime(), 2 ]
+      ]
+    },
+    {
+      "key": "Backlog",
+      "values": [
+        [ new Date( "2016-01-20" ).getTime(), 0 ],
+        [ new Date( "2016-02-04" ).getTime(), 1 ],
+        [ new Date( "2016-02-08" ).getTime(), 2 ],
+        [ new Date( "2016-03-02" ).getTime(), 4 ],
+        [ new Date( "2016-03-03" ).getTime(), 5 ]
+      ]
+    },
+    {
+      "key": "Icebox Énergie",
+      "values": [
+        [ new Date( "2016-01-20" ).getTime(), 0 ],
+        [ new Date( "2016-02-04" ).getTime(), 0 ],
+        [ new Date( "2016-02-08" ).getTime(), 0 ],
+        [ new Date( "2016-03-02" ).getTime(), 0 ],
+        [ new Date( "2016-03-03" ).getTime(), 1 ]
+      ]
+    }
   ];
   const result = parseTrelloData( [
     {
@@ -138,5 +136,6 @@ test.skip( 'parseTrelloData', ( assert ) => {
   ] );
 
   assert.looseEquals( result, expected, 'should correctly parse Trello data to be rendered' );
+  assert.looseEquals( parseTrelloData(), [], 'should return an empty list if no data is passed' );
   assert.end();
 } );
