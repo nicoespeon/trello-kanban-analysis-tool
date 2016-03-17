@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-import {groupByWith, parseDate} from '../../utils/utils';
+import {groupByWith, parseDate, lensPath, pathOr} from '../../utils/utils';
 import {countCardsPerList, mapListData} from './lists';
 
 // _parseActionsWith :: (Number -> b) -> [Action] -> [List]
@@ -24,13 +24,35 @@ const parseCreateActions = _parseActionsWith( R.identity );
 const parseDeleteActions = _parseActionsWith( R.negate );
 
 // getCreateActions :: [Action] -> [Action]
-const getCreateActions = R.filter( R.propEq( 'type', 'createCard' ) );
+const getCreateActions = R.compose(
+  R.map( ( action ) => R.set(
+    lensPath( [ 'data', 'list' ] ),
+    pathOr( R.path( [ 'data', 'list' ] )( action ), [ 'data', 'listAfter' ], action ),
+    action
+  ) ),
+  R.filter(
+    R.either(
+      R.propEq( 'type', 'createCard' ),
+      R.both(
+        R.propEq( 'type', 'updateCard' ),
+        R.path( [ 'data', 'listAfter' ] )
+      )
+    )
+  )
+);
 
 // getDeleteActions :: [Action] -> [Action]
-const getDeleteActions = R.filter(
-  R.either(
-    R.propEq( 'type', 'deleteCard' ),
-    R.propEq( 'type', 'updateCard' )
+const getDeleteActions = R.compose(
+  R.map( ( action ) => R.set(
+    lensPath( [ 'data', 'list' ] ),
+    pathOr( R.path( [ 'data', 'list' ] )( action ), [ 'data', 'listBefore' ], action ),
+    action
+  ) ),
+  R.filter(
+    R.either(
+      R.propEq( 'type', 'deleteCard' ),
+      R.propEq( 'type', 'updateCard' )
+    )
   )
 );
 
