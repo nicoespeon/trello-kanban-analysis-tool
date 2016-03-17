@@ -9,6 +9,7 @@ function makeGraphDriver ( selector ) {
           .x( R.head )
           .y( R.last )
           .clipEdge( true )
+          .showControls( false )
           .useInteractiveGuideline( true );
 
         chart.xAxis
