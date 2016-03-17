@@ -7,6 +7,7 @@ import graphDriver from './drivers/graph';
 import logDriver from './drivers/log';
 
 import {parseActions} from './models/trello';
+import {parseTrelloData} from './models/graph';
 
 function buttonView ( state$ ) {
   return state$.map( () => button( 'Get actions' ) )
@@ -18,7 +19,7 @@ function main ( {DOM, Trello} ) {
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    graph: Trello,
+    graph: Trello.map( parseActions ).map( parseTrelloData ),
     log: Trello.map( parseActions )
   };
 }

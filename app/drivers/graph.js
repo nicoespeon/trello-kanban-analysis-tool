@@ -1,26 +1,12 @@
 import nv from 'nvd3';
+import R from 'ramda';
 
 function renderGraph ( data$ ) {
-  return data$.subscribe( () => {
-    const data = [
-      {
-        "key": "Live",
-        "values": [ [ 1025409600000, 0 ], [ 1028088000000, 0 ], [ 1030766400000, 2 ], [ 1033358400000, 2 ], [ 1036040400000, 3 ] ]
-      },
-      {
-        "key": "Production",
-        "values": [ [ 1025409600000, 0 ], [ 1028088000000, 1 ], [ 1030766400000, 2 ], [ 1033358400000, 2 ], [ 1036040400000, 2 ] ]
-      },
-      {
-        "key": "Backlog",
-        "values": [ [ 1025409600000, 4 ], [ 1028088000000, 5 ], [ 1030766400000, Math.random() * 10 ], [ 1033358400000, 2 ], [ 1036040400000, 4 ] ]
-      }
-    ];
-
+  return data$.subscribe( (data) => {
     nv.addGraph( () => {
       const chart = nv.models.stackedAreaChart()
-        .x( ( d ) => d[ 0 ] )
-        .y( ( d ) => d[ 1 ] )
+        .x( R.head )
+        .y( R.last )
         .clipEdge( true )
         .useInteractiveGuideline( true );
 
