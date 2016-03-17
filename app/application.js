@@ -3,7 +3,7 @@ import {makeDOMDriver, button} from '@cycle/dom';
 import R from 'ramda';
 
 import {makeTrelloDriver} from './drivers/trello';
-import graphDriver from './drivers/graph';
+import {makeGraphDriver} from './drivers/graph';
 import logDriver from './drivers/log';
 
 import {parseActions} from './models/trello';
@@ -27,7 +27,7 @@ function main ( {DOM, Trello} ) {
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
   Trello: makeTrelloDriver(),
-  graph: graphDriver,
+  graph: makeGraphDriver( '#chart svg' ),
   log: logDriver
 };
 
