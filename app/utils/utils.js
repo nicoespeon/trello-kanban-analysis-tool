@@ -24,6 +24,13 @@ const parseDate = R.compose( R.head, R.split( 'T' ) );
 // sortByDate :: [{date: String}] -> [{date: String}]
 const sortByDate = R.sortBy( R.prop( 'date' ) );
 
+// uniqByDateLast :: [{date: String}] -> [{date: String}]
+const uniqByDateLast = R.compose(
+  R.unary( R.reverse ),
+  R.uniqBy( R.prop( 'date' ) ),
+  R.reverse
+);
+
 // These are Ramda v0.17+ methods.
 // I'm stuck with v0.17.1 because of babel-plugin-ramda which does not support
 // babel v6.x on its latest version.
@@ -37,4 +44,4 @@ const pathOr = R.curry( function pathOr ( d, p, obj ) {
   return R.defaultTo( d, R.path( p, obj ) );
 } );
 
-export {countByWith, groupByWith, parseDate, sortByDate, lensPath, pathOr};
+export {countByWith, groupByWith, parseDate, sortByDate, uniqByDateLast, lensPath, pathOr};

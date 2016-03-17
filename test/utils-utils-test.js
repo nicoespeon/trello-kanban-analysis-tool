@@ -1,7 +1,7 @@
 import {test} from 'tape';
 import R from 'ramda';
 
-import {countByWith, groupByWith, parseDate, sortByDate} from '../app/utils/utils';
+import {countByWith, groupByWith, parseDate, sortByDate, uniqByDateLast} from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
   const data = [ 1.0, 1.1, 1.2, 2.0, 3.0, 2.2 ];
@@ -88,5 +88,101 @@ test( 'sortByDate', ( assert ) => {
   ] );
 
   assert.looseEquals( result, expected, 'should sort collection by increasing date' );
+  assert.end();
+} );
+
+test( 'uniqByDateLast', ( assert ) => {
+  const expected = [
+    {
+      date: "2016-02-22",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-25",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 9 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-03-02",
+      content: [
+        { list: "Icebox", numberOfCards: 2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 2 }
+      ]
+    },
+    {
+      date: "2016-03-06",
+      content: [
+        { list: "Icebox", numberOfCards: -2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 5 }
+      ]
+    }
+  ];
+  const result = uniqByDateLast( [
+    {
+      date: "2016-02-22",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-25",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-25",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 9 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-03-02",
+      content: [
+        { list: "Icebox", numberOfCards: 2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 2 }
+      ]
+    },
+    {
+      date: "2016-03-06",
+      content: [
+        { list: "Icebox", numberOfCards: 2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 3 }
+      ]
+    },
+    {
+      date: "2016-03-06",
+      content: [
+        { list: "Icebox", numberOfCards: 20 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 3 }
+      ]
+    },
+    {
+      date: "2016-03-06",
+      content: [
+        { list: "Icebox", numberOfCards: -2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 5 }
+      ]
+    }
+  ] );
+
+  assert.looseEquals( result, expected, 'should return a new list with uniq dates, taking the last one' );
   assert.end();
 } );
