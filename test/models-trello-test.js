@@ -147,26 +147,34 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
+      date: "2016-03-07",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 2 },
+        { list: "Backlog", numberOfCards: 3 }
+      ]
+    },
+    {
       date: "2016-03-12",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 3 },
         { list: "Backlog", numberOfCards: 3 }
       ]
     },
     {
       date: "2016-03-13",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
         { list: "Backlog", numberOfCards: 3 }
       ]
     },
     {
       date: "2016-03-23",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
         { list: "Backlog", numberOfCards: 3 },
         { list: "Icebox Énergie", numberOfCards: 1 }
       ]
@@ -174,8 +182,8 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-24",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
         { list: "Backlog", numberOfCards: 2 },
         { list: "Icebox Énergie", numberOfCards: 1 }
       ]
@@ -183,8 +191,8 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-27",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
         { list: "Backlog", numberOfCards: 1 },
         { list: "Icebox Énergie", numberOfCards: 1 }
       ]
@@ -192,10 +200,20 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-04-06",
       content: [
-        { list: "Icebox", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 },
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
         { list: "Backlog", numberOfCards: 2 },
         { list: "Icebox Énergie", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-04-10",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 1 },
+        { list: "Icebox Énergie", numberOfCards: 1 },
+        { list: "Production [3]", numberOfCards: 1 }
       ]
     }
   ];

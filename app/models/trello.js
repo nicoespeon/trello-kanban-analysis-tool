@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-import {groupByWith, sortByDate} from '../utils/utils';
+import {groupByWith, sortByDate, uniqByDateLast} from '../utils/utils';
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
 // sumNumberOfCards :: [{numberOfCards: Number}] -> Number
@@ -19,6 +19,7 @@ const consolidateContent = groupByWith(
 // consolidateActions :: [List] -> [List]
 const consolidateActions = R.compose(
   R.tail,
+  uniqByDateLast,
   R.scan(
     ( a, b ) => {
       const scanContent = R.compose(
