@@ -57,7 +57,10 @@ const getDeleteActions = R.compose(
       R.propEq( 'type', 'deleteCard' ),
       R.both(
         R.propEq( 'type', 'updateCard' ),
-        R.path( [ 'data', 'listBefore' ] )
+        R.either(
+          R.path( [ 'data', 'listBefore' ] ),
+          R.compose( R.equals( true ), R.path( [ 'data', 'card', 'closed' ] ) )
+        )
       )
     )
   )
