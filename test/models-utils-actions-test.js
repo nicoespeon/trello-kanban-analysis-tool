@@ -14,25 +14,25 @@ test( 'parseCreateActions', ( assert ) => {
     {
       date: "2016-03-03",
       content: [
-        { list: "Backlog", numberOfCards: 1 },
-        { list: "Icebox Énergie", numberOfCards: 1 }
+        { list: "Backlog", numberOfCards: -1 },
+        { list: "Icebox Énergie", numberOfCards: -1 }
       ]
     },
     {
       date: "2016-03-02",
-      content: [ { list: "Backlog", numberOfCards: 1 } ]
+      content: [ { list: "Backlog", numberOfCards: -1 } ]
     },
     {
       date: "2016-02-08",
-      content: [ { list: "Backlog", numberOfCards: 1 } ]
+      content: [ { list: "Backlog", numberOfCards: -1 } ]
     },
     {
       date: "2016-02-04",
-      content: [ { list: "Backlog", numberOfCards: 1 } ]
+      content: [ { list: "Backlog", numberOfCards: -1 } ]
     },
     {
       date: "2016-01-20",
-      content: [ { list: "Card Preparation [2]", numberOfCards: 1 } ]
+      content: [ { list: "Card Preparation [2]", numberOfCards: -1 } ]
     }
   ];
   const result = parseCreateActions( [
@@ -83,25 +83,25 @@ test( 'parseDeleteActions', ( assert ) => {
     {
       date: "2016-03-03",
       content: [
-        { list: "Backlog", numberOfCards: -1 },
-        { list: "Icebox Énergie", numberOfCards: -1 }
+        { list: "Backlog", numberOfCards: 1 },
+        { list: "Icebox Énergie", numberOfCards: 1 }
       ]
     },
     {
       date: "2016-03-02",
-      content: [ { list: "Backlog", numberOfCards: -1 } ]
+      content: [ { list: "Backlog", numberOfCards: 1 } ]
     },
     {
       date: "2016-02-08",
-      content: [ { list: "Backlog", numberOfCards: -1 } ]
+      content: [ { list: "Backlog", numberOfCards: 1 } ]
     },
     {
       date: "2016-02-04",
-      content: [ { list: "Backlog", numberOfCards: -1 } ]
+      content: [ { list: "Backlog", numberOfCards: 1 } ]
     },
     {
       date: "2016-01-20",
-      content: [ { list: "Card Preparation [2]", numberOfCards: -1 } ]
+      content: [ { list: "Card Preparation [2]", numberOfCards: 1 } ]
     }
   ];
   const result = parseDeleteActions( [

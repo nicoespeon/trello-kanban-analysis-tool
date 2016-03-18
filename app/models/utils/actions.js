@@ -17,11 +17,15 @@ function _parseActionsWith ( fn ) {
   );
 }
 
+// Create actions are counted as negative delta, delete actions as positive.
+// This is because we reverse engineer the number of cards, consolidating data
+// going back through time, starting from today.
+
 // parseCreateActions :: [Action] -> [List]
-const parseCreateActions = _parseActionsWith( R.identity );
+const parseCreateActions = _parseActionsWith( R.negate );
 
 // parseDeleteActions :: [Action] -> [List]
-const parseDeleteActions = _parseActionsWith( R.negate );
+const parseDeleteActions = _parseActionsWith( R.identity );
 
 // getCreateActions :: [Action] -> [Action]
 const getCreateActions = R.compose(
