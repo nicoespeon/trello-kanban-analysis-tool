@@ -1,7 +1,6 @@
 export default [
   {
     "id": "56eabfd5765ab54c7ab88c15",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "listAfter": {
         "name": "Production [3]",
@@ -39,7 +38,6 @@ export default [
   },
   {
     "id": "56dc003c5a0885d45c5f5ca5",
-    "idMemberCreator": "50cf3712e418f91048000565",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -69,7 +67,6 @@ export default [
   },
   {
     "id": "568e35e43b644fceb47d28e3",
-    "idMemberCreator": "55dacd3db42afb6c68ef0288",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -98,7 +95,6 @@ export default [
   },
   {
     "id": "564b57ae2daa0ba7ed8c0b03",
-    "idMemberCreator": "50cf37ec948ad4ac32000f1f",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -127,7 +123,6 @@ export default [
   },
   {
     "id": "56d805d893a56f5b3e238ce6",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -157,7 +152,6 @@ export default [
   },
   {
     "id": "56e556f67400ed1b11f3d972",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -186,7 +180,6 @@ export default [
   },
   {
     "id": "56e556e368d8967f500e3269",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "list": {
         "name": "Card Preparation [2]",
@@ -220,7 +213,6 @@ export default [
   },
   {
     "id": "56e556e06ac9a987e623074f",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -250,7 +242,6 @@ export default [
   },
   {
     "id": "56eabfd5765ab54c7ab88c15",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "listAfter": {
         "name": "Card Preparation [2]",
@@ -288,7 +279,6 @@ export default [
   },
   {
     "id": "56dc003c5a0885d45c5f5ca5",
-    "idMemberCreator": "50cf3712e418f91048000565",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -318,7 +308,6 @@ export default [
   },
   {
     "id": "56d6e47e876469ef1fe7139d",
-    "idMemberCreator": "519b3898bb87e0891c0026b0",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -348,7 +337,6 @@ export default [
   },
   {
     "id": "56d56f05b9aea5e8f7e76a22",
-    "idMemberCreator": "519b3898bb87e0891c0026b0",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -378,7 +366,6 @@ export default [
   },
   {
     "id": "56cefc5166a0c2bab3758002",
-    "idMemberCreator": "519b3898bb87e0891c0026b0",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -408,7 +395,6 @@ export default [
   },
   {
     "id": "56cb5a59b4823428bb4d72d5",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
@@ -438,7 +424,6 @@ export default [
   },
   {
     "id": "56cb5a59b4823428bb4d72d5",
-    "idMemberCreator": "51843f636ef14b8a690062dc",
     "data": {
       "board": {
         "shortLink": "LydFpONf",
