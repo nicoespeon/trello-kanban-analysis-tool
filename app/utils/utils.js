@@ -21,8 +21,11 @@ const groupByWith = R.curry( ( prop, fn, data ) => {
 // parseDate :: String -> String
 const parseDate = R.compose( R.head, R.split( 'T' ) );
 
-// sortByDate :: [{date: String}] -> [{date: String}]
-const sortByDate = R.sortBy( R.prop( 'date' ) );
+// sortByDateDesc :: [{date: String}] -> [{date: String}]
+const sortByDateDesc = R.compose(
+  R.unary( R.reverse ),
+  R.sortBy( R.prop( 'date' ) )
+);
 
 // uniqByDateLast :: [{date: String}] -> [{date: String}]
 const uniqByDateLast = R.compose(
@@ -44,4 +47,12 @@ const pathOr = R.curry( function pathOr ( d, p, obj ) {
   return R.defaultTo( d, R.path( p, obj ) );
 } );
 
-export {countByWith, groupByWith, parseDate, sortByDate, uniqByDateLast, lensPath, pathOr};
+export {
+  countByWith,
+  groupByWith,
+  parseDate,
+  sortByDateDesc,
+  uniqByDateLast,
+  lensPath,
+  pathOr
+};

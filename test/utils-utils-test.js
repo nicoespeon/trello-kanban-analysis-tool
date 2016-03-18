@@ -1,7 +1,7 @@
 import {test} from 'tape';
 import R from 'ramda';
 
-import {countByWith, groupByWith, parseDate, sortByDate, uniqByDateLast} from '../app/utils/utils';
+import {countByWith, groupByWith, parseDate, sortByDateDesc, uniqByDateLast} from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
   const data = [ 1.0, 1.1, 1.2, 2.0, 3.0, 2.2 ];
@@ -71,15 +71,15 @@ test( 'parseDate', ( assert ) => {
   assert.end();
 } );
 
-test( 'sortByDate', ( assert ) => {
+test( 'sortByDateDesc', ( assert ) => {
   const expected = [
-    { date: "2015-11-20" },
-    { date: "2016-01-01" },
-    { date: "2016-01-08" },
+    { date: "2016-10-01" },
     { date: "2016-04-12" },
-    { date: "2016-10-01" }
+    { date: "2016-01-08" },
+    { date: "2016-01-01" },
+    { date: "2015-11-20" }
   ];
-  const result = sortByDate( [
+  const result = sortByDateDesc( [
     { date: "2016-01-01" },
     { date: "2016-04-12" },
     { date: "2015-11-20" },

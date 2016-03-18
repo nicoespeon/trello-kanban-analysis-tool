@@ -13,14 +13,50 @@ function buttonView ( state$ ) {
   return state$.map( () => button( 'Get actions' ) )
 }
 
-function main ( {DOM, Trello} ) {
+function main ( { DOM, Trello } ) {
   const buttonClicks$ = DOM.select( 'button' ).events( 'click' );
+
+  // TODO - dynamically get this
+  const currentStatus = [
+    {
+      "list": "Live (March 2016)",
+      "numberOfCards": 7
+    },
+    {
+      "list": "In Production",
+      "numberOfCards": 0
+    },
+    {
+      "list": "Mise en live [1]",
+      "numberOfCards": 1
+    },
+    {
+      "list": "Tests QA [2]",
+      "numberOfCards": 0
+    },
+    {
+      "list": "Production [3]",
+      "numberOfCards": 3
+    },
+    {
+      "list": "Card Preparation [2]",
+      "numberOfCards": 2
+    },
+    {
+      "list": "Backlog",
+      "numberOfCards": 9
+    },
+    {
+      "list": "Icebox Énergie",
+      "numberOfCards": 6
+    }
+  ];
 
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    graph: Trello.map( parseActions ).map( parseTrelloData ),
-    log: Trello.map( parseActions )
+    graph: Trello.map( parseActions( currentStatus ) ).map( parseTrelloData ),
+    log: Trello.map( parseActions( currentStatus ) )
   };
 }
 
