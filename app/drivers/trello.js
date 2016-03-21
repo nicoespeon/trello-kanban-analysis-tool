@@ -9,7 +9,8 @@ function trelloSinkDriver ( input$ ) {
         '/boards/' + boardId + '/actions',
         {
           filter: 'createCard,deleteCard,updateCard',
-          fields: 'data,date,type'
+          fields: 'data,date,type',
+          limit: 300
         },
         observer.onNext.bind( observer ),
         ( err ) => {
