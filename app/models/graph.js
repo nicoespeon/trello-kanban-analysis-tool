@@ -5,6 +5,7 @@ const allLists = R.compose(
   R.uniq,
   R.flatten,
   R.map( R.pluck( 'list' ) ),
+  R.reject( R.isNil ),
   R.pluck( 'content' )
 );
 

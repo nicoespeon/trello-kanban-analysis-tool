@@ -1,6 +1,10 @@
 import {test} from 'tape';
 
-import {allLists, numberOfCardsAtDate, parseTrelloData} from '../app/models/graph';
+import {
+  allLists,
+  numberOfCardsAtDate,
+  parseTrelloData
+} from '../app/models/graph';
 
 test( 'allLists', ( assert ) => {
   const data = [
@@ -29,6 +33,8 @@ test( 'allLists', ( assert ) => {
   ];
 
   assert.looseEquals( allLists( data ), [ 'Card Preparation [2]', 'Backlog', 'Icebox Énergie' ], 'should return the list of all unique lists from Trello data' );
+  assert.looseEquals( allLists( [] ), [], 'should return an empty list if data is empty' );
+  assert.looseEquals( allLists( [ {}, {} ] ), [], 'should return an empty list if data is missing content' );
   assert.end();
 } );
 
@@ -137,5 +143,7 @@ test( 'parseTrelloData', ( assert ) => {
 
   assert.looseEquals( result, expected, 'should correctly parse Trello data to be rendered' );
   assert.looseEquals( parseTrelloData(), [], 'should return an empty list if no data is passed' );
+  assert.looseEquals( parseTrelloData( [] ), [], 'should return an empty list if empty data is passed' );
+  assert.looseEquals( parseTrelloData( {} ), [], 'should return an empty list if data passed is an object' );
   assert.end();
 } );

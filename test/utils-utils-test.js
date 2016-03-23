@@ -1,7 +1,13 @@
 import {test} from 'tape';
 import R from 'ramda';
 
-import {countByWith, groupByWith, parseDate, sortByDateDesc, uniqByDateLast} from '../app/utils/utils';
+import {
+  countByWith,
+  groupByWith,
+  parseDate,
+  sortByDateDesc,
+  uniqByDateLast
+} from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
   const data = [ 1.0, 1.1, 1.2, 2.0, 3.0, 2.2 ];
@@ -55,13 +61,27 @@ test( 'groupByWith', ( assert ) => {
       ]
     }
   ];
-  const result = groupByWith( R.prop( 'grade' ), fn, data );
-  const resultCurried1 = groupByWith( R.prop( 'grade' ), fn );
-  const resultCurried2 = groupByWith( R.prop( 'grade' ) );
 
-  assert.looseEquals( expected, result, 'should return a collection of grouped parsed objects' );
-  assert.looseEquals( expected, resultCurried1( data ), 'should work if we pass last argument later' );
-  assert.looseEquals( expected, resultCurried2( fn )( data ), 'should work if we pass arguments one by one' );
+  assert.looseEquals(
+    groupByWith( R.prop( 'grade' ), fn, data ),
+    expected,
+    'should return a collection of grouped parsed objects'
+  );
+  assert.looseEquals(
+    groupByWith( R.prop( 'grade' ), fn )( data ),
+    expected,
+    'should work if we pass last argument later'
+  );
+  assert.looseEquals(
+    groupByWith( R.prop( 'grade' ) )( fn )( data ),
+    expected,
+    'should work if we pass arguments one by one'
+  );
+  assert.looseEquals(
+    groupByWith( R.prop( 'grade' ), fn, {} ), 
+    [], 
+    'should return an empty array if data is an object' 
+  );
 
   assert.end();
 } );

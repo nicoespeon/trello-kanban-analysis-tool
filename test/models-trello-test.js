@@ -300,5 +300,6 @@ test( 'parseActions', ( assert ) => {
 
   assert.looseEquals( parseActions( currentStatus, trelloActions ), expected, 'should correctly parse Trello actions' );
   assert.looseEquals( parseActions( currentStatus )( trelloActions ), expected, 'should be curried' );
+  assert.looseEquals( parseActions( currentStatus, [] ), [ currentStatus ], 'should handle empty actions' );
   assert.end();
 } );
