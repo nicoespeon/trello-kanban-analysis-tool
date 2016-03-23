@@ -3,12 +3,7 @@ import R from 'ramda';
 import {groupByWith, sortByDateDesc, uniqByDateLast} from '../utils/utils';
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
-// propDate :: {date: a} → a | Undefined
-const propDate = R.prop( 'date' );
-
 // propContent :: {content: a} → a | Undefined
-const propContent = R.prop( 'content' );
-
 // sumNumberOfCards :: [{numberOfCards: Number}] -> Number
 const sumNumberOfCards = R.compose(
   R.sum,
@@ -23,14 +18,14 @@ const consolidateContent = groupByWith(
 );
 
 // consolidateActions :: [{list: String, numberOfCards: Number}] -> [List] -> [List]
-const consolidateActions = function ( initialContent, actions ) {
+const consolidateActions = ( initialContent, actions ) => {
   return R.compose(
     R.unary( R.reverse ),
     uniqByDateLast,
     R.scan(
       ( a, b ) => R.over(
         R.lensProp( 'content' ),
-        R.compose( consolidateContent, R.concat( propContent( a ) ) ),
+        R.compose( consolidateContent, R.concat( R.prop( 'content', a ) ) ),
         b
       ),
       initialContent
@@ -39,10 +34,21 @@ const consolidateActions = function ( initialContent, actions ) {
   )( actions );
 };
 
-// parseActions :: [{list: String, numberOfCards: Number}] -> [Action] -> [List]
-const parseActions = R.curry( ( currentStatus, actions ) => {
+// parseCurrentStatus :: String -> [{name: String, cards: Array}] -> [List]
+const parseCurrentStatus = R.curry( ( date, list ) => {
+  return {
+    date: date,
+    content: R.compose(
+      R.unary( R.reverse ),
+      R.map( a => ({ list: a.name, numberOfCards: R.length( a.cards ) }) )
+    )( list )
+  };
+} );
+
+// parseActions :: String -> [{name: String, cards: Array}] -> [Action] -> [List]
+const parseActions = R.curry( ( date, lists, actions ) => {
   return consolidateActions(
-    currentStatus,
+    parseCurrentStatus( date, lists ),
     R.concat(
       parseCreateActionsFrom( actions ),
       parseDeleteActionsFrom( actions )
@@ -50,4 +56,10 @@ const parseActions = R.curry( ( currentStatus, actions ) => {
   );
 } );
 
-export {sumNumberOfCards, consolidateContent, consolidateActions, parseActions};
+export {
+  sumNumberOfCards,
+  consolidateContent,
+  consolidateActions,
+  parseCurrentStatus,
+  parseActions
+};

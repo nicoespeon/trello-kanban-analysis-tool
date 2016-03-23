@@ -1,11 +1,13 @@
 import {test} from 'tape';
 
 import trelloActions from './fixtures/trello-actions';
+import trelloLists from './fixtures/trello-lists';
 
 import {
   sumNumberOfCards,
   consolidateContent,
   consolidateActions,
+  parseCurrentStatus,
   parseActions
 } from '../app/models/trello';
 
@@ -154,12 +156,63 @@ test( 'consolidateActions', ( assert ) => {
   assert.end();
 } );
 
+test( 'parseCurrentStatus', ( assert ) => {
+  const expected = {
+    date: "2016-03-18",
+    content: [
+      {
+        "list": "Done",
+        "numberOfCards": 4
+      },
+      {
+        "list": "Doing",
+        "numberOfCards": 2
+      },
+      {
+        "list": "To Do Soon",
+        "numberOfCards": 1
+      }
+    ]
+  };
+  const data = [
+    {
+      "id": "4eea4ffc91e31d174600004a",
+      "name": "To Do Soon",
+      "cards": [
+        { "id": "4eea503791e31d1746000080" }
+      ]
+    },
+    {
+      "id": "4eea4ffc91e31d174600004b",
+      "name": "Doing",
+      "cards": [
+        { "id": "4eea503d91e31d174600008f" },
+        { "id": "4eea522c91e31d174600027e" }
+      ]
+    },
+    {
+      "id": "4eea4ffc91e31d174600004c",
+      "name": "Done",
+      "cards": [
+        { "id": "4eea501f91e31d1746000062" },
+        { "id": "4eea501f92e31d1746000062" },
+        { "id": "4eea501f91e31d1729800062" },
+        { "id": "4eea502b91e31d1746000071" }
+      ]
+    }
+  ];
+
+  assert.looseEquals( parseCurrentStatus( "2016-03-18", data ), expected, 'should parse given list and date into current status' );
+  assert.looseEquals( parseCurrentStatus( "2016-03-18" )( data ), expected, 'should be curried' );
+  assert.end();
+} );
+
 test( 'parseActions', ( assert ) => {
   const expected = [
     {
       date: "2016-02-22",
       content: [
-        { list: "Icebox", numberOfCards: 34 },
+        { list: "Icebox", numberOfCards: 4 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 8 },
         { list: "Card Preparation [2]", numberOfCards: 1 },
@@ -169,7 +222,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-02-25",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 8 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -179,7 +232,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-02",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 9 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -189,7 +242,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-06",
       content: [
-        { list: "Icebox", numberOfCards: 36 },
+        { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 10 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -199,7 +252,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-07",
       content: [
-        { list: "Icebox", numberOfCards: 36 },
+        { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -209,7 +262,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-12",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
         { list: "Card Preparation [2]", numberOfCards: 3 },
@@ -219,7 +272,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-13",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
         { list: "Card Preparation [2]", numberOfCards: 4 },
@@ -229,7 +282,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-23",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -239,7 +292,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-24",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 11 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -249,7 +302,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-03-27",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 10 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -259,7 +312,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-04-06",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 9 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -269,7 +322,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-04-10",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 10 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -279,7 +332,7 @@ test( 'parseActions', ( assert ) => {
     {
       date: "2016-05-01",
       content: [
-        { list: "Icebox", numberOfCards: 35 },
+        { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 9 },
         { list: "Card Preparation [2]", numberOfCards: 2 },
@@ -287,19 +340,19 @@ test( 'parseActions', ( assert ) => {
       ]
     }
   ];
-  const currentStatus = {
+  const expectedWithEmptyActions = [ {
     date: "2016-05-01",
     content: [
-      { list: "Icebox", numberOfCards: 35 },
+      { list: "Icebox", numberOfCards: 5 },
       { list: "Icebox Énergie", numberOfCards: 6 },
       { list: "Backlog", numberOfCards: 9 },
       { list: "Card Preparation [2]", numberOfCards: 2 },
       { list: "Production [3]", numberOfCards: 1 }
     ]
-  };
+  } ];
 
-  assert.looseEquals( parseActions( currentStatus, trelloActions ), expected, 'should correctly parse Trello actions' );
-  assert.looseEquals( parseActions( currentStatus )( trelloActions ), expected, 'should be curried' );
-  assert.looseEquals( parseActions( currentStatus, [] ), [ currentStatus ], 'should handle empty actions' );
+  assert.looseEquals( parseActions( "2016-05-01", trelloLists, trelloActions ), expected, 'should correctly parse Trello actions' );
+  assert.looseEquals( parseActions( "2016-05-01" )( trelloLists, trelloActions ), expected, 'should be curried' );
+  assert.looseEquals( parseActions( "2016-05-01", trelloLists, [] ), expectedWithEmptyActions, 'should handle empty actions' );
   assert.end();
 } );

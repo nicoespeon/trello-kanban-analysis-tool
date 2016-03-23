@@ -1,6 +1,7 @@
 import Cycle from '@cycle/core';
 import {makeDOMDriver, button} from '@cycle/dom';
-import R from 'ramda';
+import moment from 'moment';
+import Rx from 'rx';
 
 import {makeTrelloDriver} from './drivers/trello';
 import {makeGraphDriver} from './drivers/graph';
@@ -16,50 +17,17 @@ function buttonView ( state$ ) {
 function main ( { DOM, Trello } ) {
   const buttonClicks$ = DOM.select( 'button' ).events( 'click' );
 
-  // TODO - dynamically get this
-  const currentStatus = {
-    date: "2016-03-18",
-    content: [
-      {
-        "list": "Live (March 2016)",
-        "numberOfCards": 7
-      },
-      {
-        "list": "In Production",
-        "numberOfCards": 0
-      },
-      {
-        "list": "Mise en live [1]",
-        "numberOfCards": 1
-      },
-      {
-        "list": "Tests QA [2]",
-        "numberOfCards": 0
-      },
-      {
-        "list": "Production [3]",
-        "numberOfCards": 3
-      },
-      {
-        "list": "Card Preparation [2]",
-        "numberOfCards": 2
-      },
-      {
-        "list": "Backlog",
-        "numberOfCards": 9
-      },
-      {
-        "list": "Icebox Énergie",
-        "numberOfCards": 6
-      }
-    ]
-  };
+  let trelloActions$ = Rx.Observable.combineLatest(
+    Trello.lists$.startWith( [] ),
+    Trello.actions$.startWith( [] ),
+    parseActions( moment().format( 'YYYY-MM-DD' ) )
+  );
 
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    graph: Trello.map( parseActions( currentStatus ) ).map( parseTrelloData ),
-    log: Trello.map( parseActions( currentStatus ) )
+    graph: trelloActions$.map( parseTrelloData ),
+    log: trelloActions$
   };
 }
 

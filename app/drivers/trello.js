@@ -3,22 +3,40 @@ import Rx from 'rx';
 const boardId = 'LydFpONf';
 
 function trelloSinkDriver ( input$ ) {
-  return Rx.Observable.create( ( observer ) => {
-    input$.subscribe( () => {
-      Trello.get(
-        '/boards/' + boardId + '/actions',
-        {
-          filter: 'createCard,deleteCard,updateCard',
-          fields: 'data,date,type',
-          limit: 300
-        },
-        observer.onNext.bind( observer ),
-        ( err ) => {
-          console.log( 'Error when trying to retrieve board actions', err );
-        }
-      );
-    } );
-  } );
+  return {
+    actions$: Rx.Observable.create( ( observer ) => {
+      input$.subscribe( () => {
+        Trello.get(
+          '/boards/' + boardId + '/actions',
+          {
+            filter: 'createCard,deleteCard,updateCard',
+            fields: 'data,date,type',
+            limit: 300
+          },
+          observer.onNext.bind( observer ),
+          ( err ) => {
+            console.log( 'Error when trying to retrieve board actions', err );
+          }
+        );
+      } );
+    } ),
+
+    lists$: Rx.Observable.create( ( observer ) => {
+      input$.subscribe( () => {
+        Trello.get(
+          '/boards/' + boardId + '/lists',
+          {
+            cards: 'open',
+            card_fields: ''
+          },
+          observer.onNext.bind( observer ),
+          ( err ) => {
+            console.log( 'Error when trying to retrieve board lists', err );
+          }
+        );
+      } );
+    } )
+  };
 }
 
 function makeTrelloDriver () {
