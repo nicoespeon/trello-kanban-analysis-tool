@@ -49,7 +49,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 3 },
-        { list: "Card Preparation [2]", numberOfCards: 4 }
+        { list: "Card Preparation", numberOfCards: 4 }
       ]
     },
     {
@@ -57,7 +57,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 3 },
-        { list: "Card Preparation [2]", numberOfCards: 3 }
+        { list: "Card Preparation", numberOfCards: 3 }
       ]
     },
     {
@@ -65,7 +65,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 8 },
         { list: "Icebox Énergie", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 1 }
+        { list: "Card Preparation", numberOfCards: 1 }
       ]
     },
     {
@@ -73,7 +73,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 7 },
         { list: "Icebox Énergie", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 1 }
+        { list: "Card Preparation", numberOfCards: 1 }
       ]
     },
     {
@@ -81,7 +81,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 9 },
         { list: "Icebox Énergie", numberOfCards: 2 },
-        { list: "Card Preparation [2]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 0 }
       ]
     },
     {
@@ -89,7 +89,7 @@ test( 'consolidateActions', ( assert ) => {
       content: [
         { list: "Backlog", numberOfCards: 10 },
         { list: "Icebox Énergie", numberOfCards: 1 },
-        { list: "Card Preparation [2]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 0 }
       ]
     }
   ];
@@ -215,8 +215,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 4 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 8 },
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 1 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -225,8 +225,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 8 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -235,8 +235,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 9 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -245,8 +245,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 10 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -255,8 +255,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -265,8 +265,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
-        { list: "Card Preparation [2]", numberOfCards: 3 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 3 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -275,8 +275,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
-        { list: "Card Preparation [2]", numberOfCards: 4 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 4 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -285,8 +285,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
         { list: "Backlog", numberOfCards: 11 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -295,8 +295,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 11 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -305,8 +305,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 10 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -315,8 +315,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 9 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -325,8 +325,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 10 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 0 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
       ]
     },
     {
@@ -335,8 +335,8 @@ test( 'parseActions', ( assert ) => {
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
         { list: "Backlog", numberOfCards: 9 },
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Production [3]", numberOfCards: 1 }
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 1 }
       ]
     }
   ];
@@ -346,8 +346,8 @@ test( 'parseActions', ( assert ) => {
       { list: "Icebox", numberOfCards: 5 },
       { list: "Icebox Énergie", numberOfCards: 6 },
       { list: "Backlog", numberOfCards: 9 },
-      { list: "Card Preparation [2]", numberOfCards: 2 },
-      { list: "Production [3]", numberOfCards: 1 }
+      { list: "Card Preparation", numberOfCards: 2 },
+      { list: "Production", numberOfCards: 1 }
     ]
   } ];
 

@@ -1,6 +1,11 @@
 import R from 'ramda';
 
-import {groupByWith, sortByDateDesc, uniqByDateLast} from '../utils/utils';
+import {
+  groupByWith,
+  sortByDateDesc,
+  uniqByDateLast,
+  parseListName
+} from '../utils/utils';
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
 // propContent :: {content: a} → a | Undefined
@@ -20,6 +25,14 @@ const consolidateContent = groupByWith(
 // consolidateActions :: [{list: String, numberOfCards: Number}] -> [List] -> [List]
 const consolidateActions = ( initialContent, actions ) => {
   return R.compose(
+    R.map(
+      R.over(
+        R.lensProp( 'content' ),
+        R.map(
+          R.over( R.lensProp( 'list' ), parseListName )
+        )
+      )
+    ),
     R.unary( R.reverse ),
     uniqByDateLast,
     R.scan(

@@ -6,7 +6,8 @@ import {
   groupByWith,
   parseDate,
   sortByDateDesc,
-  uniqByDateLast
+  uniqByDateLast,
+  parseListName
 } from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
@@ -206,3 +207,10 @@ test( 'uniqByDateLast', ( assert ) => {
   assert.looseEquals( result, expected, 'should return a new list with uniq dates, taking the last one' );
   assert.end();
 } );
+
+test('parseListName', (assert) => {
+  assert.equals(parseListName('Card Preparation [4]'), 'Card Preparation', 'should trim trailing WIP indicator');
+  assert.equals(parseListName('Backlog'), 'Backlog', 'should leave a regular list name untouched');
+  assert.equals(parseListName('Live (March 2016)'), 'Live (March 2016)', 'should leave live list name untouched');
+  assert.end();
+});

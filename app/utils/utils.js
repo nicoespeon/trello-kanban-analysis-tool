@@ -40,6 +40,18 @@ const uniqByDateLast = R.compose(
   R.reverse
 );
 
+// Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
+const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
+
+// parseListName :: String -> [String | Undefined]
+const parseListName = R.cond( [
+  [
+    R.test( parsedNamePattern ),
+    R.compose( R.head, R.tail, R.match( parsedNamePattern ) )
+  ],
+  [ R.T, R.identity ]
+] );
+
 // These are Ramda v0.17+ methods.
 // I'm stuck with v0.17.1 because of babel-plugin-ramda which does not support
 // babel v6.x on its latest version.
@@ -59,6 +71,7 @@ export {
   parseDate,
   sortByDateDesc,
   uniqByDateLast,
+  parseListName,
   lensPath,
   pathOr
 };
