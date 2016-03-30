@@ -48,15 +48,13 @@ const consolidateActions = ( initialContent, actions ) => {
 };
 
 // parseCurrentStatus :: String -> [{name: String, cards: Array}] -> [List]
-const parseCurrentStatus = R.curry( ( date, list ) => {
-  return {
-    date: date,
-    content: R.compose(
-      R.unary( R.reverse ),
-      R.map( a => ({ list: a.name, numberOfCards: R.length( a.cards ) }) )
-    )( list )
-  };
-} );
+const parseCurrentStatus = R.curry( ( date, list ) => ({
+  date: date,
+  content: R.compose(
+    R.unary( R.reverse ),
+    R.map( a => ({ list: a.name, numberOfCards: R.length( a.cards ) }) )
+  )( list )
+}) );
 
 // parseActions :: String -> [{name: String, cards: Array}] -> [Action] -> [List]
 const parseActions = R.curry( ( date, lists, actions ) => {
