@@ -25,9 +25,10 @@ const parsedValueAtDate = R.curry( ( list, data, date ) => [
   numberOfCardsAtDate( list, date, data )
 ] );
 
-// parseTrelloData :: [List] -> [Graph]
-const parseTrelloData = ( data ) => {
+// parseTrelloData :: [String] -> [List] -> [Graph]
+const parseTrelloData = R.curry( ( displayedLists, data ) => {
   return R.compose(
+    R.filter( ( data ) => R.contains( R.prop( "key", data ), displayedLists ) ),
     R.map( ( list ) => ({
       key: list,
       values: R.map( parsedValueAtDate( list, data ), R.pluck( 'date', data ) )
@@ -35,6 +36,6 @@ const parseTrelloData = ( data ) => {
     allLists,
     R.defaultTo( [] )
   )( data );
-};
+} );
 
 export {allLists, numberOfCardsAtDate, parseTrelloData};

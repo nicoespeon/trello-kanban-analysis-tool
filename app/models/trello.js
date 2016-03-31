@@ -4,12 +4,10 @@ import {
   groupByWith,
   sortByDateDesc,
   uniqByDateLast,
-  parseListName,
-  isNamedContainedIn
+  parseListName
 } from '../utils/utils';
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
-// propContent :: {content: a} → a | Undefined
 // sumNumberOfCards :: [{numberOfCards: Number}] -> Number
 const sumNumberOfCards = R.compose(
   R.sum,
@@ -68,31 +66,10 @@ const parseActions = R.curry( ( date, lists, actions ) => {
   );
 } );
 
-// filterLists :: [String] -> [List] -> [List]
-const filterLists = R.curry( ( displayedLists, lists ) => {
-  return R.filter( isNamedContainedIn( displayedLists ), lists );
-} );
-
-// filterActions :: [String] -> [Action] -> [Action]
-const filterActions = R.curry( ( displayedLists, actions ) => {
-  return R.filter(
-    R.compose(
-      isNamedContainedIn( displayedLists ),
-      R.cond( [
-        [ R.path( [ "data", "listAfter" ] ), R.path( [ "data", "listAfter" ] ) ],
-        [ R.path( [ "data", "list" ] ), R.path( [ "data", "list" ] ) ]
-      ] )
-    ),
-    actions
-  );
-} );
-
 export {
   sumNumberOfCards,
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions,
-  filterLists,
-  filterActions
+  parseActions
 };

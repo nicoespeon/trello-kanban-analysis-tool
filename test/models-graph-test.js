@@ -91,19 +91,10 @@ test( 'parseTrelloData', ( assert ) => {
         [ new Date( "2016-03-02" ).getTime(), 4 ],
         [ new Date( "2016-03-03" ).getTime(), 5 ]
       ]
-    },
-    {
-      "key": "Icebox Énergie",
-      "values": [
-        [ new Date( "2016-01-20" ).getTime(), 0 ],
-        [ new Date( "2016-02-04" ).getTime(), 0 ],
-        [ new Date( "2016-02-08" ).getTime(), 0 ],
-        [ new Date( "2016-03-02" ).getTime(), 0 ],
-        [ new Date( "2016-03-03" ).getTime(), 1 ]
-      ]
     }
   ];
-  const result = parseTrelloData( [
+  const displayedLists = [ "Backlog", "Card Preparation [2]" ];
+  const data = [
     {
       date: "2016-01-20",
       content: [
@@ -139,11 +130,12 @@ test( 'parseTrelloData', ( assert ) => {
         { list: "Icebox Énergie", numberOfCards: 1 }
       ]
     }
-  ] );
+  ];
 
-  assert.looseEquals( result, expected, 'should correctly parse Trello data to be rendered' );
-  assert.looseEquals( parseTrelloData(), [], 'should return an empty list if no data is passed' );
-  assert.looseEquals( parseTrelloData( [] ), [], 'should return an empty list if empty data is passed' );
-  assert.looseEquals( parseTrelloData( {} ), [], 'should return an empty list if data passed is an object' );
+  assert.looseEquals( parseTrelloData( displayedLists, data ), expected, 'should correctly parse Trello data to be rendered' );
+  assert.looseEquals( parseTrelloData( displayedLists )( data ), expected, 'should be curried' );
+  assert.looseEquals( parseTrelloData( displayedLists, null ), [], 'should return an empty list if no data is passed' );
+  assert.looseEquals( parseTrelloData( displayedLists, [] ), [], 'should return an empty list if empty data is passed' );
+  assert.looseEquals( parseTrelloData( displayedLists, {} ), [], 'should return an empty list if data passed is an object' );
   assert.end();
 } );
