@@ -17,7 +17,8 @@ function buttonView ( state$ ) {
 function main ( { DOM, Trello } ) {
   const buttonClicks$ = DOM.select( 'button' ).events( 'click' );
 
-  let trelloActions$ = Rx.Observable.combineLatest(
+  const displayedLists = [ "Backlog", "Card Preparation", "Production", "Tests QA", "Mise en live", "In Production", "Live (March 2016)" ];
+  const trelloActions$ = Rx.Observable.combineLatest(
     Trello.lists$.startWith( [] ),
     Trello.actions$.startWith( [] ),
     parseActions( moment().format( 'YYYY-MM-DD' ) )
@@ -26,7 +27,7 @@ function main ( { DOM, Trello } ) {
   return {
     DOM: buttonView( buttonClicks$.startWith( false ) ),
     Trello: buttonClicks$,
-    graph: trelloActions$.map( parseTrelloData ),
+    graph: trelloActions$.map( parseTrelloData( displayedLists ) ),
     log: trelloActions$
   };
 }
