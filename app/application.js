@@ -15,7 +15,7 @@ function buttonView ( state$ ) {
 }
 
 function main ( { DOM, Trello } ) {
-  const buttonClicks$ = DOM.select( 'button' ).events( 'click' );
+  const buttonClicks$ = DOM.select( 'button' ).events( 'click' ).startWith( false );
 
   const displayedLists = [ "Backlog", "Card Preparation", "Production", "Tests QA", "Mise en live", "In Production", "Live (March 2016)" ];
   const trelloActions$ = Rx.Observable.combineLatest(
