@@ -8,7 +8,7 @@ import {makeTrelloDriver} from './drivers/trello';
 import {makeGraphDriver} from './drivers/graph';
 import logDriver from './drivers/log';
 
-import {parseActions} from './models/trello';
+import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
 function selectView ( id, labelText, match, lists ) {
@@ -41,8 +41,7 @@ function main ( { DOM, Trello } ) {
     .select( '#last-displayed-list' )
     .events( 'input' )
     .map( ev => ev.target.value )
-    // TODO - take last column value by default
-    .startWith( "Live (March 2016)" );
+    .startWith( false );
 
   const trelloLists$ = Trello.lists$.startWith( [] );
 
@@ -50,8 +49,7 @@ function main ( { DOM, Trello } ) {
     trelloLists$,
     firstDisplayedListChanges$,
     lastDisplayedListChanges$,
-    // TODO - implement this
-    () => [ "Backlog", "Card Preparation", "Production", "Tests QA", "Mise en live", "In Production", "Live (March 2016)" ]
+    getDisplayedLists
   );
 
   const trelloActions$ = Observable.combineLatest(
@@ -59,7 +57,7 @@ function main ( { DOM, Trello } ) {
     Trello.actions$.startWith( [] ),
     parseActions( moment().format( 'YYYY-MM-DD' ) )
   );
-  
+
   const trelloData$ = Observable.combineLatest(
     displayedLists$,
     trelloActions$,
@@ -71,18 +69,27 @@ function main ( { DOM, Trello } ) {
   return {
     DOM: Observable.combineLatest(
       lists$,
-      firstDisplayedListChanges$,
-      lastDisplayedListChanges$,
-      ( lists, first, last ) =>
+      displayedLists$,
+      ( lists, displayedLists ) =>
         div( [
           button( 'Get actions' ),
-          selectView( 'first-displayed-list', 'Work begins', first, lists ),
-          selectView( 'last-displayed-list', 'Work ends', last, lists )
+          selectView(
+            'first-displayed-list',
+            'Work begins',
+            R.head( displayedLists ),
+            lists
+          ),
+          selectView(
+            'last-displayed-list',
+            'Work ends',
+            R.last( displayedLists ),
+            lists
+          )
         ] )
     ),
     Trello: buttonClicks$,
     graph: trelloData$,
-    log: lists$
+    log: trelloLists$
   };
 }
 

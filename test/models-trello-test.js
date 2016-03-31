@@ -8,7 +8,8 @@ import {
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions
+  parseActions,
+  getDisplayedLists
 } from '../app/models/trello';
 
 test( 'sumNumberOfCards', ( assert ) => {
@@ -354,5 +355,44 @@ test( 'parseActions', ( assert ) => {
   assert.looseEquals( parseActions( "2016-05-01", trelloLists, trelloActions ), expected, 'should correctly parse Trello actions' );
   assert.looseEquals( parseActions( "2016-05-01" )( trelloLists, trelloActions ), expected, 'should be curried' );
   assert.looseEquals( parseActions( "2016-05-01", trelloLists, [] ), expectedWithEmptyActions, 'should handle empty actions' );
+  assert.end();
+} );
+
+test( 'getDisplayedLists', ( assert ) => {
+  const expected = [
+    "Backlog",
+    "Card Preparation",
+    "Production",
+    "Mise en live",
+    "In Production"
+  ];
+  const data = [
+    { "name": "Goals - Key Metrics" },
+    { "name": "Templates" },
+    { "name": "Icebox" },
+    { "name": "Icebox Énergie" },
+    { "name": "Backlog" },
+    { "name": "Card Preparation [2]" },
+    { "name": "Production [3]" },
+    { "name": "Mise en live [1]" },
+    { "name": "In Production" },
+    { "name": "Live (March 2016)" }
+  ];
+
+  assert.deepEquals(
+    getDisplayedLists( data, "Backlog", "In Production" ),
+    expected,
+    'should return names of list included within given range'
+  );
+  assert.deepEquals(
+    getDisplayedLists( data, "Backlog", "Production [3]" ),
+    [ "Backlog", "Card Preparation", "Production" ],
+    'should parse given names for comparison'
+  );
+  assert.deepEquals(
+    getDisplayedLists( data, "Production [3]", false ),
+    [ "Production", "Mise en live", "In Production", "Live (March 2016)" ],
+    'should take all names until the end if last is false'
+  );
   assert.end();
 } );

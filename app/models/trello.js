@@ -66,10 +66,21 @@ const parseActions = R.curry( ( date, lists, actions ) => {
   );
 } );
 
+// getDisplayedLists :: [{name: String}] -> String -> String -> [String]
+const getDisplayedLists = ( lists, first, last ) => {
+  const names = R.compose( R.map( parseListName ), R.pluck( "name" ) )( lists );
+  return R.slice(
+    R.indexOf( parseListName( first ), names ),
+    R.indexOf( parseListName( last ), names ) + 1 || R.length( lists ),
+    names
+  );
+};
+
 export {
   sumNumberOfCards,
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions
+  parseActions,
+  getDisplayedLists
 };
