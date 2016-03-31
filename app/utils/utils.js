@@ -52,6 +52,11 @@ const parseListName = R.cond( [
   [ R.T, R.identity ]
 ] );
 
+// isNamedContainedIn :: [String] -> [{name: String}] -> [{name: String}]
+const isNamedContainedIn = R.curry( ( names, a ) => {
+  return R.contains( R.prop( "name", a ), names )
+} );
+
 // These are Ramda v0.17+ methods.
 // I'm stuck with v0.17.1 because of babel-plugin-ramda which does not support
 // babel v6.x on its latest version.
@@ -72,6 +77,7 @@ export {
   sortByDateDesc,
   uniqByDateLast,
   parseListName,
+  isNamedContainedIn,
   lensPath,
   pathOr
 };

@@ -7,7 +7,8 @@ import {
   parseDate,
   sortByDateDesc,
   uniqByDateLast,
-  parseListName
+  parseListName,
+  isNamedContainedIn
 } from '../app/utils/utils';
 
 test( 'countByWith', ( assert ) => {
@@ -79,9 +80,9 @@ test( 'groupByWith', ( assert ) => {
     'should work if we pass arguments one by one'
   );
   assert.looseEquals(
-    groupByWith( R.prop( 'grade' ), fn, {} ), 
-    [], 
-    'should return an empty array if data is an object' 
+    groupByWith( R.prop( 'grade' ), fn, {} ),
+    [],
+    'should return an empty array if data is an object'
   );
 
   assert.end();
@@ -208,9 +209,17 @@ test( 'uniqByDateLast', ( assert ) => {
   assert.end();
 } );
 
-test('parseListName', (assert) => {
-  assert.equals(parseListName('Card Preparation [4]'), 'Card Preparation', 'should trim trailing WIP indicator');
-  assert.equals(parseListName('Backlog'), 'Backlog', 'should leave a regular list name untouched');
-  assert.equals(parseListName('Live (March 2016)'), 'Live (March 2016)', 'should leave live list name untouched');
+test( 'parseListName', ( assert ) => {
+  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
+  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
+  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
   assert.end();
-});
+} );
+
+test( 'isNamedContainedIn', ( assert ) => {
+  assert.equals( isNamedContainedIn( [ "lorem", "ipsum" ], { name: "ipsum" } ), true, 'should return true if object name is contained in given list' );
+  assert.equals( isNamedContainedIn( [ "lorem", "ipsum" ], { name: "dolor" } ), false, 'should return false if object name is not contained in given list' );
+  assert.equals( isNamedContainedIn( [ "lorem", "ipsum" ], { yolo: "ipsum" } ), false, 'should return false if object has no name' );
+  assert.equals( isNamedContainedIn( [ "lorem", "ipsum" ] )( { name: "ipsum" } ), true, 'should be curried' );
+  assert.end();
+} );

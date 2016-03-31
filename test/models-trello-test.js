@@ -8,7 +8,8 @@ import {
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions
+  parseActions,
+  filterLists,
 } from '../app/models/trello';
 
 test( 'sumNumberOfCards', ( assert ) => {
@@ -356,3 +357,35 @@ test( 'parseActions', ( assert ) => {
   assert.looseEquals( parseActions( "2016-05-01", trelloLists, [] ), expectedWithEmptyActions, 'should handle empty actions' );
   assert.end();
 } );
+
+test( 'filterLists', ( assert ) => {
+  const expected = [
+    {
+      "id": "4eea4ffc91e31d179270127c",
+      "name": "Production [3]",
+      "cards": [
+        { "id": "4eea501f91e31d1746098724" }
+      ]
+    },
+    {
+      "id": "4eea4ffc91e31d174600004c",
+      "name": "Backlog",
+      "cards": [
+        { "id": "4eea501f91e31d1746000064" },
+        { "id": "4eea501f92e31d1746000063" },
+        { "id": "4eea501f91e31d1729800062" },
+        { "id": "4eea502b91e31d1746000071" },
+        { "id": "4eea502b91e31d1746000061" },
+        { "id": "4eea502b91e31d1746000051" },
+        { "id": "4eea502b91e31d1746000041" },
+        { "id": "4eea502b91e31d1746000031" },
+        { "id": "4eea502b91e31d1746000021" }
+      ]
+    }
+  ];
+
+  assert.deepEquals( filterLists( [ "Backlog", "Production [3]" ], trelloLists ), expected, 'should filter lists based on given displayed names' );
+  assert.deepEquals( filterLists( [ "Backlog", "Production [3]" ] )( trelloLists ), expected, 'should be curried' );
+  assert.end();
+} );
+

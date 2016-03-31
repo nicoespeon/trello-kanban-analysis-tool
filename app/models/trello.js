@@ -4,7 +4,8 @@ import {
   groupByWith,
   sortByDateDesc,
   uniqByDateLast,
-  parseListName
+  parseListName,
+  isNamedContainedIn
 } from '../utils/utils';
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
@@ -67,10 +68,16 @@ const parseActions = R.curry( ( date, lists, actions ) => {
   );
 } );
 
+// filterLists :: [String] -> [List] -> [List]
+const filterLists = R.curry( ( displayedLists, lists ) => {
+  return R.filter( isNamedContainedIn( displayedLists ), lists );
+} );
+
 export {
   sumNumberOfCards,
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions
+  parseActions,
+  filterLists,
 };
