@@ -73,6 +73,20 @@ const filterLists = R.curry( ( displayedLists, lists ) => {
   return R.filter( isNamedContainedIn( displayedLists ), lists );
 } );
 
+// filterActions :: [String] -> [Action] -> [Action]
+const filterActions = R.curry( ( displayedLists, actions ) => {
+  return R.filter(
+    R.compose(
+      isNamedContainedIn( displayedLists ),
+      R.cond( [
+        [ R.path( [ "data", "listAfter" ] ), R.path( [ "data", "listAfter" ] ) ],
+        [ R.path( [ "data", "list" ] ), R.path( [ "data", "list" ] ) ]
+      ] )
+    ),
+    actions
+  );
+} );
+
 export {
   sumNumberOfCards,
   consolidateContent,
@@ -80,4 +94,5 @@ export {
   parseCurrentStatus,
   parseActions,
   filterLists,
+  filterActions
 };
