@@ -40,6 +40,21 @@ const uniqByDateLast = R.compose(
   R.reverse
 );
 
+// _filterByDate :: (String -> String -> Boolean) -> String -> [{date: String}] -> [{date: String}]
+const _filterByDate = R.curry( ( fn, date, items ) => R.filter(
+  R.propSatisfies(
+    x => R.or( R.isNil( date ), fn( x, date ) ),
+    'date'
+  ),
+  items
+) );
+
+// filterBeforeDate :: String -> [{date: String}] -> [{date: String}]
+const filterBeforeDate = _filterByDate( R.lt );
+
+// filterAfterDate :: String -> [{date: String}] -> [{date: String}]
+const filterAfterDate = _filterByDate( R.gt );
+
 // Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
 const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
 
@@ -71,6 +86,8 @@ export {
   parseDate,
   sortByDateDesc,
   uniqByDateLast,
+  filterBeforeDate,
+  filterAfterDate,
   parseListName,
   lensPath,
   pathOr

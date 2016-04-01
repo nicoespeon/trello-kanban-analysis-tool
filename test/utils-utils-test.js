@@ -7,6 +7,8 @@ import {
   parseDate,
   sortByDateDesc,
   uniqByDateLast,
+  filterBeforeDate,
+  filterAfterDate,
   parseListName
 } from '../app/utils/utils';
 
@@ -205,6 +207,48 @@ test( 'uniqByDateLast', ( assert ) => {
   ] );
 
   assert.looseEquals( result, expected, 'should return a new list with uniq dates, taking the last one' );
+  assert.end();
+} );
+
+test( 'filterBeforeDate', ( assert ) => {
+  const expected = [
+    { date: "2016-03-24T16:37:02.704Z" },
+    { date: "2016-03-23T23:59:02.704Z" },
+    { date: "2016-03-27T09:54:44.570Z" }
+  ];
+  const data = [
+    { date: "2016-03-24T16:37:02.704Z" },
+    { date: "2016-04-10T14:31:49.139Z" },
+    { date: "2016-03-23T23:59:02.704Z" },
+    { date: "2016-03-27T09:54:44.570Z" },
+    { date: "2016-04-06T10:02:36.133Z" }
+  ];
+
+  assert.deepEquals( filterBeforeDate( '2016-04-01T12:00:44.570Z', data ), expected, 'should filter dates that are before endDate' );
+  assert.deepEquals( filterBeforeDate( '2016-04-01T12:00:44.570Z' )( data ), expected, 'should be curried' );
+  assert.deepEquals( filterBeforeDate( '2016-04-01', data ), expected, 'should handle shortened endDate representation' );
+  assert.deepEquals( filterBeforeDate( null, data ), data, 'should return the whole list if no endDate is provided' );
+  assert.end();
+} );
+
+test( 'filterAfterDate', ( assert ) => {
+  const expected = [
+    { date: "2016-04-10T14:31:49.139Z" },
+    { date: "2016-03-27T09:54:44.570Z" },
+    { date: "2016-04-06T10:02:36.133Z" }
+  ];
+  const data = [
+    { date: "2016-03-24T16:37:02.704Z" },
+    { date: "2016-04-10T14:31:49.139Z" },
+    { date: "2016-03-23T23:59:02.704Z" },
+    { date: "2016-03-27T09:54:44.570Z" },
+    { date: "2016-04-06T10:02:36.133Z" }
+  ];
+
+  assert.deepEquals( filterAfterDate( '2016-03-26T12:00:44.570Z', data ), expected, 'should filter dates that are after startDate' );
+  assert.deepEquals( filterAfterDate( '2016-03-26T12:00:44.570Z' )( data ), expected, 'should be curried' );
+  assert.deepEquals( filterAfterDate( '2016-03-27', data ), expected, 'should handle shortened startDate representation' );
+  assert.deepEquals( filterAfterDate( null, data ), data, 'should return the whole list if no startDate is provided' );
   assert.end();
 } );
 
