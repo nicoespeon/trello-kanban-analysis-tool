@@ -11,15 +11,15 @@ import logDriver from './drivers/log';
 import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
-function selectView ( id, labelText, match, lists ) {
+function selectView ( id, labelText, selected, values ) {
   return div( [
     label( { htmlFor: id }, labelText ),
     select(
       { id: id, name: id },
-      [ R.map( name => R.cond( [
-        [ R.equals( match ), R.always( option( { selected: true }, name ) ) ],
-        [ R.T, R.always( option( name ) ) ]
-      ] )( name ), lists ) ]
+      [ R.map( value => R.cond( [
+        [ R.equals( selected ), R.always( option( { selected: true }, value ) ) ],
+        [ R.T, R.always( option( value ) ) ]
+      ] )( value ), values ) ]
     )
   ] );
 }
@@ -45,23 +45,17 @@ function main ( { DOM, Trello } ) {
 
   const trelloLists$ = Trello.lists$.startWith( [] );
 
-  const displayedLists$ = Observable.combineLatest(
-    trelloLists$,
-    firstDisplayedListChanges$,
-    lastDisplayedListChanges$,
-    getDisplayedLists
-  );
-
   const trelloActions$ = Observable.combineLatest(
     trelloLists$,
     Trello.actions$.startWith( [] ),
     parseActions( moment().format( 'YYYY-MM-DD' ) )
   );
 
-  const trelloData$ = Observable.combineLatest(
-    displayedLists$,
-    trelloActions$,
-    parseTrelloData
+  const displayedLists$ = Observable.combineLatest(
+    trelloLists$,
+    firstDisplayedListChanges$,
+    lastDisplayedListChanges$,
+    getDisplayedLists
   );
 
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
@@ -88,7 +82,11 @@ function main ( { DOM, Trello } ) {
         ] )
     ),
     Trello: buttonClicks$,
-    graph: trelloData$,
+    graph: Observable.combineLatest(
+      displayedLists$,
+      trelloActions$,
+      parseTrelloData
+    ),
     log: trelloLists$
   };
 }
