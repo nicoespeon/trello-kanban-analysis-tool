@@ -11,6 +11,8 @@ import logDriver from './drivers/log';
 import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
+import {filterAfterDate} from './utils/utils';
+
 function selectView ( id, labelText, selected, values ) {
   return div( [
     label( { htmlFor: id }, labelText ),
@@ -44,10 +46,13 @@ function main ( { DOM, Trello } ) {
     .startWith( false );
 
   const trelloLists$ = Trello.lists$.startWith( [] );
+  const trelloActions$ = Trello.actions$
+    .map( filterAfterDate( moment().date( 1 ).format( 'YYYY-MM-DD' ) ) )
+    .startWith( [] );
 
-  const trelloActions$ = Observable.combineLatest(
+  const actions$ = Observable.combineLatest(
     trelloLists$,
-    Trello.actions$.startWith( [] ),
+    trelloActions$,
     parseActions( moment().format( 'YYYY-MM-DD' ) )
   );
 
@@ -84,7 +89,7 @@ function main ( { DOM, Trello } ) {
     Trello: buttonClicks$,
     graph: Observable.combineLatest(
       displayedLists$,
-      trelloActions$,
+      actions$,
       parseTrelloData
     ),
     log: trelloLists$
