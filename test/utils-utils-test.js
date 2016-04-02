@@ -224,9 +224,23 @@ test( 'filterBeforeDate', ( assert ) => {
     { date: "2016-04-06T10:02:36.133Z" }
   ];
 
+  const expectedShortened = [
+    { date: "2016-03-24" },
+    { date: "2016-03-23" },
+    { date: "2016-03-27" }
+  ];
+  const dataShortened = [
+    { date: "2016-03-24" },
+    { date: "2016-04-10" },
+    { date: "2016-03-23" },
+    { date: "2016-03-27" },
+    { date: "2016-04-06" }
+  ];
+
   assert.deepEquals( filterBeforeDate( '2016-04-01T12:00:44.570Z', data ), expected, 'should filter dates that are before endDate' );
   assert.deepEquals( filterBeforeDate( '2016-04-01T12:00:44.570Z' )( data ), expected, 'should be curried' );
   assert.deepEquals( filterBeforeDate( '2016-04-01', data ), expected, 'should handle shortened endDate representation' );
+  assert.deepEquals( filterBeforeDate( '2016-04-01', dataShortened ), expectedShortened, 'should handle shortened dates representation' );
   assert.deepEquals( filterBeforeDate( null, data ), data, 'should return the whole list if no endDate is provided' );
   assert.end();
 } );
@@ -245,9 +259,23 @@ test( 'filterAfterDate', ( assert ) => {
     { date: "2016-04-06T10:02:36.133Z" }
   ];
 
+  const expectedShortened = [
+    { date: "2016-04-10" },
+    { date: "2016-03-27" },
+    { date: "2016-04-06" }
+  ];
+  const dataShortened = [
+    { date: "2016-03-24" },
+    { date: "2016-04-10" },
+    { date: "2016-03-23" },
+    { date: "2016-03-27" },
+    { date: "2016-04-06" }
+  ];
+
   assert.deepEquals( filterAfterDate( '2016-03-26T12:00:44.570Z', data ), expected, 'should filter dates that are after startDate' );
   assert.deepEquals( filterAfterDate( '2016-03-26T12:00:44.570Z' )( data ), expected, 'should be curried' );
   assert.deepEquals( filterAfterDate( '2016-03-27', data ), expected, 'should handle shortened startDate representation' );
+  assert.deepEquals( filterAfterDate( '2016-03-27', dataShortened ), expectedShortened, 'should handle shortened dates representation' );
   assert.deepEquals( filterAfterDate( null, data ), data, 'should return the whole list if no startDate is provided' );
   assert.end();
 } );

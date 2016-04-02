@@ -53,7 +53,7 @@ const _filterByDate = R.curry( ( fn, date, items ) => R.filter(
 const filterBeforeDate = _filterByDate( R.lt );
 
 // filterAfterDate :: String -> [{date: String}] -> [{date: String}]
-const filterAfterDate = _filterByDate( R.gt );
+const filterAfterDate = _filterByDate( R.gte );
 
 // Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
 const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
