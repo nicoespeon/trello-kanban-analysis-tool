@@ -11,7 +11,7 @@ import logDriver from './drivers/log';
 import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
-import {filterAfterDate} from './utils/utils';
+import {filterBetweenDates} from './utils/utils';
 
 function selectView ( id, labelText, selected, values ) {
   return div( [
@@ -27,6 +27,17 @@ function selectView ( id, labelText, selected, values ) {
 }
 
 function main ( { DOM, Trello } ) {
+  const dateFormat = 'YYYY-MM-DD';
+  const lastMonth = moment()
+    .month( moment().month() - 1 )
+    .date( 1 )
+    .format( dateFormat );
+  const endOfLastMonth = moment( lastMonth )
+    .date( moment( lastMonth, dateFormat ).daysInMonth() )
+    .format( dateFormat );
+  const currentMonth = moment().date( 1 ).format( dateFormat );
+  const today = moment().format( dateFormat );
+
   // TODO - refactor these with components (button, select, trello)
   const getActionsClicks$ = DOM
     .select( '#get-actions' )
@@ -46,14 +57,29 @@ function main ( { DOM, Trello } ) {
     .startWith( false );
 
   const trelloLists$ = Trello.lists$.startWith( [] );
-  const trelloActions$ = Trello.actions$
-    .map( filterAfterDate( moment().date( 1 ).format( 'YYYY-MM-DD' ) ) )
-    .startWith( [] );
+  const trelloActions$ = Trello.actions$.startWith( [] );
+
+  const lastMonthDates$ = DOM
+    .select( '#last-month' )
+    .events( 'click' )
+    .map( R.always( { startDate: lastMonth, endDate: endOfLastMonth } ) );
+
+  const currentMonthDates$ = DOM
+    .select( '#current-month' )
+    .events( 'click' )
+    .map( R.always( { startDate: currentMonth, endDate: null } ) );
+
+  const dates$ = Observable.merge( lastMonthDates$, currentMonthDates$, )
+    .startWith( { startDate: currentMonth, endDate: null } );
 
   const actions$ = Observable.combineLatest(
+    dates$,
     trelloLists$,
     trelloActions$,
-    parseActions( moment().format( 'YYYY-MM-DD' ) )
+    ( { startDate, endDate }, lists, actions ) => R.compose(
+      filterBetweenDates( startDate, endDate ),
+      parseActions( today, lists ),
+    )( actions )
   );
 
   const displayedLists$ = Observable.combineLatest(
@@ -72,6 +98,8 @@ function main ( { DOM, Trello } ) {
       ( lists, displayedLists ) =>
         div( [
           button( { id: 'get-actions' }, 'Get actions' ),
+          button( { id: 'last-month' }, 'Last month' ),
+          button( { id: 'current-month' }, 'Current month' ),
           selectView(
             'first-displayed-list',
             'Work begins',
