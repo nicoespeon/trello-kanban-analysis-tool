@@ -55,6 +55,12 @@ const filterBeforeDate = _filterByDate( R.lt );
 // filterAfterDate :: String -> [{date: String}] -> [{date: String}]
 const filterAfterDate = _filterByDate( R.gte );
 
+// filterBetweenDates :: String -> String -> [{date: String}] -> [{date: String}]
+const filterBetweenDates = R.curry( ( startDate, endDate, items ) => R.compose(
+  filterBeforeDate( endDate ),
+  filterAfterDate( startDate )
+)( items ) );
+
 // Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
 const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
 
@@ -88,6 +94,7 @@ export {
   uniqByDateLast,
   filterBeforeDate,
   filterAfterDate,
+  filterBetweenDates,
   parseListName,
   lensPath,
   pathOr

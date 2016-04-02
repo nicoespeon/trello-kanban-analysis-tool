@@ -9,6 +9,7 @@ import {
   uniqByDateLast,
   filterBeforeDate,
   filterAfterDate,
+  filterBetweenDates,
   parseListName
 } from '../app/utils/utils';
 
@@ -277,6 +278,39 @@ test( 'filterAfterDate', ( assert ) => {
   assert.deepEquals( filterAfterDate( '2016-03-27', data ), expected, 'should handle shortened startDate representation' );
   assert.deepEquals( filterAfterDate( '2016-03-27', dataShortened ), expectedShortened, 'should handle shortened dates representation' );
   assert.deepEquals( filterAfterDate( null, data ), data, 'should return the whole list if no startDate is provided' );
+  assert.end();
+} );
+
+test( 'filterBetweenDates', ( assert ) => {
+  const expected = [
+    { date: "2016-03-27T09:54:44.570Z" },
+    { date: "2016-04-06T10:02:36.133Z" }
+  ];
+  const data = [
+    { date: "2016-03-24T16:37:02.704Z" },
+    { date: "2016-04-10T14:31:49.139Z" },
+    { date: "2016-03-23T23:59:02.704Z" },
+    { date: "2016-03-27T09:54:44.570Z" },
+    { date: "2016-04-06T10:02:36.133Z" }
+  ];
+
+  const expectedShortened = [
+    { date: "2016-03-27" },
+    { date: "2016-04-06" }
+  ];
+  const dataShortened = [
+    { date: "2016-03-24" },
+    { date: "2016-04-10" },
+    { date: "2016-03-23" },
+    { date: "2016-03-27" },
+    { date: "2016-04-06" }
+  ];
+
+  assert.deepEquals( filterBetweenDates( '2016-03-26T12:00:44.570Z', '2016-04-07T12:00:44.570Z', data ), expected, 'should filter dates that are between bound dates' );
+  assert.deepEquals( filterBetweenDates( '2016-03-26T12:00:44.570Z', '2016-04-07T12:00:44.570Z' )( data ), expected, 'should be curried' );
+  assert.deepEquals( filterBetweenDates( '2016-03-27', '2016-04-07', data ), expected, 'should handle shortened bound dates representation' );
+  assert.deepEquals( filterBetweenDates( '2016-03-27', '2016-04-07', dataShortened ), expectedShortened, 'should handle shortened dates representation' );
+  assert.deepEquals( filterBetweenDates( null, null, data ), data, 'should return the whole list if no bound dates are provided' );
   assert.end();
 } );
 
