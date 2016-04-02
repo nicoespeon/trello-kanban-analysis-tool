@@ -98,7 +98,7 @@ function main ( { DOM, Trello } ) {
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
-  Trello: makeTrelloDriver(),
+  Trello: makeTrelloDriver( 'LydFpONf' ),
   graph: makeGraphDriver( '#chart svg' ),
   log: logDriver
 };

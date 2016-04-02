@@ -1,17 +1,16 @@
-import Rx from 'rx';
+import R from 'ramda';
+import {Observable} from 'rx';
 
-const boardId = 'LydFpONf';
-
-function trelloSinkDriver ( input$ ) {
+const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
   return {
-    actions$: Rx.Observable.create( ( observer ) => {
+    actions$: Observable.create( ( observer ) => {
       input$.subscribe( () => {
         Trello.get(
           '/boards/' + boardId + '/actions',
           {
             filter: 'createCard,deleteCard,updateCard',
             fields: 'data,date,type',
-            limit: 300
+            limit: 500
           },
           observer.onNext.bind( observer ),
           ( err ) => {
@@ -21,13 +20,13 @@ function trelloSinkDriver ( input$ ) {
       } );
     } ),
 
-    lists$: Rx.Observable.create( ( observer ) => {
+    lists$: Observable.create( ( observer ) => {
       input$.subscribe( () => {
         Trello.get(
           '/boards/' + boardId + '/lists',
           {
             cards: 'open',
-            card_fields: ''
+            card_fields: ''
           },
           observer.onNext.bind( observer ),
           ( err ) => {
@@ -37,9 +36,9 @@ function trelloSinkDriver ( input$ ) {
       } );
     } )
   };
-}
+} );
 
-function makeTrelloDriver () {
+function makeTrelloDriver ( boardId ) {
   Trello.authorize( {
     type: 'popup',
     name: 'Trello Kanban',
@@ -50,7 +49,7 @@ function makeTrelloDriver () {
     error: () => console.log( 'Error on Trello connexion.' )
   } );
 
-  return trelloSinkDriver;
+  return trelloSinkDriver( boardId );
 }
 
 export {makeTrelloDriver};
