@@ -28,8 +28,8 @@ function selectView ( id, labelText, selected, values ) {
 
 function main ( { DOM, Trello } ) {
   // TODO - refactor these with components (button, select, trello)
-  const buttonClicks$ = DOM
-    .select( 'button' )
+  const getActionsClicks$ = DOM
+    .select( '#get-actions' )
     .events( 'click' )
     .startWith( false );
 
@@ -71,7 +71,7 @@ function main ( { DOM, Trello } ) {
       displayedLists$,
       ( lists, displayedLists ) =>
         div( [
-          button( 'Get actions' ),
+          button( { id: 'get-actions' }, 'Get actions' ),
           selectView(
             'first-displayed-list',
             'Work begins',
@@ -86,7 +86,7 @@ function main ( { DOM, Trello } ) {
           )
         ] )
     ),
-    Trello: buttonClicks$,
+    Trello: getActionsClicks$,
     graph: Observable.combineLatest(
       displayedLists$,
       actions$,
