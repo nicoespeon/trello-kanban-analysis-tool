@@ -1,4 +1,5 @@
 import R from 'ramda';
+import moment from 'moment';
 
 // countByWith :: (a -> String) -> (String,Number -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const countByWith = R.curry( ( prop, fn, data ) => {
@@ -27,17 +28,60 @@ const groupByWith = R.curry( ( prop, fn, data ) => {
 // parseDate :: String -> String
 const parseDate = R.compose( R.head, R.split( 'T' ) );
 
+// sortByDate :: [{date: String}] -> [{date: String}]
+const sortByDate = R.sortBy( R.prop( 'date' ) );
+
 // sortByDateDesc :: [{date: String}] -> [{date: String}]
 const sortByDateDesc = R.compose(
   R.unary( R.reverse ),
-  R.sortBy( R.prop( 'date' ) )
+  sortByDate
 );
 
-// uniqByDateLast :: [{date: String}] -> [{date: String}]
-const uniqByDateLast = R.compose(
-  R.unary( R.reverse ),
+// uniqByDateDesc :: [{date: String}] -> [{date: String}]
+const uniqByDateDesc = R.compose(
   R.uniqBy( R.prop( 'date' ) ),
   R.reverse
+);
+
+// nextDay :: String -> String
+const nextDay = ( date ) => moment( date ).add( 1, 'days' ).format( 'YYYY-MM-DD' );
+
+// _withNextDay :: [{date: String}] -> [{date: String}]
+const _withNextDay = R.over( R.lensProp( 'date' ), nextDay );
+
+// _wasPreviousDateOf :: [{date: String}] -> [{date: String}] -> Boolean
+const _wasPreviousDateOf = R.curry( ( a, b ) => {
+  return R.propEq( 'date', nextDay( R.prop( 'date', b ) ), a );
+} );
+
+// _scanMissingDate :: [{date: String|undefined}|[{date: String}]] -> [{date: String}] -> [{date: String}|[{date: String}]]
+function _scanMissingDate ( a, b ) {
+  return R.compose(
+    R.cond( [
+      [
+        R.either( R.isEmpty, _wasPreviousDateOf( b ) ),
+        R.always( b )
+      ],
+      [
+        R.T,
+        ( a ) => [
+          _withNextDay( a ),
+          _scanMissingDate( _withNextDay( a ), b )
+        ]
+      ]
+    ] ),
+    R.last,
+    R.flatten,
+    R.concat( [] )
+  )( a );
+}
+
+// fillMissingDates :: [{date: String}] -> [{date: String}]
+const fillMissingDates = R.compose(
+  R.tail,
+  R.flatten,
+  R.scan( _scanMissingDate, {} ),
+  sortByDate
 );
 
 // _filterByDate :: (String -> String -> Boolean) -> String -> [{date: String}] -> [{date: String}]
@@ -90,8 +134,11 @@ export {
   countByWith,
   groupByWith,
   parseDate,
+  sortByDate,
   sortByDateDesc,
-  uniqByDateLast,
+  uniqByDateDesc,
+  nextDay,
+  fillMissingDates,
   filterBeforeDate,
   filterAfterDate,
   filterBetweenDates,

@@ -27,7 +27,7 @@ export default [
       }
     },
     "type": "updateCard",
-    "date": "2016-04-10T14:31:49.139Z",
+    "date": "2016-03-10T14:31:49.139Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -56,7 +56,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-04-06T10:02:36.133Z",
+    "date": "2016-03-09T10:02:36.133Z",
     "memberCreator": {
       "id": "50cf3712e418f91048000565",
       "avatarHash": "290d0fdd2a31f2401ce195ad585b10ff",
@@ -84,7 +84,7 @@ export default [
       }
     },
     "type": "deleteCard",
-    "date": "2016-03-27T09:54:44.570Z",
+    "date": "2016-03-06T09:54:44.570Z",
     "memberCreator": {
       "id": "55dacd3db42afb6c68ef0288",
       "avatarHash": "f1746a17e476aadcb59f42ae4d32b547",
@@ -112,7 +112,7 @@ export default [
       }
     },
     "type": "deleteCard",
-    "date": "2016-03-24T16:37:02.704Z",
+    "date": "2016-03-05T16:37:02.704Z",
     "memberCreator": {
       "id": "50cf37ec948ad4ac32000f1f",
       "avatarHash": "893ac5d6a6dfad2d0cec2c20b298a366",
@@ -141,7 +141,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-03-23T09:37:28.552Z",
+    "date": "2016-03-04T09:37:28.552Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -169,7 +169,7 @@ export default [
       }
     },
     "type": "deleteCard",
-    "date": "2016-03-13T12:03:02.374Z",
+    "date": "2016-03-02T12:03:02.374Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -202,7 +202,7 @@ export default [
       }
     },
     "type": "updateCard",
-    "date": "2016-03-13T12:02:43.287Z",
+    "date": "2016-03-02T12:02:43.287Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -231,7 +231,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-03-12T12:02:40.821Z",
+    "date": "2016-03-01T12:02:40.821Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -268,7 +268,7 @@ export default [
       }
     },
     "type": "updateCard",
-    "date": "2016-03-07T14:31:49.139Z",
+    "date": "2016-02-29T14:31:49.139Z",
     "memberCreator": {
       "id": "51843f636ef14b8a690062dc",
       "avatarHash": "6a8e591c71d0006179ba98abc5684385",
@@ -297,7 +297,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-03-06T10:02:36.133Z",
+    "date": "2016-02-27T10:02:36.133Z",
     "memberCreator": {
       "id": "50cf3712e418f91048000565",
       "avatarHash": "290d0fdd2a31f2401ce195ad585b10ff",
@@ -326,7 +326,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-03-02T13:02:54.953Z",
+    "date": "2016-02-26T13:02:54.953Z",
     "memberCreator": {
       "id": "519b3898bb87e0891c0026b0",
       "avatarHash": "302673eff8f1cd92651a1ec70fb53cd8",
@@ -355,7 +355,7 @@ export default [
       }
     },
     "type": "createCard",
-    "date": "2016-03-02T10:29:25.183Z",
+    "date": "2016-02-26T10:29:25.183Z",
     "memberCreator": {
       "id": "519b3898bb87e0891c0026b0",
       "avatarHash": "302673eff8f1cd92651a1ec70fb53cd8",

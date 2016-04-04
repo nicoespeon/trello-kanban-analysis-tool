@@ -5,8 +5,11 @@ import {
   countByWith,
   groupByWith,
   parseDate,
+  sortByDate,
   sortByDateDesc,
-  uniqByDateLast,
+  uniqByDateDesc,
+  nextDay,
+  fillMissingDates,
   filterBeforeDate,
   filterAfterDate,
   filterBetweenDates,
@@ -95,6 +98,26 @@ test( 'parseDate', ( assert ) => {
   assert.end();
 } );
 
+test( 'sortByDate', ( assert ) => {
+  const expected = [
+    { date: "2015-11-20" },
+    { date: "2016-01-01" },
+    { date: "2016-01-08" },
+    { date: "2016-04-12" },
+    { date: "2016-10-01" }
+  ];
+  const result = sortByDate( [
+    { date: "2016-01-01" },
+    { date: "2016-04-12" },
+    { date: "2015-11-20" },
+    { date: "2016-10-01" },
+    { date: "2016-01-08" }
+  ] );
+
+  assert.looseEquals( result, expected, 'should sort collection by increasing date' );
+  assert.end();
+} );
+
 test( 'sortByDateDesc', ( assert ) => {
   const expected = [
     { date: "2016-10-01" },
@@ -111,25 +134,18 @@ test( 'sortByDateDesc', ( assert ) => {
     { date: "2016-01-08" }
   ] );
 
-  assert.looseEquals( result, expected, 'should sort collection by increasing date' );
+  assert.looseEquals( result, expected, 'should sort collection by decreasing date' );
   assert.end();
 } );
 
-test( 'uniqByDateLast', ( assert ) => {
+test( 'uniqByDateDesc', ( assert ) => {
   const expected = [
     {
-      date: "2016-02-22",
+      date: "2016-03-06",
       content: [
-        { list: "Icebox", numberOfCards: 1 },
-        { list: "Card Preparation [2]", numberOfCards: 1 }
-      ]
-    },
-    {
-      date: "2016-02-25",
-      content: [
-        { list: "Icebox", numberOfCards: 1 },
-        { list: "Card Preparation [2]", numberOfCards: 9 },
-        { list: "Backlog", numberOfCards: 1 }
+        { list: "Icebox", numberOfCards: -2 },
+        { list: "Card Preparation [2]", numberOfCards: 1 },
+        { list: "Backlog", numberOfCards: 5 }
       ]
     },
     {
@@ -141,15 +157,22 @@ test( 'uniqByDateLast', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-06",
+      date: "2016-02-25",
       content: [
-        { list: "Icebox", numberOfCards: -2 },
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 5 }
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 9 },
+        { list: "Backlog", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-22",
+      content: [
+        { list: "Icebox", numberOfCards: 1 },
+        { list: "Card Preparation [2]", numberOfCards: 1 }
       ]
     }
   ];
-  const result = uniqByDateLast( [
+  const result = uniqByDateDesc( [
     {
       date: "2016-02-22",
       content: [
@@ -208,6 +231,33 @@ test( 'uniqByDateLast', ( assert ) => {
   ] );
 
   assert.looseEquals( result, expected, 'should return a new list with uniq dates, taking the last one' );
+  assert.end();
+} );
+
+test( 'nextDay', ( assert ) => {
+  assert.equals( nextDay( '2015-01-02' ), '2015-01-03', 'should return the date incremented by one day' );
+  assert.equals( nextDay( '2015-01-31' ), '2015-02-01', 'should handle end of months' );
+  assert.equals( nextDay( '2015-12-31' ), '2016-01-01', 'should handle end of years' );
+  assert.end();
+} );
+
+test( 'fillMissingDates', ( assert ) => {
+  const expected = [
+    { date: "2015-01-02", label: "lorem" },
+    { date: "2015-01-03", label: "ipsum" },
+    { date: "2015-01-04", label: "ipsum" },
+    { date: "2015-01-05", label: "ipsum" },
+    { date: "2015-01-06", label: "dolor" },
+    { date: "2015-01-07", label: "sit" }
+  ];
+  const data = [
+    { date: "2015-01-03", label: "ipsum" },
+    { date: "2015-01-06", label: "dolor" },
+    { date: "2015-01-07", label: "sit" },
+    { date: "2015-01-02", label: "lorem" }
+  ];
+
+  assert.deepEquals( fillMissingDates( data ), expected, 'should fill missing dates with duplicate data' );
   assert.end();
 } );
 

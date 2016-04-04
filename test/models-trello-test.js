@@ -46,7 +46,7 @@ test( 'consolidateContent', ( assert ) => {
 test( 'consolidateActions', ( assert ) => {
   const expected = [
     {
-      date: "2016-01-20",
+      date: "2016-02-03",
       content: [
         { list: "Backlog", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 3 },
@@ -62,6 +62,30 @@ test( 'consolidateActions', ( assert ) => {
       ]
     },
     {
+      date: "2016-02-05",
+      content: [
+        { list: "Backlog", numberOfCards: 6 },
+        { list: "Icebox Énergie", numberOfCards: 3 },
+        { list: "Card Preparation", numberOfCards: 3 }
+      ]
+    },
+    {
+      date: "2016-02-06",
+      content: [
+        { list: "Backlog", numberOfCards: 6 },
+        { list: "Icebox Énergie", numberOfCards: 3 },
+        { list: "Card Preparation", numberOfCards: 3 }
+      ]
+    },
+    {
+      date: "2016-02-07",
+      content: [
+        { list: "Backlog", numberOfCards: 6 },
+        { list: "Icebox Énergie", numberOfCards: 3 },
+        { list: "Card Preparation", numberOfCards: 3 }
+      ]
+    },
+    {
       date: "2016-02-08",
       content: [
         { list: "Backlog", numberOfCards: 8 },
@@ -70,7 +94,7 @@ test( 'consolidateActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-02",
+      date: "2016-02-09",
       content: [
         { list: "Backlog", numberOfCards: 7 },
         { list: "Icebox Énergie", numberOfCards: 2 },
@@ -78,7 +102,15 @@ test( 'consolidateActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-03",
+      date: "2016-02-10",
+      content: [
+        { list: "Backlog", numberOfCards: 7 },
+        { list: "Icebox Énergie", numberOfCards: 2 },
+        { list: "Card Preparation", numberOfCards: 1 }
+      ]
+    },
+    {
+      date: "2016-02-11",
       content: [
         { list: "Backlog", numberOfCards: 9 },
         { list: "Icebox Énergie", numberOfCards: 2 },
@@ -86,7 +118,7 @@ test( 'consolidateActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-04-01",
+      date: "2016-02-12",
       content: [
         { list: "Backlog", numberOfCards: 10 },
         { list: "Icebox Énergie", numberOfCards: 1 },
@@ -96,7 +128,7 @@ test( 'consolidateActions', ( assert ) => {
   ];
   const result = consolidateActions(
     {
-      date: "2016-04-01",
+      date: "2016-02-12",
       content: [
         { list: "Backlog", numberOfCards: 10 },
         { list: "Icebox Énergie", numberOfCards: 1 },
@@ -109,33 +141,33 @@ test( 'consolidateActions', ( assert ) => {
         content: [ { list: "Backlog", numberOfCards: 1 } ]
       },
       {
-        date: "2016-03-03",
+        date: "2016-02-11",
         content: [
           { list: "Backlog", numberOfCards: 1 },
           { list: "Icebox Énergie", numberOfCards: 1 }
         ]
       },
       {
-        date: "2016-03-03",
+        date: "2016-02-11",
         content: [
           { list: "Backlog", numberOfCards: -2 }
         ]
       },
       {
-        date: "2016-03-02",
+        date: "2016-02-09",
         content: [
           { list: "Backlog", numberOfCards: -2 },
           { list: "Card Preparation [2]", numberOfCards: -1 }
         ]
       },
       {
-        date: "2016-03-02",
+        date: "2016-02-09",
         content: [
           { list: "Card Preparation [2]", numberOfCards: 2 }
         ]
       },
       {
-        date: "2016-01-20",
+        date: "2016-02-03",
         content: [
           { list: "Card Preparation [2]", numberOfCards: 1 }
         ]
@@ -221,6 +253,26 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
+      date: "2016-02-23",
+      content: [
+        { list: "Icebox", numberOfCards: 4 },
+        { list: "Icebox Énergie", numberOfCards: 5 },
+        { list: "Backlog", numberOfCards: 8 },
+        { list: "Card Preparation", numberOfCards: 1 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-02-24",
+      content: [
+        { list: "Icebox", numberOfCards: 4 },
+        { list: "Icebox Énergie", numberOfCards: 5 },
+        { list: "Backlog", numberOfCards: 8 },
+        { list: "Card Preparation", numberOfCards: 1 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
       date: "2016-02-25",
       content: [
         { list: "Icebox", numberOfCards: 5 },
@@ -231,7 +283,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-02",
+      date: "2016-02-26",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -241,7 +293,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-06",
+      date: "2016-02-27",
       content: [
         { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -251,7 +303,17 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-07",
+      date: "2016-02-28",
+      content: [
+        { list: "Icebox", numberOfCards: 6 },
+        { list: "Icebox Énergie", numberOfCards: 5 },
+        { list: "Backlog", numberOfCards: 10 },
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-02-29",
       content: [
         { list: "Icebox", numberOfCards: 6 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -261,7 +323,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-12",
+      date: "2016-03-01",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -271,7 +333,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-13",
+      date: "2016-03-02",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -281,7 +343,17 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-23",
+      date: "2016-03-03",
+      content: [
+        { list: "Icebox", numberOfCards: 5 },
+        { list: "Icebox Énergie", numberOfCards: 5 },
+        { list: "Backlog", numberOfCards: 11 },
+        { list: "Card Preparation", numberOfCards: 4 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-03-04",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 5 },
@@ -291,7 +363,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-24",
+      date: "2016-03-05",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
@@ -301,7 +373,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-03-27",
+      date: "2016-03-06",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
@@ -311,7 +383,27 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-04-06",
+      date: "2016-03-07",
+      content: [
+        { list: "Icebox", numberOfCards: 5 },
+        { list: "Icebox Énergie", numberOfCards: 6 },
+        { list: "Backlog", numberOfCards: 10 },
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-03-08",
+      content: [
+        { list: "Icebox", numberOfCards: 5 },
+        { list: "Icebox Énergie", numberOfCards: 6 },
+        { list: "Backlog", numberOfCards: 10 },
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-03-09",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
@@ -321,7 +413,7 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-04-10",
+      date: "2016-03-10",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
@@ -331,7 +423,17 @@ test( 'parseActions', ( assert ) => {
       ]
     },
     {
-      date: "2016-05-01",
+      date: "2016-03-11",
+      content: [
+        { list: "Icebox", numberOfCards: 5 },
+        { list: "Icebox Énergie", numberOfCards: 6 },
+        { list: "Backlog", numberOfCards: 10 },
+        { list: "Card Preparation", numberOfCards: 2 },
+        { list: "Production", numberOfCards: 0 }
+      ]
+    },
+    {
+      date: "2016-03-12",
       content: [
         { list: "Icebox", numberOfCards: 5 },
         { list: "Icebox Énergie", numberOfCards: 6 },
@@ -342,7 +444,7 @@ test( 'parseActions', ( assert ) => {
     }
   ];
   const expectedWithEmptyActions = [ {
-    date: "2016-05-01",
+    date: "2016-03-12",
     content: [
       { list: "Icebox", numberOfCards: 5 },
       { list: "Icebox Énergie", numberOfCards: 6 },
@@ -352,9 +454,9 @@ test( 'parseActions', ( assert ) => {
     ]
   } ];
 
-  assert.looseEquals( parseActions( "2016-05-01", trelloLists, trelloActions ), expected, 'should correctly parse Trello actions' );
-  assert.looseEquals( parseActions( "2016-05-01" )( trelloLists, trelloActions ), expected, 'should be curried' );
-  assert.looseEquals( parseActions( "2016-05-01", trelloLists, [] ), expectedWithEmptyActions, 'should handle empty actions' );
+  assert.looseEquals( parseActions( "2016-03-12", trelloLists, trelloActions ), expected, 'should correctly parse Trello actions' );
+  assert.looseEquals( parseActions( "2016-03-12" )( trelloLists, trelloActions ), expected, 'should be curried' );
+  assert.looseEquals( parseActions( "2016-03-12", trelloLists, [] ), expectedWithEmptyActions, 'should handle empty actions' );
   assert.end();
 } );
 
