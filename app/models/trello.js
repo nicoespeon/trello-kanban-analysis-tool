@@ -7,6 +7,7 @@ import {
   fillMissingDates,
   parseListName
 } from '../utils/utils';
+
 import {parseCreateActionsFrom, parseDeleteActionsFrom} from './utils/actions';
 
 // sumNumberOfCards :: [{numberOfCards: Number}] -> Number

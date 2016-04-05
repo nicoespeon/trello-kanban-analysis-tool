@@ -1,6 +1,7 @@
 import R from 'ramda';
 
 import {groupByWith, parseDate, lensPath, pathOr} from '../../utils/utils';
+
 import {countCardsPerList, mapListData} from './lists';
 
 // _parseActionsWith :: (Number -> b) -> [Action] -> [List]

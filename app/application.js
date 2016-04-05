@@ -1,7 +1,6 @@
 import Cycle from '@cycle/core';
 import {makeDOMDriver, div, button} from '@cycle/dom';
 import isolate from '@cycle/isolate';
-import moment from 'moment';
 import {Observable} from 'rx';
 import R from 'ramda';
 
@@ -15,20 +14,15 @@ import SelectDatesButton from './SelectDatesButton/SelectDatesButton';
 import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
-import {filterBetweenDates} from './utils/utils';
+import {
+  lastMonth,
+  endOfLastMonth,
+  currentMonth,
+  today,
+  filterBetweenDates
+} from './utils/utils.date';
 
 function main ( { DOM, Trello } ) {
-  const dateFormat = 'YYYY-MM-DD';
-  const lastMonth = moment()
-    .month( moment().month() - 1 )
-    .date( 1 )
-    .format( dateFormat );
-  const endOfLastMonth = moment( lastMonth )
-    .date( moment( lastMonth, dateFormat ).daysInMonth() )
-    .format( dateFormat );
-  const currentMonth = moment().date( 1 ).format( dateFormat );
-  const today = moment().format( dateFormat );
-
   const trelloLists$ = Trello.lists$.startWith( [] );
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
 
