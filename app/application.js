@@ -1,5 +1,6 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, div, button, select, option, label} from '@cycle/dom';
+import {makeDOMDriver, div, button} from '@cycle/dom';
+import isolate from '@cycle/isolate';
 import moment from 'moment';
 import {Observable} from 'rx';
 import R from 'ramda';
@@ -8,23 +9,12 @@ import {makeTrelloDriver} from './drivers/trello';
 import {makeGraphDriver} from './drivers/graph';
 import logDriver from './drivers/log';
 
+import LabeledSelect from './LabeledSelect/LabeledSelect';
+
 import {parseActions, getDisplayedLists} from './models/trello';
 import {parseTrelloData} from './models/graph';
 
 import {filterBetweenDates} from './utils/utils';
-
-function selectView ( id, labelText, selected, values ) {
-  return div( [
-    label( { htmlFor: id }, labelText ),
-    select(
-      { id: id, name: id },
-      [ R.map( value => R.cond( [
-        [ R.equals( selected ), R.always( option( { selected: true }, value ) ) ],
-        [ R.T, R.always( option( value ) ) ]
-      ] )( value ), values ) ]
-    )
-  ] );
-}
 
 function main ( { DOM, Trello } ) {
   const dateFormat = 'YYYY-MM-DD';
@@ -37,27 +27,50 @@ function main ( { DOM, Trello } ) {
     .format( dateFormat );
   const currentMonth = moment().date( 1 ).format( dateFormat );
   const today = moment().format( dateFormat );
+  
+  const trelloLists$ = Trello.lists$.startWith( [] );
+  const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
+  
+  const trelloActions$ = Trello.actions$.startWith( [] );
+  
+  // Select to choose the first displayed list
+  
+  const FirstDisplayedListSelect = isolate( LabeledSelect );
+
+  const firstDisplayedListProps$ = Observable.of( {
+    name: 'first-displayed-list',
+    labelText: 'Work begins',
+    select: R.always( 'Backlog' )
+  } );
+
+  const firstDisplayedListSelect = FirstDisplayedListSelect( {
+    DOM,
+    props$: firstDisplayedListProps$,
+    values$: lists$
+  } );
+  
+  // Select to choose the last displayed list
+
+  const LastDisplayedListSelect = isolate( LabeledSelect );
+
+  const lastDisplayedListProps$ = lists$.map( lists => ({
+    name: 'last-displayed-list',
+    labelText: 'Work ends',
+    select: R.last
+  }) );
+
+  const lastDisplayedListSelect = LastDisplayedListSelect( {
+    DOM,
+    props$: lastDisplayedListProps$,
+    values$: lists$
+  } );
 
   // TODO - refactor these with components (button, select, trello)
+  
   const getActionsClicks$ = DOM
     .select( '#get-actions' )
     .events( 'click' )
     .startWith( false );
-
-  const firstDisplayedListChanges$ = DOM
-    .select( '#first-displayed-list' )
-    .events( 'input' )
-    .map( ev => ev.target.value )
-    .startWith( "Backlog" );
-
-  const lastDisplayedListChanges$ = DOM
-    .select( '#last-displayed-list' )
-    .events( 'input' )
-    .map( ev => ev.target.value )
-    .startWith( false );
-
-  const trelloLists$ = Trello.lists$.startWith( [] );
-  const trelloActions$ = Trello.actions$.startWith( [] );
 
   const lastMonthDates$ = DOM
     .select( '#last-month' )
@@ -84,34 +97,22 @@ function main ( { DOM, Trello } ) {
 
   const displayedLists$ = Observable.combineLatest(
     trelloLists$,
-    firstDisplayedListChanges$,
-    lastDisplayedListChanges$,
+    firstDisplayedListSelect.selected$,
+    lastDisplayedListSelect.selected$,
     getDisplayedLists
   );
 
-  const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
-
   return {
     DOM: Observable.combineLatest(
-      lists$,
-      displayedLists$,
-      ( lists, displayedLists ) =>
+      firstDisplayedListSelect.DOM,
+      lastDisplayedListSelect.DOM,
+      ( firstDisplayedListVTree, lastDisplayedListVTree ) =>
         div( [
           button( { id: 'get-actions' }, 'Get actions' ),
           button( { id: 'last-month' }, 'Last month' ),
           button( { id: 'current-month' }, 'Current month' ),
-          selectView(
-            'first-displayed-list',
-            'Work begins',
-            R.head( displayedLists ),
-            lists
-          ),
-          selectView(
-            'last-displayed-list',
-            'Work ends',
-            R.last( displayedLists ),
-            lists
-          )
+          firstDisplayedListVTree,
+          lastDisplayedListVTree
         ] )
     ),
     Trello: getActionsClicks$,

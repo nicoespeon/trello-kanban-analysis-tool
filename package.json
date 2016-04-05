@@ -12,6 +12,7 @@
   "dependencies": {
     "@cycle/core": "6.0.3",
     "@cycle/dom": "9.1.0",
+    "@cycle/isolate": "1.2.0",
     "moment": "2.12.0",
     "nvd3": "1.8.2",
     "ramda": "0.19.1",
