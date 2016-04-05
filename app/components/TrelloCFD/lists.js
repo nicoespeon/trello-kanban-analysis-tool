@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-import {countByWith} from '../utils/utils';
+import {countByWith} from '../../utils/utils';
 
 // Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
 const _parsedNamePattern = /(.*?)(\s\[\d+\])$/;

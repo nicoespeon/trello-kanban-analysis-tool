@@ -12,7 +12,7 @@ import {
   consolidateActions,
   parseCurrentStatus,
   parseActions
-} from '../app/TrelloCFD/actions';
+} from '../app/components/TrelloCFD/actions';
 
 test( 'parseCreateActions', ( assert ) => {
   const expected = [

@@ -8,9 +8,9 @@ import {makeTrelloDriver} from './drivers/trello';
 import {makeGraphDriver} from './drivers/graph';
 import logDriver from './drivers/log';
 
-import LabeledSelect from './LabeledSelect/LabeledSelect';
-import SelectDatesButton from './SelectDatesButton/SelectDatesButton';
-import TrelloCFD from './TrelloCFD/TrelloCFD';
+import LabeledSelect from './components/LabeledSelect/LabeledSelect';
+import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
+import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 
 import {lastMonth, endOfLastMonth, currentMonth} from './utils/utils.date';
 

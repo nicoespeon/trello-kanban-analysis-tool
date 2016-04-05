@@ -8,7 +8,7 @@ import {
   parseDate,
   lensPath,
   pathOr
-} from '../utils/utils';
+} from '../../utils/utils';
 
 import {sumNumberOfCards} from './cards';
 import {countCardsPerList, mapListData, parseListName} from './lists';
