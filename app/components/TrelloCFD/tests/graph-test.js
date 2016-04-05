@@ -3,7 +3,7 @@ import {test} from 'tape';
 import {
   numberOfCardsAtDate,
   parseToGraph
-} from '../app/components/TrelloCFD/graph';
+} from '../graph';
 
 test( 'numberOfCardsAtDate', ( assert ) => {
   const data = [

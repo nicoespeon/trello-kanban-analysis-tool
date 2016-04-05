@@ -1,6 +1,6 @@
 import {test} from 'tape';
 
-import {sumNumberOfCards,} from '../app/components/TrelloCFD/cards';
+import {sumNumberOfCards,} from '../cards';
 
 test( 'sumNumberOfCards', ( assert ) => {
   const result = sumNumberOfCards( [

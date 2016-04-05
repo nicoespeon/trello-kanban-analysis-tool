@@ -7,7 +7,7 @@ import {
   mapListData,
   parseListName,
   getDisplayedLists
-} from '../app/components/TrelloCFD/lists';
+} from '../lists';
 
 test( 'allLists', ( assert ) => {
   const data = [

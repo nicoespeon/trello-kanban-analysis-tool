@@ -10,7 +10,7 @@ import {
   filterBeforeDate,
   filterAfterDate,
   filterBetweenDates
-} from '../app/utils/utils.date';
+} from '../date';
 
 test( 'parseDate', ( assert ) => {
   assert.equal( parseDate( '2016-03-03T14:55:54.110Z' ), '2016-03-03', 'should correctly parse an ISODate' );

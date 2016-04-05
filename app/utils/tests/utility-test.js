@@ -4,7 +4,7 @@ import R from 'ramda';
 import {
   countByWith,
   groupByWith
-} from '../app/utils/utils.utility';
+} from '../utility';
 
 test( 'countByWith', ( assert ) => {
   const data = [ 1.0, 1.1, 1.2, 2.0, 3.0, 2.2 ];

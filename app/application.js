@@ -12,7 +12,7 @@ import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 
-import {lastMonth, endOfLastMonth, currentMonth} from './utils/utils.date';
+import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
 
 function main ( { DOM, Trello } ) {
   const trelloLists$ = Trello.lists$.startWith( [] );

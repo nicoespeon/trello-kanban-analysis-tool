@@ -6,7 +6,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/babel-tape-runner test/*.js",
+    "test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
     "testdiff": "npm run test | node_modules/.bin/tap-diff"
   },
   "dependencies": {

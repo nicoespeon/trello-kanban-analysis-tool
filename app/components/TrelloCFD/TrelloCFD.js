@@ -6,7 +6,7 @@ import {parseActions} from './actions';
 import {getDisplayedLists} from './lists';
 import {parseToGraph} from './graph';
 
-import {today, filterBetweenDates} from '../../utils/utils.date';
+import {today, filterBetweenDates} from '../../utils/date';
 
 function TrelloCFD (
   {
