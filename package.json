@@ -24,7 +24,7 @@
     "babel-brunch": "5.1.2",
     "babel-plugin-ramda": "0.1.2",
     "babel-tape-runner": "1.2.0",
-    "brunch": "git://github.com/brunch/brunch.git#8a33ad2",
+    "brunch": "2.6.2",
     "css-brunch": "2.0.0",
     "javascript-brunch": "1.7.1",
     "sass-brunch": "1.9.1",
