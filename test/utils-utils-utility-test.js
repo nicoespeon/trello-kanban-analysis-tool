@@ -3,8 +3,7 @@ import R from 'ramda';
 
 import {
   countByWith,
-  groupByWith,
-  parseListName
+  groupByWith
 } from '../app/utils/utils.utility';
 
 test( 'countByWith', ( assert ) => {
@@ -81,12 +80,5 @@ test( 'groupByWith', ( assert ) => {
     'should return an empty array if data is an object'
   );
 
-  assert.end();
-} );
-
-test( 'parseListName', ( assert ) => {
-  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
-  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
-  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
   assert.end();
 } );

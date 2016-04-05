@@ -1,5 +1,5 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, div, button} from '@cycle/dom';
+import {makeDOMDriver, div} from '@cycle/dom';
 import isolate from '@cycle/isolate';
 import {Observable} from 'rx';
 import R from 'ramda';
@@ -10,23 +10,13 @@ import logDriver from './drivers/log';
 
 import LabeledSelect from './LabeledSelect/LabeledSelect';
 import SelectDatesButton from './SelectDatesButton/SelectDatesButton';
+import TrelloCFD from './TrelloCFD/TrelloCFD';
 
-import {parseActions, getDisplayedLists} from './models/trello';
-import {parseTrelloData} from './models/graph';
-
-import {
-  lastMonth,
-  endOfLastMonth,
-  currentMonth,
-  today,
-  filterBetweenDates
-} from './utils/utils.date';
+import {lastMonth, endOfLastMonth, currentMonth} from './utils/utils.date';
 
 function main ( { DOM, Trello } ) {
   const trelloLists$ = Trello.lists$.startWith( [] );
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
-
-  const trelloActions$ = Trello.actions$.startWith( [] );
 
   // Select to choose the first displayed list
 
@@ -89,60 +79,50 @@ function main ( { DOM, Trello } ) {
     props$: selectCurrentMonthProps$
   } );
 
-  // TODO - refactor these with components (trello)
+  // Trello
 
-  const getActionsClicks$ = DOM
-    .select( '#get-actions' )
-    .events( 'click' )
-    .startWith( false );
+  const trelloCFDProps$ = Observable.of( {
+    label: 'Get actions'
+  } );
 
-  const dates$ = Observable.merge(
+  const trelloCFDDates$ = Observable.merge(
     selectLastMonthButton.dates$,
     selectCurrentMonthButton.dates$
   ).startWith( { startDate: currentMonth, endDate: null } );
 
-  const actions$ = Observable.combineLatest(
-    dates$,
-    trelloLists$,
-    trelloActions$,
-    ( { startDate, endDate }, lists, actions ) => R.compose(
-      filterBetweenDates( startDate, endDate ),
-      parseActions( today, lists ),
-    )( actions )
-  );
-
-  const displayedLists$ = Observable.combineLatest(
-    trelloLists$,
-    firstDisplayedListSelect.selected$,
-    lastDisplayedListSelect.selected$,
-    getDisplayedLists
-  );
+  const trelloCFD = TrelloCFD( {
+    DOM,
+    actions$: Trello.actions$.startWith( [] ),
+    lists$: trelloLists$,
+    firstListDisplayed$: firstDisplayedListSelect.selected$,
+    lastListDisplayed$: lastDisplayedListSelect.selected$,
+    dates$: trelloCFDDates$,
+    props$: trelloCFDProps$
+  } );
 
   return {
     DOM: Observable.combineLatest(
+      trelloCFD.DOM,
       selectLastMonthButton.DOM,
       selectCurrentMonthButton.DOM,
       firstDisplayedListSelect.DOM,
       lastDisplayedListSelect.DOM,
       (
+        trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
         firstDisplayedListVTree,
         lastDisplayedListVTree
       ) => div( [
-        button( { id: 'get-actions' }, 'Get actions' ),
+        trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
         firstDisplayedListVTree,
         lastDisplayedListVTree
       ] )
     ),
-    Trello: getActionsClicks$,
-    graph: Observable.combineLatest(
-      displayedLists$,
-      actions$,
-      parseTrelloData
-    ),
+    Trello: trelloCFD.Trello,
+    graph: trelloCFD.graph,
     log: trelloLists$
   };
 }

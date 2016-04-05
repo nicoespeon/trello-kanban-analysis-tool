@@ -1,13 +1,6 @@
 import R from 'ramda';
 
-// allLists :: [List] -> [String]
-const allLists = R.compose(
-  R.uniq,
-  R.flatten,
-  R.map( R.pluck( 'list' ) ),
-  R.reject( R.isNil ),
-  R.pluck( 'content' )
-);
+import {allLists} from './lists';
 
 // numberOfCardsAtDate :: String -> String -> [List] -> Number
 const numberOfCardsAtDate = ( list, date, data ) => {
@@ -25,8 +18,8 @@ const parsedValueAtDate = R.curry( ( list, data, date ) => [
   numberOfCardsAtDate( list, date, data )
 ] );
 
-// parseTrelloData :: [String] -> [List] -> [Graph]
-const parseTrelloData = R.curry( ( displayedLists, data ) => {
+// parseToGraph :: [String] -> [List] -> [Graph]
+const parseToGraph = R.curry( ( displayedLists, data ) => {
   return R.compose(
     R.filter( ( data ) => R.contains( R.prop( "key", data ), displayedLists ) ),
     R.map( ( list ) => ({
@@ -38,4 +31,4 @@ const parseTrelloData = R.curry( ( displayedLists, data ) => {
   )( data );
 } );
 
-export {allLists, numberOfCardsAtDate, parseTrelloData};
+export {numberOfCardsAtDate, parseToGraph};

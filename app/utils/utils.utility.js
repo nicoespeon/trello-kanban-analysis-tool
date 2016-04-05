@@ -24,20 +24,7 @@ const groupByWith = R.curry( ( prop, fn, data ) => {
   ] )( data );
 } );
 
-// Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
-const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
-
-// parseListName :: String -> [String | Undefined]
-const parseListName = R.cond( [
-  [
-    R.test( parsedNamePattern ),
-    R.compose( R.head, R.tail, R.match( parsedNamePattern ) )
-  ],
-  [ R.T, R.identity ]
-] );
-
 export {
   countByWith,
-  groupByWith,
-  parseListName
+  groupByWith
 };
