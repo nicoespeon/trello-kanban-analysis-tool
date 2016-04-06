@@ -8,14 +8,14 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
     .events( 'input' )
     .map( ev => ev.target.value )
     .startWith( null );
-  
+
   const selected$ = Observable.combineLatest(
     props$,
     values$,
     newSelected$,
-    ( props, values, newSelected ) => R.defaultTo( 
-      props.select( values ), 
-      newSelected 
+    ( props, values, newSelected ) => R.defaultTo(
+      props.select( values ),
+      newSelected
     )
   );
 
@@ -26,8 +26,10 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
     ( props, selected, values ) => div( [
       label( { htmlFor: props.name }, props.labelText ),
       select(
-        '.select',
-        { name: props.name },
+        {
+          className: R.join( ' ', R.concat( [ 'select' ], props.classNames ) ),
+          name: props.name
+        },
         [ R.map( value => R.cond( [
           [ R.equals( selected ), R.always( option( { selected: true }, value ) ) ],
           [ R.T, R.always( option( value ) ) ]

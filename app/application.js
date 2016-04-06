@@ -25,6 +25,7 @@ function main ( { DOM, Trello } ) {
   const firstDisplayedListProps$ = Observable.of( {
     name: 'first-displayed-list',
     labelText: 'Work begins',
+    classNames: [ 'browser-default' ],
     select: R.always( 'Backlog' )
   } );
 
@@ -41,6 +42,7 @@ function main ( { DOM, Trello } ) {
   const lastDisplayedListProps$ = lists$.map( lists => ({
     name: 'last-displayed-list',
     labelText: 'Work ends',
+    classNames: [ 'browser-default' ],
     select: R.last
   }) );
 
@@ -124,8 +126,10 @@ function main ( { DOM, Trello } ) {
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
-        firstDisplayedListVTree,
-        lastDisplayedListVTree
+        div( '.row', [
+          div( '.col.s6', [ firstDisplayedListVTree ] ),
+          div( '.col.s6', [ lastDisplayedListVTree ] )
+        ] )
       ] )
     ),
     Trello: trelloCFD.Trello,
