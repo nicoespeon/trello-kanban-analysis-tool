@@ -56,6 +56,7 @@ function main ( { DOM, Trello } ) {
 
   const selectLastMonthProps$ = lists$.map( lists => ({
     label: 'Last month',
+    classNames: [ 'btn waves-effect waves-light' ],
     startDate: lastMonth,
     endDate: endOfLastMonth
   }) );
@@ -71,6 +72,7 @@ function main ( { DOM, Trello } ) {
 
   const selectCurrentMonthProps$ = lists$.map( lists => ({
     label: 'Current month',
+    classNames: [ 'btn waves-effect waves-light' ],
     startDate: currentMonth
   }) );
 
@@ -82,7 +84,8 @@ function main ( { DOM, Trello } ) {
   // Trello
 
   const trelloCFDProps$ = Observable.of( {
-    label: 'Get actions'
+    label: 'Get actions',
+    classNames: [ 'btn waves-effect waves-light purple' ]
   } );
 
   const trelloCFDDates$ = Observable.merge(

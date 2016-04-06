@@ -13,7 +13,10 @@ function SelectDatesButton ( { DOM, props$ } ) {
     ( props ) => R.pick( [ 'startDate', 'endDate' ], props )
   );
 
-  const vtree$ = props$.map( props => button( '.button', props.label ) );
+  const vtree$ = props$.map( props => button(
+    { className: R.join( ' ', R.concat( [ 'button' ], props.classNames ) ) },
+    props.label )
+  );
 
   return {
     DOM: vtree$,

@@ -24,7 +24,10 @@ function TrelloCFD (
     .events( 'click' )
     .startWith( false );
 
-  const vtree$ = props$.map( ( props ) => button( '.button', props.label ) );
+  const vtree$ = props$.map( ( props ) => button(
+    { className: R.join( ' ', R.concat( [ 'button' ], props.classNames ) ) },
+    props.label )
+  );
 
   const displayedLists$ = Observable.combineLatest(
     lists$,
