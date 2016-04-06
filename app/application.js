@@ -1,5 +1,5 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, div} from '@cycle/dom';
+import {makeDOMDriver, div, h1, small} from '@cycle/dom';
 import isolate from '@cycle/isolate';
 import {Observable} from 'rx';
 import R from 'ramda';
@@ -94,8 +94,8 @@ function main ( { DOM, Trello } ) {
     DOM,
     actions$: Trello.actions$.startWith( [] ),
     lists$: trelloLists$,
-    firstListDisplayed$: firstDisplayedListSelect.selected$,
-    lastListDisplayed$: lastDisplayedListSelect.selected$,
+    firstListDisplayed$: firstDisplayedListSelect.selected$,
+    lastListDisplayed$: lastDisplayedListSelect.selected$,
     dates$: trelloCFDDates$,
     props$: trelloCFDProps$
   } );
@@ -114,6 +114,10 @@ function main ( { DOM, Trello } ) {
         firstDisplayedListVTree,
         lastDisplayedListVTree
       ) => div( [
+        h1( '.title', [
+          'Trello Kanban ',
+          small( 'A simple side-project' )
+        ] ),
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
