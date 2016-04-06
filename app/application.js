@@ -4,9 +4,9 @@ import isolate from '@cycle/isolate';
 import {Observable} from 'rx';
 import R from 'ramda';
 
-import {makeTrelloDriver} from './drivers/trello';
-import {makeGraphDriver} from './drivers/graph';
-import logDriver from './drivers/log';
+import {makeTrelloDriver} from './drivers/Trello';
+import {makeGraphDriver} from './drivers/Graph';
+import logDriver from './drivers/Log';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
@@ -129,16 +129,16 @@ function main ( { DOM, Trello } ) {
       ] )
     ),
     Trello: trelloCFD.Trello,
-    graph: trelloCFD.graph,
-    log: trelloLists$
+    Graph: trelloCFD.Graph,
+    Log: trelloLists$
   };
 }
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
   Trello: makeTrelloDriver( 'LydFpONf' ),
-  graph: makeGraphDriver( '#chart svg' ),
-  log: logDriver
+  Graph: makeGraphDriver( '#chart svg' ),
+  Log: logDriver
 };
 
 Cycle.run( main, drivers );

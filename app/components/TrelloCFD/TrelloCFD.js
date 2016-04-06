@@ -49,7 +49,7 @@ function TrelloCFD (
   return {
     DOM: vtree$,
     Trello: clicks$,
-    graph: Observable.combineLatest(
+    Graph: Observable.combineLatest(
       displayedLists$,
       parsedActions$,
       parseToGraph
