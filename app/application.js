@@ -118,15 +118,17 @@ function main ( { DOM, Trello } ) {
         selectCurrentMonthButtonVTree,
         firstDisplayedListVTree,
         lastDisplayedListVTree
-      ) => div( [
-        h1( '.title', [
+      ) => div( '.container', [
+        h1( '.title.center-align', [
           'Trello Kanban ',
           small( 'A simple side-project' )
         ] ),
-        trelloCFDVTree,
-        selectLastMonthButtonVTree,
-        selectCurrentMonthButtonVTree,
-        div( '.row', [
+        div( '.center-align-around', [
+          trelloCFDVTree,
+          selectLastMonthButtonVTree,
+          selectCurrentMonthButtonVTree
+        ] ),
+        div( '.m-top.row', [
           div( '.col.s6', [ firstDisplayedListVTree ] ),
           div( '.col.s6', [ lastDisplayedListVTree ] )
         ] )

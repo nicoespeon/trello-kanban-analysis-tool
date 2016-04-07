@@ -1,13 +1,25 @@
 h1 {
-  font-size : 2em;
-  margin    : 0.5em 0 1em;
-
   & > small {
+    display   : block;
     color     : gray;
-    font-size : 70%;
+    font-size : 50%;
   }
 }
 
-#chart svg {
-  height : 400px;
+.center-align-around {
+  display         : flex;
+  align-items     : center;
+  justify-content : space-around;
+}
+
+.chart {
+  height : 30rem;
+}
+
+.m-top {
+  margin-top : 2rem;
+}
+
+.d {
+  border : 1px red solid;
 }
