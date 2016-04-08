@@ -9,7 +9,8 @@ import {
   fillMissingDates,
   filterBeforeDate,
   filterAfterDate,
-  filterBetweenDates
+  filterBetweenDates,
+  daysSpent
 } from '../date';
 
 test( 'parseDate', ( assert ) => {
@@ -280,5 +281,13 @@ test( 'filterBetweenDates', ( assert ) => {
   assert.deepEquals( filterBetweenDates( '2016-03-27', '2016-04-07', data ), expected, 'should handle shortened bound dates representation' );
   assert.deepEquals( filterBetweenDates( '2016-03-27', '2016-04-07', dataShortened ), expectedShortened, 'should handle shortened dates representation' );
   assert.deepEquals( filterBetweenDates( null, null, data ), data, 'should return the whole list if no bound dates are provided' );
+  assert.end();
+} );
+
+test( 'daysSpent', ( assert ) => {
+  assert.equals( daysSpent( '2016-03-04', '2016-03-07' ), 3, 'should return the number of days spent between dates' );
+  assert.equals( daysSpent( '2016-03-04', '2016-04-04' ), 31, 'should handle end of months' );
+  assert.equals( daysSpent( '2015-03-04', '2016-03-04' ), 366, 'should handle end of years' );
+  assert.equals( daysSpent( '2015-03-04T14:55:54.110Z', '2016-03-04T14:55:54.110Z' ), 366, 'should handle ISODates' );
   assert.end();
 } );

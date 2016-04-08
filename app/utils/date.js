@@ -98,6 +98,9 @@ const filterBetweenDates = R.curry( ( startDate, endDate, items ) => R.compose(
   filterAfterDate( startDate )
 )( items ) );
 
+// daysSpent :: Date -> Date -> Integer
+const daysSpent = ( start, end ) => moment( end ).diff( moment( start ), 'days' );
+
 export {
   lastMonth,
   currentMonth,
@@ -112,5 +115,6 @@ export {
   fillMissingDates,
   filterBeforeDate,
   filterAfterDate,
-  filterBetweenDates
+  filterBetweenDates,
+  daysSpent
 };
