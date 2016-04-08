@@ -1,6 +1,47 @@
 import R from 'ramda';
 
-import {daysSpent} from '../../utils/date';
+import {
+  parseDate,
+  daysSpent,
+  groupByWith,
+  getCreateList,
+  getCreateActions
+} from '../../utils/utils';
+
+// StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]
+// LeadTimes :: [{id: a, leadTime: Integer}]
+
+// _startDatesFromActions :: [Action] -> [String] -> [{list: String, date: Date}]
+const _startDatesFromActions = ( actions, lists ) => R.map(
+  ( list ) => ({
+    list: list,
+    date: R.compose(
+      R.cond( [
+        [ R.isNil, R.identity ],
+        [ R.T, parseDate ]
+      ] ),
+      R.propOr( null, 'date' ),
+      R.find(
+        R.compose(
+          R.propEq( 'name', list ),
+          getCreateList
+        )
+      ),
+    )( actions )
+  })
+)( lists );
+
+// parseStartDates :: [Action] -> [String] -> StartDates
+const parseStartDates = ( actions, lists ) => R.compose(
+  groupByWith(
+    R.path( [ 'data', 'card', 'id' ] ),
+    ( cardId, cardActions ) => ({
+      id: cardId,
+      startDates: _startDatesFromActions( cardActions, lists )
+    })
+  ),
+  getCreateActions
+)( actions );
 
 // _propDate :: {date: a} -> a
 const _propDate = R.prop( 'date' );
@@ -23,13 +64,13 @@ const leadTimeFromDates = R.cond( [
   ]
 ] );
 
-// parseLeadTime :: [{startDates: [{list: String, date: Date}]}] -> [{leadTime: Integer}]
+// parseLeadTime :: StartDates -> LeadTimes
 const parseLeadTime = R.map( card => ({
   id: card.id,
   leadTime: leadTimeFromDates( card.startDates )
 }) );
 
-// avgLeadTime :: [{leadTime: Integer}] -> Integer
+// avgLeadTime :: LeadTimes -> Integer
 const avgLeadTime = R.compose(
   Math.round.bind( Math ),
   R.mean,
@@ -38,6 +79,7 @@ const avgLeadTime = R.compose(
 );
 
 export default {
+  parseStartDates,
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime

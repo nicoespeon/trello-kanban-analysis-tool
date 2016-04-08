@@ -6,8 +6,8 @@ import {
   uniqByDateDesc,
   fillMissingDates,
   parseDate,
-  lensPath,
-  pathOr
+  getCreateActions,
+  getDeleteActions
 } from '../../utils/utils';
 
 import {sumNumberOfCards} from './cards';
@@ -36,45 +36,6 @@ const parseCreateActions = _parseActionsWith( R.negate );
 
 // parseDeleteActions :: [Action] -> [List]
 const parseDeleteActions = _parseActionsWith( R.identity );
-
-// getCreateActions :: [Action] -> [Action]
-const getCreateActions = R.compose(
-  R.map( ( action ) => R.set(
-    lensPath( [ 'data', 'list' ] ),
-    pathOr( R.path( [ 'data', 'list' ] )( action ), [ 'data', 'listAfter' ], action ),
-    action
-  ) ),
-  R.filter(
-    R.either(
-      R.propEq( 'type', 'createCard' ),
-      R.both(
-        R.propEq( 'type', 'updateCard' ),
-        R.path( [ 'data', 'listAfter' ] )
-      )
-    )
-  )
-);
-
-// getDeleteActions :: [Action] -> [Action]
-const getDeleteActions = R.compose(
-  R.map( ( action ) => R.set(
-    lensPath( [ 'data', 'list' ] ),
-    pathOr( R.path( [ 'data', 'list' ] )( action ), [ 'data', 'listBefore' ], action ),
-    action
-  ) ),
-  R.filter(
-    R.either(
-      R.propEq( 'type', 'deleteCard' ),
-      R.both(
-        R.propEq( 'type', 'updateCard' ),
-        R.either(
-          R.path( [ 'data', 'listBefore' ] ),
-          R.compose( R.equals( true ), R.path( [ 'data', 'card', 'closed' ] ) )
-        )
-      )
-    )
-  )
-);
 
 // parseCreateActionsFrom :: [Action] -> [List]
 const parseCreateActionsFrom = R.compose( parseCreateActions, getCreateActions );

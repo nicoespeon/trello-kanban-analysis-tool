@@ -1,10 +1,82 @@
 import {test} from 'tape';
 
+import trelloActions from './fixtures/trello-actions';
+
 import {
+  parseStartDates,
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime
 } from '../times';
+
+test( 'parseStartDates', ( assert ) => {
+  const expected = [
+    {
+      id: "5661abfe6c2f11e4db652169",
+      startDates: [
+        { list: "Production [3]", date: "2016-04-10" },
+        { list: "Tests QA [2]", date: "2016-05-06" },
+        { list: "Mise en live [1]", date: null }
+      ]
+    },
+    {
+      id: "564077e6e6dfdc9c01244836",
+      startDates: [
+        { list: "Production [3]", date: "2016-04-06" },
+        { list: "Tests QA [2]", date: "2016-04-06" },
+        { list: "Mise en live [1]", date: "2016-04-12" }
+      ]
+    },
+    {
+      id: "570768ca19fde6c4a98714b5",
+      startDates: [
+        { list: "Production [3]", date: null },
+        { list: "Tests QA [2]", date: null },
+        { list: "Mise en live [1]", date: null }
+      ]
+    },
+    {
+      id: "56fb8a5af196e52193de6179",
+      startDates: [
+        { list: "Production [3]", date: null },
+        { list: "Tests QA [2]", date: "2016-04-07" },
+        { list: "Mise en live [1]", date: "2016-04-07" }
+      ]
+    },
+    {
+      id: "56f3e734a5ab9295bcdb29d6",
+      startDates: [
+        { list: "Production [3]", date: "2016-04-07" },
+        { list: "Tests QA [2]", date: null },
+        { list: "Mise en live [1]", date: null }
+      ]
+    },
+    {
+      id: "56f2a2265985b75e2c6e59c4",
+      startDates: [
+        { list: "Production [3]", date: "2016-01-23" },
+        { list: "Tests QA [2]", date: "2016-02-07" },
+        { list: "Mise en live [1]", date: "2016-02-12" }
+      ]
+    },
+    {
+      id: "56dc003c5a0885d45c5f5ca4",
+      startDates: [
+        { list: "Production [3]", date: null },
+        { list: "Tests QA [2]", date: "2016-02-08" },
+        { list: "Mise en live [1]", date: null }
+      ]
+    }
+  ];
+  const lists = [
+    "Production [3]",
+    "Tests QA [2]",
+    "Mise en live [1]"
+  ];
+
+  assert.deepEquals( parseStartDates( trelloActions, lists ), expected, 'should parse actions with given lists to determine start dates' );
+  assert.end();
+} );
 
 test( 'leadTimeFromDates', ( assert ) => {
   const dates = [
