@@ -11,6 +11,7 @@ import logDriver from './drivers/Log';
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
+import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
 
 import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
 
@@ -83,7 +84,7 @@ function main ( { DOM, Trello } ) {
     props$: selectCurrentMonthProps$
   } );
 
-  // Trello
+  // Trello CFD
 
   const trelloCFDProps$ = Observable.of( {
     label: 'Get actions',
@@ -105,6 +106,10 @@ function main ( { DOM, Trello } ) {
     props$: trelloCFDProps$
   } );
 
+  // Trello Kanban metrics
+
+  const trelloKanbanMetrics = TrelloKanbanMetrics();
+
   return {
     DOM: Observable.combineLatest(
       trelloCFD.DOM,
@@ -112,12 +117,14 @@ function main ( { DOM, Trello } ) {
       selectCurrentMonthButton.DOM,
       firstDisplayedListSelect.DOM,
       lastDisplayedListSelect.DOM,
+      trelloKanbanMetrics.DOM,
       (
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
         firstDisplayedListVTree,
-        lastDisplayedListVTree
+        lastDisplayedListVTree,
+        trelloKanbanMetricsVTree
       ) => div( '.container', [
         h1( '.title.center-align', [
           'TKAT ',
@@ -131,7 +138,8 @@ function main ( { DOM, Trello } ) {
         div( '.m-top.row', [
           div( '.col.s6', [ firstDisplayedListVTree ] ),
           div( '.col.s6', [ lastDisplayedListVTree ] )
-        ] )
+        ] ),
+        trelloKanbanMetricsVTree
       ] )
     ),
     Trello: trelloCFD.Trello,
