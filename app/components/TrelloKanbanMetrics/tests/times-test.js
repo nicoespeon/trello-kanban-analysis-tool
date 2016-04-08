@@ -134,14 +134,17 @@ test( 'avgLeadTime', ( assert ) => {
     { leadTime: 3 },
     { leadTime: 0 },
     { leadTime: 8 },
+    { leadTime: null },
     { leadTime: 1 },
     { leadTime: 3 }
   ];
   const dataAvgFloat = [
     { leadTime: 4 },
     { leadTime: 7 },
+    { leadTime: null },
     { leadTime: 5 },
     { leadTime: 10 },
+    { leadTime: null },
     { leadTime: 2 }
   ];
 

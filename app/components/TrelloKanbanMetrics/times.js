@@ -32,7 +32,8 @@ const parseLeadTime = R.map( card => ({
 // avgLeadTime :: [{leadTime: Integer}] -> Integer
 const avgLeadTime = R.compose(
   Math.round.bind( Math ),
-  R.mean(),
+  R.mean,
+  R.reject( R.isNil ),
   R.pluck( 'leadTime' )
 );
 
