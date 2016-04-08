@@ -23,6 +23,12 @@ const leadTimeFromDates = R.cond( [
   ]
 ] );
 
+// parseLeadTime :: [{startDates: [{list: String, date: Date}]}] -> [{leadTime: Integer}]
+const parseLeadTime = R.map( card => ({
+  id: card.id,
+  leadTime: leadTimeFromDates( card.startDates )
+}) );
+
 // avgLeadTime :: [{leadTime: Integer}] -> Integer
 const avgLeadTime = R.compose(
   Math.round.bind( Math ),
@@ -32,5 +38,6 @@ const avgLeadTime = R.compose(
 
 export default {
   leadTimeFromDates,
+  parseLeadTime,
   avgLeadTime
 };
