@@ -10,7 +10,7 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
           {
             filter: 'createCard,deleteCard,updateCard',
             fields: 'data,date,type',
-            limit: 500
+            limit: 1000
           },
           observer.onNext.bind( observer ),
           ( err ) => {
