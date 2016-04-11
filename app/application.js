@@ -120,8 +120,8 @@ function main ( { DOM, Trello } ) {
         lastDisplayedListVTree
       ) => div( '.container', [
         h1( '.title.center-align', [
-          'Trello Kanban ',
-          small( 'A simple side-project' )
+          'TKAT ',
+          small( 'Trello Kanban Analysis Tool' )
         ] ),
         div( '.center-align-around', [
           trelloCFDVTree,
