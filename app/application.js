@@ -108,7 +108,9 @@ function main ( { DOM, Trello } ) {
 
   // Trello Kanban metrics
 
-  const trelloKanbanMetrics = TrelloKanbanMetrics();
+  const trelloKanbanMetrics = TrelloKanbanMetrics( {
+    actions$: Trello.actions$.startWith( [] )
+  } );
 
   return {
     DOM: Observable.combineLatest(
