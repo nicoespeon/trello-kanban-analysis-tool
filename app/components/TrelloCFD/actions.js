@@ -7,11 +7,12 @@ import {
   fillMissingDates,
   parseDate,
   getCreateActions,
-  getDeleteActions
+  getDeleteActions,
+  parseListName
 } from '../../utils/utils';
 
 import {sumNumberOfCards} from './cards';
-import {countCardsPerList, mapListData, parseListName} from './lists';
+import {countCardsPerList, mapListData} from './lists';
 
 // _parseActionsWith :: (Number -> b) -> [Action] -> [List]
 function _parseActionsWith ( fn ) {

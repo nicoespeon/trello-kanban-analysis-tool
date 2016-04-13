@@ -1,9 +1,6 @@
 import R from 'ramda';
 
-import {countByWith} from '../../utils/utils';
-
-// Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
-const _parsedNamePattern = /(.*?)(\s\[\d+\])$/;
+import {countByWith} from '../../utils/utility';
 
 // allLists :: [List] -> [String]
 const allLists = R.compose(
@@ -26,29 +23,8 @@ const countCardsPerList = R.curry( function ( fn, data ) {
 // mapListData :: [{data: {list: a}}] -> [a]
 const mapListData = R.map( R.path( [ 'data', 'list' ] ) );
 
-// parseListName :: String -> [String | Undefined]
-const parseListName = R.cond( [
-  [
-    R.test( _parsedNamePattern ),
-    R.compose( R.head, R.tail, R.match( _parsedNamePattern ) )
-  ],
-  [ R.T, R.identity ]
-] );
-
-// getDisplayedLists :: [{name: String}] -> String -> String -> [String]
-const getDisplayedLists = ( lists, first, last ) => {
-  const names = R.compose( R.map( parseListName ), R.pluck( "name" ) )( lists );
-  return R.slice(
-    R.indexOf( parseListName( first ), names ),
-    R.indexOf( parseListName( last ), names ) + 1 || R.length( lists ),
-    names
-  );
-};
-
 export {
   allLists, 
   countCardsPerList, 
-  mapListData,
-  parseListName,
-  getDisplayedLists
+  mapListData
 };

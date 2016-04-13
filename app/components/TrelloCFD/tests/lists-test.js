@@ -4,9 +4,7 @@ import R from 'ramda';
 import {
   allLists,
   countCardsPerList,
-  mapListData,
-  parseListName,
-  getDisplayedLists
+  mapListData
 } from '../lists';
 
 test( 'allLists', ( assert ) => {
@@ -100,51 +98,5 @@ test( 'mapListData', ( assert ) => {
   ] );
 
   assert.looseEquals( result, expected, 'should return an array of data.list' );
-  assert.end();
-} );
-
-test( 'parseListName', ( assert ) => {
-  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
-  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
-  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
-  assert.end();
-} );
-
-test( 'getDisplayedLists', ( assert ) => {
-  const expected = [
-    "Backlog",
-    "Card Preparation",
-    "Production",
-    "Mise en live",
-    "In Production"
-  ];
-  const data = [
-    { "name": "Goals - Key Metrics" },
-    { "name": "Templates" },
-    { "name": "Icebox" },
-    { "name": "Icebox Énergie" },
-    { "name": "Backlog" },
-    { "name": "Card Preparation [2]" },
-    { "name": "Production [3]" },
-    { "name": "Mise en live [1]" },
-    { "name": "In Production" },
-    { "name": "Live (March 2016)" }
-  ];
-
-  assert.deepEquals(
-    getDisplayedLists( data, "Backlog", "In Production" ),
-    expected,
-    'should return names of list included within given range'
-  );
-  assert.deepEquals(
-    getDisplayedLists( data, "Backlog", "Production [3]" ),
-    [ "Backlog", "Card Preparation", "Production" ],
-    'should parse given names for comparison'
-  );
-  assert.deepEquals(
-    getDisplayedLists( data, "Production [3]", false ),
-    [ "Production", "Mise en live", "In Production", "Live (March 2016)" ],
-    'should take all names until the end if last is false'
-  );
   assert.end();
 } );
