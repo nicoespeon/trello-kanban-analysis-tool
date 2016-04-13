@@ -42,7 +42,7 @@ function TrelloCFD (
     actions$,
     ( { startDate, endDate }, lists, actions ) => R.compose(
       filterBetweenDates( startDate, endDate ),
-      parseActions( today, lists ),
+      parseActions( today, lists )
     )( actions )
   );
 

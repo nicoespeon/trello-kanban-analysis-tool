@@ -25,9 +25,9 @@ function TrelloKanbanMetrics ( { actions$, dates$ } ) {
     R.compose(
       leadTime => div( `Lead Time: ${leadTime} days` ),
       avgLeadTime,
-      R.tap(console.log.bind(console, "leadTimes")),
+      R.tap( console.log.bind( console, "leadTimes" ) ),
       parseLeadTime,
-      R.tap(console.log.bind(console, "startDates"))
+      R.tap( console.log.bind( console, "startDates" ) )
     )
   );
 
