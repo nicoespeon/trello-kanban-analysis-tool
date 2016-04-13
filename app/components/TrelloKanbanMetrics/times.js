@@ -43,11 +43,8 @@ const parseStartDates = ( actions, lists ) => R.compose(
   getCreateActions
 )( actions );
 
-// _propDate :: {date: a} -> a
-const _propDate = R.prop( 'date' );
-
 // _isDateNil :: {date: a} -> Boolean
-const _isDateNil = R.compose( R.isNil, _propDate );
+const _isDateNil = R.compose( R.isNil, R.prop( 'date' ) );
 
 // leadTimeFromDates :: [{list: String, date: Date}] -> Integer
 const leadTimeFromDates = R.cond( [
@@ -55,10 +52,8 @@ const leadTimeFromDates = R.cond( [
   [
     R.T,
     R.compose(
-      R.converge(
-        daysSpent,
-        [ R.compose( _propDate, R.head ), R.compose( _propDate, R.last ) ]
-      ),
+      R.converge( daysSpent, [ R.head, R.last ]),
+      R.pluck( 'date' ),
       R.reject( _isDateNil )
     )
   ]
