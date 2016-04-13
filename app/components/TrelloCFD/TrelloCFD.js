@@ -5,7 +5,6 @@ import R from 'ramda';
 import {parseActions} from './actions';
 import {parseToGraph} from './graph';
 
-import {getDisplayedLists} from '../../utils/trello';
 import {today, filterBetweenDates} from '../../utils/date';
 
 function TrelloCFD (
@@ -13,8 +12,7 @@ function TrelloCFD (
     DOM,
     actions$,
     lists$,
-    firstListDisplayed$,
-    lastListDisplayed$,
+    displayedLists$,
     dates$,
     props$
   }
@@ -27,13 +25,6 @@ function TrelloCFD (
   const vtree$ = props$.map( ( props ) => button(
     { className: R.join( ' ', R.concat( [ 'button' ], props.classNames ) ) },
     props.label )
-  );
-
-  const displayedLists$ = Observable.combineLatest(
-    lists$,
-    firstListDisplayed$,
-    lastListDisplayed$,
-    getDisplayedLists
   );
 
   const parsedActions$ = Observable.combineLatest(

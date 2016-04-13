@@ -14,6 +14,7 @@ import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
 
 import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
+import {getDisplayedLists} from './utils/trello';
 
 function main ( { DOM, Trello } ) {
   const trelloLists$ = Trello.lists$.startWith( [] );
@@ -98,12 +99,18 @@ function main ( { DOM, Trello } ) {
     selectCurrentMonthButton.dates$
   ).startWith( { startDate: currentMonth, endDate: null } );
 
+  const trelloDisplayedLists$ = Observable.combineLatest(
+    trelloLists$,
+    firstDisplayedListSelect.selected$,
+    lastDisplayedListSelect.selected$,
+    getDisplayedLists
+  );
+
   const trelloCFD = TrelloCFD( {
     DOM,
     actions$: trelloActions$,
     lists$: trelloLists$,
-    firstListDisplayed$: firstDisplayedListSelect.selected$,
-    lastListDisplayed$: lastDisplayedListSelect.selected$,
+    displayedLists$: trelloDisplayedLists$,
     dates$: trelloCFDDates$,
     props$: trelloCFDProps$
   } );
@@ -112,7 +119,8 @@ function main ( { DOM, Trello } ) {
 
   const trelloKanbanMetrics = TrelloKanbanMetrics( {
     actions$: trelloActions$,
-    dates$: trelloCFDDates$
+    dates$: trelloCFDDates$,
+    lists$: trelloDisplayedLists$
   } );
 
   return {

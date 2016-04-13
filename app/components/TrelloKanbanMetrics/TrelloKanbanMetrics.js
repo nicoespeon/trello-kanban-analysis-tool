@@ -5,9 +5,7 @@ import R from 'ramda';
 import {parseStartDates, parseLeadTime, avgLeadTime} from './times';
 import {filterBetweenDates} from '../../utils/date';
 
-function TrelloKanbanMetrics ( { actions$, dates$ } ) {
-  const lists$ = Observable.of( [ "Backlog", "Card Preparation [2]", "Production [3]", "Tests QA [2]", "Mise en live [1]", "In Production", "Live (April 2016)" ] );
-
+function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
   const selectedPeriodActions$ = Observable.combineLatest(
     dates$,
     actions$,
@@ -25,9 +23,7 @@ function TrelloKanbanMetrics ( { actions$, dates$ } ) {
     R.compose(
       leadTime => div( `Lead Time: ${leadTime} days` ),
       avgLeadTime,
-      R.tap( console.log.bind( console, "leadTimes" ) ),
-      parseLeadTime,
-      R.tap( console.log.bind( console, "startDates" ) )
+      parseLeadTime
     )
   );
 
