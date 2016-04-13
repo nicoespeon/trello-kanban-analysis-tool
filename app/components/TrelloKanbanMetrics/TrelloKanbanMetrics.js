@@ -3,12 +3,20 @@ import {Observable} from 'rx';
 import R from 'ramda';
 
 import {parseStartDates, parseLeadTime, avgLeadTime} from './times';
+import {filterBetweenDates} from '../../utils/date';
 
-function TrelloKanbanMetrics ( { actions$ } ) {
+function TrelloKanbanMetrics ( { actions$, dates$ } ) {
   const lists$ = Observable.of( [ "Backlog", "Card Preparation [2]", "Production [3]", "Tests QA [2]", "Mise en live [1]", "In Production", "Live (April 2016)" ] );
 
-  const cards$ = Observable.combineLatest(
+  const selectedPeriodActions$ = Observable.combineLatest(
+    dates$,
     actions$,
+    ( { startDate, endDate }, actions ) =>
+      filterBetweenDates( startDate, endDate, actions )
+  );
+
+  const cards$ = Observable.combineLatest(
+    selectedPeriodActions$,
     lists$,
     parseStartDates
   );

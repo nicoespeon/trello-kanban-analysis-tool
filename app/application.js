@@ -19,6 +19,8 @@ function main ( { DOM, Trello } ) {
   const trelloLists$ = Trello.lists$.startWith( [] );
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
 
+  const trelloActions$ = Trello.actions$.startWith( [] );
+
   // Select to choose the first displayed list
 
   const FirstDisplayedListSelect = isolate( LabeledSelect );
@@ -98,7 +100,7 @@ function main ( { DOM, Trello } ) {
 
   const trelloCFD = TrelloCFD( {
     DOM,
-    actions$: Trello.actions$.startWith( [] ),
+    actions$: trelloActions$,
     lists$: trelloLists$,
     firstListDisplayed$: firstDisplayedListSelect.selected$,
     lastListDisplayed$: lastDisplayedListSelect.selected$,
@@ -109,7 +111,8 @@ function main ( { DOM, Trello } ) {
   // Trello Kanban metrics
 
   const trelloKanbanMetrics = TrelloKanbanMetrics( {
-    actions$: Trello.actions$.startWith( [] )
+    actions$: trelloActions$,
+    dates$: trelloCFDDates$
   } );
 
   return {
