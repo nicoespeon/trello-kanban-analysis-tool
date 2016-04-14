@@ -2,6 +2,7 @@ import R from 'ramda';
 
 import {
   parseDate,
+  parseListName,
   daysSpent,
   groupByWith,
   getCreateList,
@@ -23,7 +24,9 @@ const _startDatesFromActions = ( actions, lists ) => R.map(
       R.propOr( null, 'date' ),
       R.find(
         R.compose(
-          R.propEq( 'name', list ),
+          R.equals( list ),
+          parseListName,
+          R.prop( 'name' ),
           getCreateList
         )
       ),
@@ -48,11 +51,17 @@ const _isDateNil = R.compose( R.isNil, R.prop( 'date' ) );
 
 // leadTimeFromDates :: [{list: String, date: Date}] -> Integer
 const leadTimeFromDates = R.cond( [
-  [ R.compose( _isDateNil, R.last ), R.always( null ) ],
+  [
+    R.either(
+      R.isEmpty,
+      R.compose( _isDateNil, R.last ),
+    ),
+    R.always( null )
+  ],
   [
     R.T,
     R.compose(
-      R.converge( daysSpent, [ R.head, R.last ]),
+      R.converge( daysSpent, [ R.head, R.last ] ),
       R.pluck( 'date' ),
       R.reject( _isDateNil )
     )
