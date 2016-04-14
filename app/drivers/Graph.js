@@ -14,7 +14,7 @@ function makeGraphDriver ( selector ) {
 
         chart.xAxis
           .showMaxMin( false )
-          .tickFormat( ( d ) => d3.time.format( '%x' )( new Date( d ) ) );
+          .tickFormat( ( d ) => d3.time.format( '%d/%m/%y' )( new Date( d ) ) );
 
         chart.yAxis
           .tickFormat( d3.format( ',.0f' ) );
