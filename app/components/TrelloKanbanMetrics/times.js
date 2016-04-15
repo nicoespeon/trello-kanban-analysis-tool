@@ -94,7 +94,7 @@ const isMissingInformation = R.compose(
   R.prop( 'startDates' )
 );
 
-export default {
+export {
   parseStartDates,
   leadTimeFromDates,
   parseLeadTime,
