@@ -82,9 +82,19 @@ const avgLeadTime = R.compose(
   R.pluck( 'leadTime' )
 );
 
+// isMissingInformation :: StartDates -> Boolean
+const isMissingInformation = R.compose(
+  R.both(
+    R.compose( _isDateNil, R.head ),
+    R.compose( R.not, _isDateNil, R.last )
+  ),
+  R.prop( 'startDates' )
+);
+
 export default {
   parseStartDates,
   leadTimeFromDates,
   parseLeadTime,
-  avgLeadTime
+  avgLeadTime,
+  isMissingInformation
 };

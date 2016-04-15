@@ -6,7 +6,8 @@ import {
   parseStartDates,
   leadTimeFromDates,
   parseLeadTime,
-  avgLeadTime
+  avgLeadTime,
+  isMissingInformation
 } from '../times';
 
 test( 'parseStartDates', ( assert ) => {
@@ -234,5 +235,46 @@ test( 'avgLeadTime', ( assert ) => {
 
   assert.equals( avgLeadTime( dataAvgInteger ), 3, 'should return the average lead time from given data' );
   assert.equals( avgLeadTime( dataAvgFloat ), 6, 'should return a rounded average lead time' );
+  assert.end();
+} );
+
+test( 'isMissingInformation', ( assert ) => {
+  const card = {
+    id: "29876467890",
+    startDates: [
+      { list: "Production", date: "2016-03-03" },
+      { list: "Tests QA", date: "2016-05-06" },
+      { list: "Mise en live", date: "2016-05-10" }
+    ]
+  };
+  const cardWithoutStart = {
+    id: "29876467890",
+    startDates: [
+      { list: "Production", date: null },
+      { list: "Tests QA", date: "2016-05-06" },
+      { list: "Mise en live", date: "2016-05-10" }
+    ]
+  };
+  const cardWithoutEnd = {
+    id: "29876467890",
+    startDates: [
+      { list: "Production", date: "2016-03-03" },
+      { list: "Tests QA", date: "2016-05-06" },
+      { list: "Mise en live", date: null }
+    ]
+  };
+  const cardWithoutStartNorEnd = {
+    id: "29876467890",
+    startDates: [
+      { list: "Production", date: "2016-03-03" },
+      { list: "Tests QA", date: "2016-05-06" },
+      { list: "Mise en live", date: null }
+    ]
+  };
+
+  assert.equals( isMissingInformation( card ), false, 'should return false if given card is complete' );
+  assert.equals( isMissingInformation( cardWithoutStart ), true, 'should return true if given card has no information on first start dates' );
+  assert.equals( isMissingInformation( cardWithoutEnd ), false, 'should return false if card has not completed its cycle' );
+  assert.equals( isMissingInformation( cardWithoutStartNorEnd ), false, 'should return false if given card has no information on first start dates but has not completed its cycle' );
   assert.end();
 } );

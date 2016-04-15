@@ -2,7 +2,12 @@ import {div} from '@cycle/dom';
 import {Observable} from 'rx';
 import R from 'ramda';
 
-import {parseStartDates, parseLeadTime, avgLeadTime} from './times';
+import {
+  parseStartDates,
+  parseLeadTime,
+  avgLeadTime,
+  isMissingInformation
+} from './times';
 import {filterBetweenDates} from '../../utils/date';
 
 function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
@@ -17,6 +22,10 @@ function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
     selectedPeriodActions$,
     lists$,
     parseStartDates
+  );
+
+  const missingInformationCards$ = cards$.map(
+    R.filter( isMissingInformation )
   );
 
   const vtree$ = cards$.map(
