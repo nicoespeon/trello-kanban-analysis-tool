@@ -85,8 +85,11 @@ const avgLeadTime = R.compose(
 // isMissingInformation :: StartDates -> Boolean
 const isMissingInformation = R.compose(
   R.both(
-    R.compose( _isDateNil, R.head ),
-    R.compose( R.not, _isDateNil, R.last )
+    R.compose( R.not, R.isEmpty ),
+    R.both(
+      R.compose( _isDateNil, R.head ),
+      R.compose( R.not, _isDateNil, R.last )
+    )
   ),
   R.prop( 'startDates' )
 );

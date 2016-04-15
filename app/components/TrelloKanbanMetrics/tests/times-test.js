@@ -271,10 +271,15 @@ test( 'isMissingInformation', ( assert ) => {
       { list: "Mise en live", date: null }
     ]
   };
+  const cardWithoutDates = {
+    id: "29876467890",
+    startDates: []
+  };
 
   assert.equals( isMissingInformation( card ), false, 'should return false if given card is complete' );
   assert.equals( isMissingInformation( cardWithoutStart ), true, 'should return true if given card has no information on first start dates' );
   assert.equals( isMissingInformation( cardWithoutEnd ), false, 'should return false if card has not completed its cycle' );
   assert.equals( isMissingInformation( cardWithoutStartNorEnd ), false, 'should return false if given card has no information on first start dates but has not completed its cycle' );
+  assert.equals( isMissingInformation( cardWithoutDates ), false, 'should return false if given card has no dates' );
   assert.end();
 } );
