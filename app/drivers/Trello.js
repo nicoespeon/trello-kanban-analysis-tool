@@ -46,9 +46,7 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
             limit: 1000
           },
           observer.onNext.bind( observer ),
-          ( err ) => {
-            console.log( 'Error when trying to retrieve board actions', err );
-          }
+          observer.onError.bind( observer )
         );
       } );
     } ),
@@ -62,9 +60,7 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
             card_fields: ''
           },
           observer.onNext.bind( observer ),
-          ( err ) => {
-            console.log( 'Error when trying to retrieve board lists', err );
-          }
+          observer.onError.bind( observer )
         );
       } );
     } ),
