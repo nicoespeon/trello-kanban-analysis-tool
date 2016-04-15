@@ -16,11 +16,11 @@ import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMe
 import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
 import {getDisplayedLists} from './utils/trello';
 
-function main ( { DOM, Trello } ) {
-  const trelloLists$ = Trello.lists$.startWith( [] );
+function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
+  const trelloLists$ = TrelloFetch.lists$.startWith( [] );
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
 
-  const trelloActions$ = Trello.actions$.startWith( [] );
+  const trelloActions$ = TrelloFetch.actions$.startWith( [] );
 
   // Select to choose the first displayed list
 
@@ -155,15 +155,17 @@ function main ( { DOM, Trello } ) {
         trelloKanbanMetricsVTree
       ] )
     ),
-    Trello: trelloCFD.Trello,
+    TrelloFetch: trelloCFD.Trello,
+    TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: trelloLists$
+    Log: TrelloMissingInfo.cardsActions$$.switch()
   };
 }
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
-  Trello: makeTrelloDriver( 'LydFpONf' ),
+  TrelloFetch: makeTrelloDriver( 'LydFpONf' ),
+  TrelloMissingInfo: makeTrelloDriver( 'LydFpONf' ),
   Graph: makeGraphDriver( '#chart svg' ),
   Log: logDriver
 };

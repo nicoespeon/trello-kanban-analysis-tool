@@ -24,8 +24,11 @@ function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
     parseStartDates
   );
 
-  const missingInformationCards$ = cards$.map(
-    R.filter( isMissingInformation )
+  const missingInformationCardIds$ = cards$.map(
+    R.compose(
+      R.pluck( 'id' ),
+      R.filter( isMissingInformation )
+    )
   );
 
   const vtree$ = cards$.map(
@@ -37,7 +40,8 @@ function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
   );
 
   return {
-    DOM: vtree$
+    DOM: vtree$,
+    Trello: missingInformationCardIds$
   };
 }
 
