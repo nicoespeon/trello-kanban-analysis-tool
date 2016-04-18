@@ -19,8 +19,10 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
     )
   );
 
+  const propsDefaults = { render: R.identity };
+
   const vtree$ = Observable.combineLatest(
-    props$,
+    props$.map( R.merge( propsDefaults ) ),
     selected$,
     values$,
     ( props, selected, values ) => div( [
@@ -31,8 +33,11 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
           name: props.name
         },
         [ R.map( value => R.cond( [
-          [ R.equals( selected ), R.always( option( { selected: true }, value ) ) ],
-          [ R.T, R.always( option( value ) ) ]
+          [
+            R.equals( selected ),
+            R.always( option( { value: value, selected: true }, props.render( value ) ) )
+          ],
+          [ R.T, R.always( option( {value: value}, props.render( value ) ) ) ]
         ] )( value ), values ) ]
       )
     ] )

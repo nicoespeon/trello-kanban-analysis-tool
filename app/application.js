@@ -26,6 +26,29 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const trelloActions$ = publishedTrelloActions$.startWith( [] );
 
+  // Select to choose the displayed board
+
+  const BoardSelect = isolate( LabeledSelect );
+
+  const boardProps$ = TrelloFetch.boards$
+    .map( ( boards ) => ({
+      name: 'board',
+      labelText: 'Board',
+      classNames: [ 'browser-default' ],
+      select: R.always( 'LydFpONf' ),
+      render: ( value ) => R.propOr(
+        value,
+        'name',
+        R.find( R.propEq( 'shortLink', value ), boards )
+      )
+    }) );
+
+  const boardSelect = BoardSelect( {
+    DOM,
+    props$: boardProps$,
+    values$: TrelloFetch.boards$.map( R.pluck( 'shortLink' ) )
+  } );
+
   // Select to choose the first displayed list
 
   const FirstDisplayedListSelect = isolate( LabeledSelect );
@@ -138,6 +161,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   return {
     DOM: Observable.combineLatest(
+      boardSelect.DOM,
       trelloCFD.DOM,
       selectLastMonthButton.DOM,
       selectCurrentMonthButton.DOM,
@@ -145,6 +169,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
       lastDisplayedListSelect.DOM,
       trelloKanbanMetrics.DOM,
       (
+        boardVTree,
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
@@ -162,23 +187,28 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
           selectCurrentMonthButtonVTree
         ] ),
         div( '.m-top.row', [
+          div( '.col.s12', [ boardVTree ] ),
           div( '.col.s6', [ firstDisplayedListVTree ] ),
           div( '.col.s6', [ lastDisplayedListVTree ] )
         ] ),
         trelloKanbanMetricsVTree
       ] )
     ),
-    TrelloFetch: trelloCFD.Trello,
+    TrelloFetch: Observable.combineLatest(
+      boardSelect.selected$,
+      trelloCFD.Trello,
+      R.compose( R.head, R.unapply( R.identity ) )
+    ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: TrelloMissingInfo.cardsActions$$.switch()
+    Log: boardSelect.selected$
   };
 }
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
-  TrelloFetch: makeTrelloDriver( 'LydFpONf' ),
-  TrelloMissingInfo: makeTrelloDriver( 'LydFpONf' ),
+  TrelloFetch: makeTrelloDriver(),
+  TrelloMissingInfo: makeTrelloDriver(),
   Graph: makeGraphDriver( '#chart svg' ),
   Log: logDriver
 };

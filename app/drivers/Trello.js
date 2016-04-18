@@ -34,10 +34,25 @@ function cardActions$ ( cardId ) {
   } );
 }
 
-const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
+function trelloSinkDriver ( input$ ) {
   return {
+    boards$: Observable.create( ( observer ) => {
+      Trello.get(
+        '/members/me/boards',
+        {
+          filter: 'open',
+          fields: 'name,shortLink'
+        },
+        ( data ) => {
+          observer.onNext( data );
+          observer.onCompleted();
+        },
+        observer.onError.bind( observer )
+      );
+    } ),
+
     actions$: Observable.create( ( observer ) => {
-      input$.subscribe( () => {
+      input$.subscribe( ( boardId ) => {
         Trello.get(
           '/boards/' + boardId + '/actions',
           {
@@ -52,7 +67,7 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
     } ),
 
     lists$: Observable.create( ( observer ) => {
-      input$.subscribe( () => {
+      input$.subscribe( ( boardId ) => {
         Trello.get(
           '/boards/' + boardId + '/lists',
           {
@@ -80,9 +95,9 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
         } );
     } )
   };
-} );
+}
 
-function makeTrelloDriver ( boardId ) {
+function makeTrelloDriver () {
   Trello.authorize( {
     type: 'popup',
     name: 'Trello Kanban Analysis Tool',
@@ -93,7 +108,7 @@ function makeTrelloDriver ( boardId ) {
     error: () => console.log( 'Error on Trello connexion.' )
   } );
 
-  return trelloSinkDriver( boardId );
+  return trelloSinkDriver;
 }
 
 export {makeTrelloDriver};
