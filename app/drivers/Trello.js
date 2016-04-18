@@ -85,7 +85,7 @@ const trelloSinkDriver = R.curry( ( boardId, input$ ) => {
 function makeTrelloDriver ( boardId ) {
   Trello.authorize( {
     type: 'popup',
-    name: 'Trello Kanban',
+    name: 'Trello Kanban Analysis Tool',
     scope: { read: true },
     persist: true,
     expiration: 'never',

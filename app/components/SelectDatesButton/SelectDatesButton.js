@@ -15,8 +15,8 @@ function SelectDatesButton ( { DOM, props$ } ) {
 
   const vtree$ = props$.map( props => button(
     { className: R.join( ' ', R.concat( [ 'button' ], props.classNames ) ) },
-    props.label )
-  );
+    props.label
+  ) );
 
   return {
     DOM: vtree$,
