@@ -17,10 +17,14 @@ import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
 import {getDisplayedLists} from './utils/trello';
 
 function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
-  const trelloLists$ = TrelloFetch.lists$.startWith( [] );
+  const publishedTrelloLists$ = TrelloFetch.lists$.publish();
+  const publishedTrelloActions$ = TrelloFetch.actions$.publish();
+  const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
+
+  const trelloLists$ = publishedTrelloLists$.startWith( [] );
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
 
-  const trelloActions$ = TrelloFetch.actions$.startWith( [] );
+  const trelloActions$ = publishedTrelloActions$.startWith( [] );
 
   // Select to choose the first displayed list
 
@@ -120,8 +124,17 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const trelloKanbanMetrics = TrelloKanbanMetrics( {
     actions$: trelloActions$,
     dates$: trelloCFDDates$,
-    lists$: trelloDisplayedLists$
+    lists$: trelloDisplayedLists$,
+    complementaryActions$: publishedTrelloCardsActions$$
+      .switch()
+      .startWith( [] )
+      .scan( R.concat )
   } );
+
+  // Connect
+  publishedTrelloLists$.connect();
+  publishedTrelloActions$.connect();
+  publishedTrelloCardsActions$$.connect();
 
   return {
     DOM: Observable.combineLatest(
