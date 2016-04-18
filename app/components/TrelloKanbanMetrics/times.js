@@ -46,6 +46,21 @@ const parseStartDates = ( actions, lists ) => R.compose(
   getCreateActions
 )( actions );
 
+// filterCardsOnPeriod :: {startDate: Date, endDate: Date} -> StartDates -> StartDates
+const filterCardsOnPeriod = R.curry( ( { startDate, endDate }, cards ) =>
+  R.filter(
+    R.compose(
+      R.both(
+        R.either( () => R.isNil( endDate ), R.gte( endDate ) ),
+        R.either( () => R.isNil( startDate ), R.lte( startDate ) )
+      ),
+      R.prop( 'date' ),
+      R.last,
+      R.prop( 'startDates' )
+    )
+  )( cards )
+);
+
 // _isDateNil :: {date: a} -> Boolean
 const _isDateNil = R.compose( R.isNil, R.prop( 'date' ) );
 
@@ -96,6 +111,7 @@ const isMissingInformation = R.compose(
 
 export {
   parseStartDates,
+  filterCardsOnPeriod,
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime,

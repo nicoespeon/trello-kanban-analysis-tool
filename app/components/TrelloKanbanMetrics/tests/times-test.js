@@ -4,6 +4,7 @@ import trelloActions from './fixtures/trello-actions';
 
 import {
   parseStartDates,
+  filterCardsOnPeriod,
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime,
@@ -76,6 +77,158 @@ test( 'parseStartDates', ( assert ) => {
   ];
 
   assert.deepEquals( parseStartDates( trelloActions, lists ), expected, 'should parse actions with given lists to determine start dates' );
+  assert.end();
+} );
+
+test( 'filterCardsOnPeriod', ( assert ) => {
+  const data = [
+    {
+      id: "5661abfe6c2f11e4db652169",
+      startDates: [
+        { list: "Production", date: "2016-04-10" },
+        { list: "Tests QA", date: "2016-05-06" },
+        { list: "Mise en live", date: null }
+      ]
+    },
+    {
+      id: "564077e6e6dfdc9c01244836",
+      startDates: [
+        { list: "Production", date: "2016-04-06" },
+        { list: "Tests QA", date: "2016-04-06" },
+        { list: "Mise en live", date: "2016-04-12" }
+      ]
+    },
+    {
+      id: "570768ca19fde6c4a98714b5",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: null },
+        { list: "Mise en live", date: null }
+      ]
+    },
+    {
+      id: "56fb8a5af196e52193de6179",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: "2016-04-07" },
+        { list: "Mise en live", date: "2016-04-07" }
+      ]
+    },
+    {
+      id: "56f3e734a5ab9295bcdb29d6",
+      startDates: [
+        { list: "Production", date: "2016-04-07" },
+        { list: "Tests QA", date: null },
+        { list: "Mise en live", date: null }
+      ]
+    },
+    {
+      id: "56f2a2265985b75e2c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-23" },
+        { list: "Tests QA", date: "2016-02-07" },
+        { list: "Mise en live", date: "2016-02-12" }
+      ]
+    },
+    {
+      id: "56f2a2265985b7599c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-24" },
+        { list: "Tests QA", date: "2016-02-09" },
+        { list: "Mise en live", date: "2016-02-10" }
+      ]
+    },
+    {
+      id: "56dc003c5a0885d45c5f5ca4",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: "2016-02-08" },
+        { list: "Mise en live", date: null }
+      ]
+    }
+  ];
+
+  const expected = [
+    {
+      id: "56fb8a5af196e52193de6179",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: "2016-04-07" },
+        { list: "Mise en live", date: "2016-04-07" }
+      ]
+    },
+    {
+      id: "56f2a2265985b75e2c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-23" },
+        { list: "Tests QA", date: "2016-02-07" },
+        { list: "Mise en live", date: "2016-02-12" }
+      ]
+    }
+  ];
+  const dates = { startDate: "2016-02-12", endDate: "2016-04-07" };
+
+  const expectedWithNullEnd = [
+    {
+      id: "564077e6e6dfdc9c01244836",
+      startDates: [
+        { list: "Production", date: "2016-04-06" },
+        { list: "Tests QA", date: "2016-04-06" },
+        { list: "Mise en live", date: "2016-04-12" }
+      ]
+    },
+    {
+      id: "56fb8a5af196e52193de6179",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: "2016-04-07" },
+        { list: "Mise en live", date: "2016-04-07" }
+      ]
+    },
+    {
+      id: "56f2a2265985b75e2c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-23" },
+        { list: "Tests QA", date: "2016-02-07" },
+        { list: "Mise en live", date: "2016-02-12" }
+      ]
+    }
+  ];
+  const datesWithNullEnd = {startDate: "2016-02-12", endDate: null};
+
+  const expectedWithNullStart =  [
+    {
+      id: "56fb8a5af196e52193de6179",
+      startDates: [
+        { list: "Production", date: null },
+        { list: "Tests QA", date: "2016-04-07" },
+        { list: "Mise en live", date: "2016-04-07" }
+      ]
+    },
+    {
+      id: "56f2a2265985b75e2c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-23" },
+        { list: "Tests QA", date: "2016-02-07" },
+        { list: "Mise en live", date: "2016-02-12" }
+      ]
+    },
+    {
+      id: "56f2a2265985b7599c6e59c4",
+      startDates: [
+        { list: "Production", date: "2016-01-24" },
+        { list: "Tests QA", date: "2016-02-09" },
+        { list: "Mise en live", date: "2016-02-10" }
+      ]
+    }
+  ];
+  const datesWithNullStart = {startDate: null, endDate: "2016-04-07"};
+
+  assert.deepEquals( filterCardsOnPeriod( dates, data ), expected, 'should return cards that count for selected period lead time calculation' );
+  assert.deepEquals( filterCardsOnPeriod( dates )( data ), expected, 'should be curried' );
+
+  assert.deepEquals( filterCardsOnPeriod( datesWithNullEnd, data ), expectedWithNullEnd, 'should take all cards after startDate if endDate is null' );
+  assert.deepEquals( filterCardsOnPeriod( datesWithNullStart, data ), expectedWithNullStart, 'should take all cards before endDate if startDate is null' );
   assert.end();
 } );
 

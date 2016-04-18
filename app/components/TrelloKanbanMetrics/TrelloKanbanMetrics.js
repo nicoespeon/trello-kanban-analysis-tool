@@ -4,34 +4,64 @@ import R from 'ramda';
 
 import {
   parseStartDates,
+  filterCardsOnPeriod,
   parseLeadTime,
   avgLeadTime,
   isMissingInformation
 } from './times';
-import {filterBetweenDates} from '../../utils/date';
 
-function TrelloKanbanMetrics ( { actions$, dates$, lists$ } ) {
-  const selectedPeriodActions$ = Observable.combineLatest(
-    dates$,
-    actions$,
-    ( { startDate, endDate }, actions ) =>
-      filterBetweenDates( startDate, endDate, actions )
-  );
+function TrelloKanbanMetrics ( { actions$, dates$, lists$, complementaryActions$ } ) {
+
+  // Determine missing information
 
   const cards$ = Observable.combineLatest(
-    selectedPeriodActions$,
+    actions$,
     lists$,
-    parseStartDates
+    dates$,
+    ( actions, lists, dates ) =>
+      filterCardsOnPeriod( dates, parseStartDates( actions, lists ) )
   );
 
-  const missingInformationCardIds$ = cards$.map(
+  const complementaryCardsIds$ = complementaryActions$.map(
     R.compose(
-      R.pluck( 'id' ),
-      R.filter( isMissingInformation )
+      R.uniq,
+      R.map( R.path( [ 'data', 'card', 'id' ] ) ),
+      R.flatten
     )
   );
 
-  const vtree$ = cards$.map(
+  const missingInformationCardIds$ = Observable.combineLatest(
+    cards$,
+    complementaryCardsIds$,
+    ( cards, complementaryCardsIds ) => R.compose(
+      R.pluck( 'id' ),
+      R.filter( isMissingInformation ),
+      // Only pick cards which are not already in complementary ones.
+      R.differenceWith(
+        R.useWith( R.equals, [ R.prop( 'id' ), R.identity ] ),
+        R.__,
+        complementaryCardsIds
+      )
+    )( cards )
+  );
+
+  // Calculate Lead Time from consolidated data
+
+  const consolidatedActions$ = Observable.combineLatest(
+    actions$,
+    complementaryActions$,
+    R.useWith( R.concat, [ R.identity, R.flatten ] )
+  );
+
+  const consolidatedCards$ = Observable.combineLatest(
+    consolidatedActions$,
+    lists$,
+    dates$,
+    ( actions, lists, dates ) =>
+      filterCardsOnPeriod( dates, parseStartDates( actions, lists ) )
+  );
+
+  const vtree$ = consolidatedCards$.map(
     R.compose(
       leadTime => div( `Lead Time: ${leadTime} days` ),
       avgLeadTime,
