@@ -7,8 +7,7 @@ import {
   fillMissingDates,
   parseDate,
   getCreateActions,
-  getDeleteActions,
-  parseListName
+  getDeleteActions
 } from '../../utils/utils';
 
 import {sumNumberOfCards} from './cards';
@@ -54,14 +53,6 @@ const consolidateContent = groupByWith(
 const consolidateActions = ( initialContent, actions ) => {
   return R.compose(
     fillMissingDates,
-    R.map(
-      R.over(
-        R.lensProp( 'content' ),
-        R.map(
-          R.over( R.lensProp( 'list' ), parseListName )
-        )
-      )
-    ),
     uniqByDateDesc,
     R.scan(
       ( a, b ) => R.over(
@@ -75,16 +66,16 @@ const consolidateActions = ( initialContent, actions ) => {
   )( actions );
 };
 
-// parseCurrentStatus :: String -> [{name: String, cards: Array}] -> [List]
+// parseCurrentStatus :: String -> [{id: String, cards: Array}] -> [List]
 const parseCurrentStatus = R.curry( ( date, list ) => ({
   date: date,
   content: R.compose(
     R.unary( R.reverse ),
-    R.map( a => ({ list: a.name, numberOfCards: R.length( a.cards ) }) )
+    R.map( a => ({ list: a.id, numberOfCards: R.length( a.cards ) }) )
   )( list )
 }) );
 
-// parseActions :: String -> [{name: String, cards: Array}] -> [Action] -> [List]
+// parseActions :: String -> [{id: String, cards: Array}] -> [Action] -> [List]
 const parseActions = R.curry( ( date, lists, actions ) => {
   return consolidateActions(
     parseCurrentStatus( date, lists ),

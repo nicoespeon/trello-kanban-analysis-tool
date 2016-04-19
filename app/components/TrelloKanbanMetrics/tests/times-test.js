@@ -16,64 +16,64 @@ test( 'parseStartDates', ( assert ) => {
     {
       id: "5661abfe6c2f11e4db652169",
       startDates: [
-        { list: "Production", date: "2016-04-10" },
-        { list: "Tests QA", date: "2016-05-06" },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-10" },
+        { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "564077e6e6dfdc9c01244836",
       startDates: [
-        { list: "Production", date: "2016-04-06" },
-        { list: "Tests QA", date: "2016-04-06" },
-        { list: "Mise en live", date: "2016-04-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-06" },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-06" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-12" }
       ]
     },
     {
       id: "570768ca19fde6c4a98714b5",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: null },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: null },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-04-07" },
-        { list: "Mise en live", date: "2016-04-07" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-07" }
       ]
     },
     {
       id: "56f3e734a5ab9295bcdb29d6",
       startDates: [
-        { list: "Production", date: "2016-04-07" },
-        { list: "Tests QA", date: null },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-07" },
+        { list: "53a775adc6ff397a74274486", date: null },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "56f2a2265985b75e2c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-23" },
-        { list: "Tests QA", date: "2016-02-07" },
-        { list: "Mise en live", date: "2016-02-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-23" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-12" }
       ]
     },
     {
       id: "56dc003c5a0885d45c5f5ca4",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-02-08" },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-08" },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     }
   ];
   const lists = [
-    "Production",
-    "Tests QA",
-    "Mise en live"
+    "563b1afeb758fc0e81a3c1b6",
+    "53a775adc6ff397a74274486",
+    "5450ed6ad166fa6110790030"
   ];
 
   assert.deepEquals( parseStartDates( trelloActions, lists ), expected, 'should parse actions with given lists to determine start dates' );
@@ -85,65 +85,65 @@ test( 'filterCardsOnPeriod', ( assert ) => {
     {
       id: "5661abfe6c2f11e4db652169",
       startDates: [
-        { list: "Production", date: "2016-04-10" },
-        { list: "Tests QA", date: "2016-05-06" },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-10" },
+        { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "564077e6e6dfdc9c01244836",
       startDates: [
-        { list: "Production", date: "2016-04-06" },
-        { list: "Tests QA", date: "2016-04-06" },
-        { list: "Mise en live", date: "2016-04-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-06" },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-06" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-12" }
       ]
     },
     {
       id: "570768ca19fde6c4a98714b5",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: null },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: null },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-04-07" },
-        { list: "Mise en live", date: "2016-04-07" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-07" }
       ]
     },
     {
       id: "56f3e734a5ab9295bcdb29d6",
       startDates: [
-        { list: "Production", date: "2016-04-07" },
-        { list: "Tests QA", date: null },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-07" },
+        { list: "53a775adc6ff397a74274486", date: null },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     },
     {
       id: "56f2a2265985b75e2c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-23" },
-        { list: "Tests QA", date: "2016-02-07" },
-        { list: "Mise en live", date: "2016-02-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-23" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-12" }
       ]
     },
     {
       id: "56f2a2265985b7599c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-24" },
-        { list: "Tests QA", date: "2016-02-09" },
-        { list: "Mise en live", date: "2016-02-10" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-24" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-09" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-10" }
       ]
     },
     {
       id: "56dc003c5a0885d45c5f5ca4",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-02-08" },
-        { list: "Mise en live", date: null }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-08" },
+        { list: "5450ed6ad166fa6110790030", date: null }
       ]
     }
   ];
@@ -152,17 +152,17 @@ test( 'filterCardsOnPeriod', ( assert ) => {
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-04-07" },
-        { list: "Mise en live", date: "2016-04-07" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-07" }
       ]
     },
     {
       id: "56f2a2265985b75e2c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-23" },
-        { list: "Tests QA", date: "2016-02-07" },
-        { list: "Mise en live", date: "2016-02-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-23" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-12" }
       ]
     }
   ];
@@ -172,25 +172,25 @@ test( 'filterCardsOnPeriod', ( assert ) => {
     {
       id: "564077e6e6dfdc9c01244836",
       startDates: [
-        { list: "Production", date: "2016-04-06" },
-        { list: "Tests QA", date: "2016-04-06" },
-        { list: "Mise en live", date: "2016-04-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-04-06" },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-06" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-12" }
       ]
     },
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-04-07" },
-        { list: "Mise en live", date: "2016-04-07" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-07" }
       ]
     },
     {
       id: "56f2a2265985b75e2c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-23" },
-        { list: "Tests QA", date: "2016-02-07" },
-        { list: "Mise en live", date: "2016-02-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-23" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-12" }
       ]
     }
   ];
@@ -200,25 +200,25 @@ test( 'filterCardsOnPeriod', ( assert ) => {
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
-        { list: "Production", date: null },
-        { list: "Tests QA", date: "2016-04-07" },
-        { list: "Mise en live", date: "2016-04-07" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: null },
+        { list: "53a775adc6ff397a74274486", date: "2016-04-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-04-07" }
       ]
     },
     {
       id: "56f2a2265985b75e2c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-23" },
-        { list: "Tests QA", date: "2016-02-07" },
-        { list: "Mise en live", date: "2016-02-12" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-23" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-07" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-12" }
       ]
     },
     {
       id: "56f2a2265985b7599c6e59c4",
       startDates: [
-        { list: "Production", date: "2016-01-24" },
-        { list: "Tests QA", date: "2016-02-09" },
-        { list: "Mise en live", date: "2016-02-10" }
+        { list: "563b1afeb758fc0e81a3c1b6", date: "2016-01-24" },
+        { list: "53a775adc6ff397a74274486", date: "2016-02-09" },
+        { list: "5450ed6ad166fa6110790030", date: "2016-02-10" }
       ]
     }
   ];
@@ -395,33 +395,33 @@ test( 'isMissingInformation', ( assert ) => {
   const card = {
     id: "29876467890",
     startDates: [
-      { list: "Production", date: "2016-03-03" },
-      { list: "Tests QA", date: "2016-05-06" },
-      { list: "Mise en live", date: "2016-05-10" }
+      { list: "563b1afeb758fc0e81a3c1b6", date: "2016-03-03" },
+      { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+      { list: "5450ed6ad166fa6110790030", date: "2016-05-10" }
     ]
   };
   const cardWithoutStart = {
     id: "29876467890",
     startDates: [
-      { list: "Production", date: null },
-      { list: "Tests QA", date: "2016-05-06" },
-      { list: "Mise en live", date: "2016-05-10" }
+      { list: "563b1afeb758fc0e81a3c1b6", date: null },
+      { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+      { list: "5450ed6ad166fa6110790030", date: "2016-05-10" }
     ]
   };
   const cardWithoutEnd = {
     id: "29876467890",
     startDates: [
-      { list: "Production", date: "2016-03-03" },
-      { list: "Tests QA", date: "2016-05-06" },
-      { list: "Mise en live", date: null }
+      { list: "563b1afeb758fc0e81a3c1b6", date: "2016-03-03" },
+      { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+      { list: "5450ed6ad166fa6110790030", date: null }
     ]
   };
   const cardWithoutStartNorEnd = {
     id: "29876467890",
     startDates: [
-      { list: "Production", date: "2016-03-03" },
-      { list: "Tests QA", date: "2016-05-06" },
-      { list: "Mise en live", date: null }
+      { list: "563b1afeb758fc0e81a3c1b6", date: "2016-03-03" },
+      { list: "53a775adc6ff397a74274486", date: "2016-05-06" },
+      { list: "5450ed6ad166fa6110790030", date: null }
     ]
   };
   const cardWithoutDates = {

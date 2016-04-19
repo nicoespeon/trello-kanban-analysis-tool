@@ -1,46 +1,54 @@
 import {test} from 'tape';
 
 import {
+  parseListName,
   numberOfCardsAtDate,
   parseToGraph
 } from '../graph';
+
+test( 'parseListName', ( assert ) => {
+  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
+  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
+  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
+  assert.end();
+} );
 
 test( 'numberOfCardsAtDate', ( assert ) => {
   const data = [
     {
       date: "2016-02-12",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 3 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 3 }
       ]
     },
     {
       date: "2016-02-04",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Icebox Yolo", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 1 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 },
+        { list: "563b1afeb758fc0e81a3c1b6", numberOfCards: 1 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 1 }
       ]
     },
     {
       date: "2016-02-08",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 2 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 2 }
       ]
     }
   ];
 
-  assert.equals( numberOfCardsAtDate( 'Backlog', '2016-02-12', data ), 3, 'should return the correct number of card at given date' );
-  assert.equals( numberOfCardsAtDate( 'Icebox Yolo', '2016-02-12', data ), 0, 'should return 0 if there were no card of given list at given date' );
-  assert.equals( numberOfCardsAtDate( 'Backlog', '2013-08-01', data ), 0, 'should return 0 if there were no card at given date' );
+  assert.equals( numberOfCardsAtDate( '4eea4ffc91e31d179270127c', '2016-02-12', data ), 3, 'should return the correct number of card at given date' );
+  assert.equals( numberOfCardsAtDate( '563b1afeb758fc0e81a3c1b6', '2016-02-12', data ), 0, 'should return 0 if there were no card of given list at given date' );
+  assert.equals( numberOfCardsAtDate( '4eea4ffc91e31d179270127c', '2013-08-01', data ), 0, 'should return 0 if there were no card at given date' );
   assert.end();
 } );
 
 test( 'parseToGraph', ( assert ) => {
   const expected = [
     {
-      "key": "Card Preparation [2]",
+      "key": "Card Preparation",
       "values": [
         [ new Date( "2016-01-20" ).getTime(), 1 ],
         [ new Date( "2016-02-04" ).getTime(), 1 ],
@@ -60,41 +68,44 @@ test( 'parseToGraph', ( assert ) => {
       ]
     }
   ];
-  const displayedLists = [ "Backlog", "Card Preparation [2]" ];
+  const displayedLists = [
+    { id: "4eea4ffc91e31d179270127c", name: "Backlog" },
+    { id: "4eea4ffc91e31d179270004c", name: "Card Preparation [2]" }
+  ];
   const data = [
     {
       date: "2016-01-20",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 }
       ]
     },
     {
       date: "2016-02-04",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 1 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 1 }
       ]
     },
     {
       date: "2016-02-08",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 1 },
-        { list: "Backlog", numberOfCards: 2 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 1 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 2 }
       ]
     },
     {
       date: "2016-03-02",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Backlog", numberOfCards: 4 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 2 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 4 }
       ]
     },
     {
       date: "2016-03-03",
       content: [
-        { list: "Card Preparation [2]", numberOfCards: 2 },
-        { list: "Backlog", numberOfCards: 5 },
-        { list: "Icebox Énergie", numberOfCards: 1 }
+        { list: "4eea4ffc91e31d179270004c", numberOfCards: 2 },
+        { list: "4eea4ffc91e31d179270127c", numberOfCards: 5 },
+        { list: "5640ae316fa780a52826b238", numberOfCards: 1 }
       ]
     }
   ];

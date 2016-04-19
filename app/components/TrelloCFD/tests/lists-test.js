@@ -41,23 +41,23 @@ test( 'allLists', ( assert ) => {
 
 test( 'countCardsPerList', ( assert ) => {
   const data = [
-    { name: "Backlog" },
-    { name: "Yolo" },
-    { name: "Backlog" },
-    { name: "Backlog" },
-    { name: "Icebox Énergie" },
-    { name: "Yolo" },
-    { name: "Icebox Énergie" }
+    { id: "53a7751f2bff3ac430c5ec80" },
+    { id: "5640ae316fa780a52826b238" },
+    { id: "53a7751f2bff3ac430c5ec80" },
+    { id: "53a7751f2bff3ac430c5ec80" },
+    { id: "4eea4ffc91e31d174600004c" },
+    { id: "5640ae316fa780a52826b238" },
+    { id: "4eea4ffc91e31d174600004c" }
   ];
   const expectedWithIdentity = [
-    { list: "Backlog", numberOfCards: 3 },
-    { list: "Yolo", numberOfCards: 2 },
-    { list: "Icebox Énergie", numberOfCards: 2 }
+    { list: "53a7751f2bff3ac430c5ec80", numberOfCards: 3 },
+    { list: "5640ae316fa780a52826b238", numberOfCards: 2 },
+    { list: "4eea4ffc91e31d174600004c", numberOfCards: 2 }
   ];
   const expectedWithNegateParser = [
-    { list: "Backlog", numberOfCards: -3 },
-    { list: "Yolo", numberOfCards: -2 },
-    { list: "Icebox Énergie", numberOfCards: -2 }
+    { list: "53a7751f2bff3ac430c5ec80", numberOfCards: -3 },
+    { list: "5640ae316fa780a52826b238", numberOfCards: -2 },
+    { list: "4eea4ffc91e31d174600004c", numberOfCards: -2 }
   ];
 
   assert.looseEquals( countCardsPerList( R.identity, data ), expectedWithIdentity, 'should correctly count the number of cards per list' );

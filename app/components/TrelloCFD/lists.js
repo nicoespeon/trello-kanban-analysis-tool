@@ -11,10 +11,10 @@ const allLists = R.compose(
   R.pluck( 'content' )
 );
 
-// countCardsPerList :: (Number -> b) -> [{name: String}] -> [{ list: String, numberOfCards: b }]
+// countCardsPerList :: (Number -> b) -> [{id: String}] -> [{ list: String, numberOfCards: b }]
 const countCardsPerList = R.curry( function ( fn, data ) {
   return countByWith(
-    R.prop( 'name' ),
+    R.prop( 'id' ),
     ( a, b ) => ({ list: a, numberOfCards: fn( b ) }),
     data
   );

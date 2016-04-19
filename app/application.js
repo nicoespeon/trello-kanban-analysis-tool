@@ -163,7 +163,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const trelloKanbanMetrics = TrelloKanbanMetrics( {
     actions$: trelloActions$,
     dates$: trelloCFDDates$,
-    lists$: trelloDisplayedLists$,
+    lists$: trelloDisplayedLists$.map( R.pluck( 'id' ) ),
     complementaryActions$: publishedTrelloCardsActions$$
       .switch()
       .startWith( [] )
@@ -222,7 +222,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: boardSelect.selected$
+    Log: trelloDisplayedLists$
   };
 }
 

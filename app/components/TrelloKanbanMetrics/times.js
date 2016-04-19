@@ -2,7 +2,6 @@ import R from 'ramda';
 
 import {
   parseDate,
-  parseListName,
   daysSpent,
   groupByWith,
   getCreateList,
@@ -25,8 +24,7 @@ const _startDatesFromActions = ( actions, lists ) => R.map(
       R.find(
         R.compose(
           R.equals( list ),
-          parseListName,
-          R.prop( 'name' ),
+          R.prop( 'id' ),
           getCreateList
         )
       ),

@@ -5,7 +5,6 @@ import trelloActions from './fixtures/trello-actions';
 import {
   getCreateActions,
   getDeleteActions,
-  parseListName,
   getDisplayedLists
 } from '../trello';
 
@@ -569,47 +568,39 @@ test( 'getDeleteActions', ( assert ) => {
   assert.end();
 } );
 
-test( 'parseListName', ( assert ) => {
-  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
-  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
-  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
-  assert.end();
-} );
-
 test( 'getDisplayedLists', ( assert ) => {
-  const expected = [
-    "Backlog",
-    "Card Preparation",
-    "Production",
-    "Mise en live",
-    "In Production"
-  ];
   const data = [
-    { "name": "Goals - Key Metrics" },
-    { "name": "Templates" },
-    { "name": "Icebox" },
-    { "name": "Icebox Énergie" },
-    { "name": "Backlog" },
-    { "name": "Card Preparation [2]" },
-    { "name": "Production [3]" },
-    { "name": "Mise en live [1]" },
-    { "name": "In Production" },
-    { "name": "Live (March 2016)" }
+    { id: "51a7ec7f", name: "Goals - Key Metrics" },
+    { id: "52a7ec7f", name: "Templates" },
+    { id: "53a7ec7f", name: "Icebox" },
+    { id: "54a7ec7f", name: "Icebox Énergie" },
+    { id: "55a7ec7f", name: "Backlog" },
+    { id: "56a7ec7f", name: "Card Preparation [2]" },
+    { id: "57a7ec7f", name: "Production [3]" },
+    { id: "58a7ec7f", name: "Mise en live [1]" },
+    { id: "59a7ec7f", name: "In Production" },
+    { id: "60a7ec7f", name: "Live (March 2016)" }
   ];
 
   assert.deepEquals(
     getDisplayedLists( data, "Backlog", "In Production" ),
-    expected,
-    'should return names of list included within given range'
-  );
-  assert.deepEquals(
-    getDisplayedLists( data, "Backlog", "Production [3]" ),
-    [ "Backlog", "Card Preparation", "Production" ],
-    'should parse given names for comparison'
+    [
+      { id: "55a7ec7f", name: "Backlog" },
+      { id: "56a7ec7f", name: "Card Preparation [2]" },
+      { id: "57a7ec7f", name: "Production [3]" },
+      { id: "58a7ec7f", name: "Mise en live [1]" },
+      { id: "59a7ec7f", name: "In Production" }
+    ],
+    'should return ids of list included within given range'
   );
   assert.deepEquals(
     getDisplayedLists( data, "Production [3]", false ),
-    [ "Production", "Mise en live", "In Production", "Live (March 2016)" ],
+    [
+      { id: "57a7ec7f", name: "Production [3]" },
+      { id: "58a7ec7f", name: "Mise en live [1]" },
+      { id: "59a7ec7f", name: "In Production" },
+      { id: "60a7ec7f", name: "Live (March 2016)" }
+    ],
     'should take all names until the end if last is false'
   );
   assert.end();

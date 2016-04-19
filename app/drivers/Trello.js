@@ -71,6 +71,7 @@ function trelloSinkDriver ( input$ ) {
         Trello.get(
           '/boards/' + boardId + '/lists',
           {
+            fields: 'name',
             cards: 'open',
             card_fields: ''
           },
