@@ -5,7 +5,7 @@ import R from 'ramda';
 import {parseActions} from './actions';
 import {parseToGraph} from './graph';
 
-import {today, filterBetweenDates} from '../../utils/date';
+import {today, tomorrow, filterBetweenDates} from '../../utils/date';
 
 function TrelloCFD (
   {
@@ -14,9 +14,15 @@ function TrelloCFD (
     lists$,
     displayedLists$,
     dates$,
-    props$
+    props$,
+    previewTomorrow$
   }
 ) {
+  const currentDate$ = previewTomorrow$.map( R.cond( [
+    [ R.equals( true ), R.always( tomorrow ) ],
+    [ R.equals( false ), R.always( today ) ]
+  ] ) );
+
   const clicks$ = DOM
     .select( '.button' )
     .events( 'click' )
@@ -31,9 +37,10 @@ function TrelloCFD (
     dates$,
     lists$,
     actions$,
-    ( { startDate, endDate }, lists, actions ) => R.compose(
+    currentDate$,
+    ( { startDate, endDate }, lists, actions, currentDate ) => R.compose(
       filterBetweenDates( startDate, endDate ),
-      parseActions( today, lists )
+      parseActions( currentDate, lists )
     )( actions )
   );
 

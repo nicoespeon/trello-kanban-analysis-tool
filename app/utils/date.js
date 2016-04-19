@@ -17,6 +17,7 @@ const endOfLastMonth = moment( lastMonth )
 const currentMonth = moment().date( 1 ).format( _dateFormat );
 
 const today = moment().format( _dateFormat );
+const tomorrow = moment().add( 1, 'day' ).format( _dateFormat );
 
 // parseDate :: String -> String
 const parseDate = R.compose( R.head, R.split( 'T' ) );
@@ -106,6 +107,7 @@ export {
   currentMonth,
   endOfLastMonth,
   today,
+  tomorrow,
 
   parseDate,
   sortByDate,

@@ -1,5 +1,5 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, div, h1, small} from '@cycle/dom';
+import {makeDOMDriver, div, h1, small, input, label} from '@cycle/dom';
 import isolate from '@cycle/isolate';
 import {Observable} from 'rx';
 import R from 'ramda';
@@ -9,6 +9,7 @@ import {makeGraphDriver} from './drivers/Graph';
 import logDriver from './drivers/Log';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
+import LabeledCheckbox from './components/LabeledCheckbox/LabeledCheckbox';
 import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
@@ -25,6 +26,20 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
 
   const trelloActions$ = publishedTrelloActions$.startWith( [] );
+
+  // Checkbox to preview tomorrow CFD
+
+  const PreviewTomorrow = isolate( LabeledCheckbox );
+
+  const previewTomorrowProps$ = Observable.of( {
+    name: 'preview-tomorrow',
+    labelText: 'Preview tomorrow CFD (include today operations)'
+  } );
+
+  const previewTomorrow = PreviewTomorrow( {
+    DOM,
+    props$: previewTomorrowProps$
+  } );
 
   // Select to choose the displayed board
 
@@ -139,7 +154,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
     dates$: trelloCFDDates$,
-    props$: trelloCFDProps$
+    props$: trelloCFDProps$,
+    previewTomorrow$: previewTomorrow.checked$
   } );
 
   // Trello Kanban metrics
@@ -165,6 +181,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
       trelloCFD.DOM,
       selectLastMonthButton.DOM,
       selectCurrentMonthButton.DOM,
+      previewTomorrow.DOM,
       firstDisplayedListSelect.DOM,
       lastDisplayedListSelect.DOM,
       trelloKanbanMetrics.DOM,
@@ -173,6 +190,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
+        previewTomorrowVTree,
         firstDisplayedListVTree,
         lastDisplayedListVTree,
         trelloKanbanMetricsVTree
@@ -191,7 +209,10 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
           div( '.col.s6', [ firstDisplayedListVTree ] ),
           div( '.col.s6', [ lastDisplayedListVTree ] )
         ] ),
-        trelloKanbanMetricsVTree
+        trelloKanbanMetricsVTree,
+        div( '.m-top.row', [
+          div( '.col.s12', [ previewTomorrowVTree ] )
+        ] )
       ] )
     ),
     TrelloFetch: Observable.combineLatest(
