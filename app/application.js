@@ -23,8 +23,6 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
 
   const trelloLists$ = publishedTrelloLists$.startWith( [] );
-  const lists$ = trelloLists$.map( R.map( R.propOr( "", "name" ) ) );
-
   const trelloActions$ = publishedTrelloActions$.startWith( [] );
 
   // Checkbox to preview tomorrow CFD
@@ -78,36 +76,36 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const firstDisplayedListSelect = FirstDisplayedListSelect( {
     DOM,
     props$: firstDisplayedListProps$,
-    values$: lists$
+    values$: trelloLists$.map( R.pluck( 'name' ) )
   } );
 
   // Select to choose the last displayed list
 
   const LastDisplayedListSelect = isolate( LabeledSelect );
 
-  const lastDisplayedListProps$ = lists$.map( lists => ({
+  const lastDisplayedListProps$ = Observable.of( {
     name: 'last-displayed-list',
     labelText: 'Work ends',
     classNames: [ 'browser-default' ],
     select: R.last
-  }) );
+  } );
 
   const lastDisplayedListSelect = LastDisplayedListSelect( {
     DOM,
     props$: lastDisplayedListProps$,
-    values$: lists$
+    values$: trelloLists$.map( R.pluck( 'name' ) )
   } );
 
   // Button to select last month period
 
   const SelectLastMonthButton = isolate( SelectDatesButton );
 
-  const selectLastMonthProps$ = lists$.map( lists => ({
+  const selectLastMonthProps$ = Observable.of( {
     label: 'Last month',
     classNames: [ 'btn waves-effect waves-light' ],
     startDate: lastMonth,
     endDate: endOfLastMonth
-  }) );
+  } );
 
   const selectLastMonthButton = SelectLastMonthButton( {
     DOM,
@@ -118,11 +116,11 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const SelectCurrentMonthButton = isolate( SelectDatesButton );
 
-  const selectCurrentMonthProps$ = lists$.map( lists => ({
+  const selectCurrentMonthProps$ = Observable.of( {
     label: 'Current month',
     classNames: [ 'btn waves-effect waves-light' ],
     startDate: currentMonth
-  }) );
+  } );
 
   const selectCurrentMonthButton = SelectCurrentMonthButton( {
     DOM,
