@@ -71,10 +71,30 @@ const getDisplayedLists = ( lists, first, last ) => {
   );
 };
 
+// Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
+const _parsedNamePattern = /(.*?)(\s\[\d+\])$/;
+
+// parseListName :: String -> [String | Undefined]
+const parseListName = R.cond( [
+  [
+    R.test( _parsedNamePattern ),
+    R.compose( R.head, R.tail, R.match( _parsedNamePattern ) )
+  ],
+  [ R.T, R.identity ]
+] );
+
+const getListNameFromId = R.curry( ( lists, id ) => R.compose(
+  parseListName,
+  R.propOr( '', 'name' ),
+  R.find( R.propEq( 'id', id ) )
+)( lists ) );
+
 export {
   getCreateList,
   getDeleteList,
   getCreateActions,
   getDeleteActions,
-  getDisplayedLists
+  getDisplayedLists,
+  parseListName,
+  getListNameFromId
 };

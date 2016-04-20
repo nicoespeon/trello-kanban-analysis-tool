@@ -77,6 +77,7 @@ test( 'parseStartDates', ( assert ) => {
   ];
 
   assert.deepEquals( parseStartDates( trelloActions, lists ), expected, 'should parse actions with given lists to determine start dates' );
+  assert.deepEquals( parseStartDates( trelloActions )( lists ), expected, 'should be curried' );
   assert.end();
 } );
 
@@ -194,9 +195,9 @@ test( 'filterCardsOnPeriod', ( assert ) => {
       ]
     }
   ];
-  const datesWithNullEnd = {startDate: "2016-02-12", endDate: null};
+  const datesWithNullEnd = { startDate: "2016-02-12", endDate: null };
 
-  const expectedWithNullStart =  [
+  const expectedWithNullStart = [
     {
       id: "56fb8a5af196e52193de6179",
       startDates: [
@@ -222,7 +223,7 @@ test( 'filterCardsOnPeriod', ( assert ) => {
       ]
     }
   ];
-  const datesWithNullStart = {startDate: null, endDate: "2016-04-07"};
+  const datesWithNullStart = { startDate: null, endDate: "2016-04-07" };
 
   assert.deepEquals( filterCardsOnPeriod( dates, data ), expected, 'should return cards that count for selected period lead time calculation' );
   assert.deepEquals( filterCardsOnPeriod( dates )( data ), expected, 'should be curried' );

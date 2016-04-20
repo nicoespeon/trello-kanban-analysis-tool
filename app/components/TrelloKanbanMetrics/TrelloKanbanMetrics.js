@@ -1,24 +1,33 @@
-import {div} from '@cycle/dom';
+import {div, table, thead, tr, th, tbody, td} from '@cycle/dom';
 import {Observable} from 'rx';
 import R from 'ramda';
 
 import {
-  parseStartDates,
-  filterCardsOnPeriod,
+  parseStartDatesOnPeriod,
   parseAvgLeadTime,
   isMissingInformation
 } from './times';
+import {splitToPairs} from './lists';
+import {cycleTimeVTreeWithLists} from './vtree';
 
-function TrelloKanbanMetrics ( { actions$, dates$, lists$, complementaryActions$ } ) {
+function TrelloKanbanMetrics (
+  {
+    actions$,
+    dates$,
+    lists$,
+    complementaryActions$
+  }
+) {
+
+  const listsIds$ = lists$.map( R.pluck( 'id' ) );
 
   // Determine missing information
 
   const cards$ = Observable.combineLatest(
-    actions$,
-    lists$,
     dates$,
-    ( actions, lists, dates ) =>
-      filterCardsOnPeriod( dates, parseStartDates( actions, lists ) )
+    actions$,
+    listsIds$,
+    parseStartDatesOnPeriod
   );
 
   const complementaryCardsIds$ = complementaryActions$.map(
@@ -52,23 +61,56 @@ function TrelloKanbanMetrics ( { actions$, dates$, lists$, complementaryActions$
     R.useWith( R.concat, [ R.identity, R.flatten ] )
   );
 
-  const consolidatedCards$ = Observable.combineLatest(
-    consolidatedActions$,
-    lists$,
+  const leadTimes$ = Observable.combineLatest(
     dates$,
-    ( actions, lists, dates ) =>
-      filterCardsOnPeriod( dates, parseStartDates( actions, lists ) )
+    consolidatedActions$,
+    listsIds$,
+    R.compose( parseAvgLeadTime, parseStartDatesOnPeriod )
   );
 
-  const vtree$ = consolidatedCards$.map(
-    R.compose(
-      leadTime => div( `Lead Time: ${leadTime} days` ),
-      parseAvgLeadTime
-    )
+  const leadTimeVTree$ = leadTimes$.map(
+    leadTime => div( `Lead Time: ${leadTime} days` ),
+  );
+
+  // Calculate Cycle Times from consolidated data
+
+  const listsGroups$ = listsIds$.map( splitToPairs );
+
+  const cycleTimes$ = Observable.combineLatest(
+    dates$,
+    consolidatedActions$,
+    listsGroups$,
+    ( dates, actions, listsGroups ) =>
+      R.map(
+        R.compose( parseAvgLeadTime, parseStartDatesOnPeriod( dates, actions ) )
+      )( listsGroups )
+  );
+
+  const cycleTimesVTree$ = Observable.combineLatest(
+    lists$,
+    listsGroups$,
+    cycleTimes$,
+    ( lists, groups, cycleTimes ) =>
+      table( '.striped.responsive-table', [
+        thead( [
+          tr( [ th( 'Lists' ), th( 'Cycle Time' ) ] )
+        ] ),
+        tbody( [
+          R.compose(
+            R.map( cycleTimeVTreeWithLists( lists ) ),
+            R.zip
+          )( groups, cycleTimes )
+        ] )
+      ] )
   );
 
   return {
-    DOM: vtree$,
+    DOM: Observable.combineLatest(
+      leadTimeVTree$,
+      cycleTimesVTree$,
+      ( leadTimeVTree, cycleTimesVTree ) =>
+        div( [ leadTimeVTree, cycleTimesVTree ] )
+    ),
     Trello: missingInformationCardIds$
   };
 }

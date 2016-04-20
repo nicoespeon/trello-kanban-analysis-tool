@@ -11,6 +11,21 @@ import {
 // StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]
 // LeadTimes :: [{id: a, leadTime: Integer}]
 
+// filterCardsOnPeriod :: {startDate: Date, endDate: Date} -> StartDates -> StartDates
+const filterCardsOnPeriod = R.curry( ( { startDate, endDate }, cards ) =>
+  R.filter(
+    R.compose(
+      R.both(
+        R.either( () => R.isNil( endDate ), R.gte( endDate ) ),
+        R.either( () => R.isNil( startDate ), R.lte( startDate ) )
+      ),
+      R.prop( 'date' ),
+      R.last,
+      R.prop( 'startDates' )
+    )
+  )( cards )
+);
+
 // _startDatesFromActions :: [Action] -> [String] -> [{list: String, date: Date}]
 const _startDatesFromActions = ( actions, lists ) => R.map(
   ( list ) => ({
@@ -33,7 +48,7 @@ const _startDatesFromActions = ( actions, lists ) => R.map(
 )( lists );
 
 // parseStartDates :: [Action] -> [String] -> StartDates
-const parseStartDates = ( actions, lists ) => R.compose(
+const parseStartDates = R.curry( ( actions, lists ) => R.compose(
   groupByWith(
     R.path( [ 'data', 'card', 'id' ] ),
     ( cardId, cardActions ) => ({
@@ -42,22 +57,13 @@ const parseStartDates = ( actions, lists ) => R.compose(
     })
   ),
   getCreateActions
-)( actions );
+)( actions ) );
 
-// filterCardsOnPeriod :: {startDate: Date, endDate: Date} -> StartDates -> StartDates
-const filterCardsOnPeriod = R.curry( ( { startDate, endDate }, cards ) =>
-  R.filter(
-    R.compose(
-      R.both(
-        R.either( () => R.isNil( endDate ), R.gte( endDate ) ),
-        R.either( () => R.isNil( startDate ), R.lte( startDate ) )
-      ),
-      R.prop( 'date' ),
-      R.last,
-      R.prop( 'startDates' )
-    )
-  )( cards )
-);
+// parseStartDatesOnPeriod :: {startDate: Date, endDate: Date} -> [Action] -> [String] -> StartDates
+const parseStartDatesOnPeriod = R.curry( ( dates, actions, lists ) => R.compose(
+  filterCardsOnPeriod( dates ),
+  parseStartDates( actions )
+)( lists ) );
 
 // _isDateNil :: {date: a} -> Boolean
 const _isDateNil = R.compose( R.isNil, R.prop( 'date' ) );
@@ -81,12 +87,6 @@ const leadTimeFromDates = R.cond( [
   ]
 ] );
 
-// parseLeadTime :: StartDates -> LeadTimes
-const parseLeadTime = R.map( card => ({
-  id: card.id,
-  leadTime: leadTimeFromDates( card.startDates )
-}) );
-
 // avgLeadTime :: LeadTimes -> Integer
 const avgLeadTime = R.compose(
   Math.round.bind( Math ),
@@ -95,8 +95,14 @@ const avgLeadTime = R.compose(
   R.pluck( 'leadTime' )
 );
 
+// parseLeadTime :: StartDates -> LeadTimes
+const parseLeadTime = R.map( card => ({
+  id: card.id,
+  leadTime: leadTimeFromDates( card.startDates )
+}) );
+
 // parseAvgLeadTime :: StartDates -> Integer
-const parseAvgLeadTime = R.compose(avgLeadTime, parseLeadTime);
+const parseAvgLeadTime = R.compose( avgLeadTime, parseLeadTime );
 
 // isMissingInformation :: StartDates -> Boolean
 const isMissingInformation = R.compose(
@@ -111,11 +117,12 @@ const isMissingInformation = R.compose(
 );
 
 export {
-  parseStartDates,
   filterCardsOnPeriod,
+  parseStartDates,
+  parseStartDatesOnPeriod,
   leadTimeFromDates,
-  parseLeadTime,
   avgLeadTime,
+  parseLeadTime,
   parseAvgLeadTime,
   isMissingInformation
 };

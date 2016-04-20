@@ -1,17 +1,9 @@
 import {test} from 'tape';
 
 import {
-  parseListName,
   numberOfCardsAtDate,
   parseToGraph
 } from '../graph';
-
-test( 'parseListName', ( assert ) => {
-  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
-  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
-  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
-  assert.end();
-} );
 
 test( 'numberOfCardsAtDate', ( assert ) => {
   const data = [

@@ -161,7 +161,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const trelloKanbanMetrics = TrelloKanbanMetrics( {
     actions$: trelloActions$,
     dates$: trelloCFDDates$,
-    lists$: trelloDisplayedLists$.map( R.pluck( 'id' ) ),
+    lists$: trelloDisplayedLists$,
     complementaryActions$: publishedTrelloCardsActions$$
       .switch()
       .startWith( [] )

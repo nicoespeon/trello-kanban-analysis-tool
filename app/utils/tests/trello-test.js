@@ -5,7 +5,8 @@ import trelloActions from './fixtures/trello-actions';
 import {
   getCreateActions,
   getDeleteActions,
-  getDisplayedLists
+  getDisplayedLists,
+  parseListName
 } from '../trello';
 
 test( 'getCreateActions', ( assert ) => {
@@ -603,5 +604,12 @@ test( 'getDisplayedLists', ( assert ) => {
     ],
     'should take all names until the end if last is false'
   );
+  assert.end();
+} );
+
+test( 'parseListName', ( assert ) => {
+  assert.equals( parseListName( 'Card Preparation [4]' ), 'Card Preparation', 'should trim trailing WIP indicator' );
+  assert.equals( parseListName( 'Backlog' ), 'Backlog', 'should leave a regular list name untouched' );
+  assert.equals( parseListName( 'Live (March 2016)' ), 'Live (March 2016)', 'should leave live list name untouched' );
   assert.end();
 } );
