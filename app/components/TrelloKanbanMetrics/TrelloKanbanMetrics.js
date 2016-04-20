@@ -5,8 +5,7 @@ import R from 'ramda';
 import {
   parseStartDates,
   filterCardsOnPeriod,
-  parseLeadTime,
-  avgLeadTime,
+  parseAvgLeadTime,
   isMissingInformation
 } from './times';
 
@@ -64,8 +63,7 @@ function TrelloKanbanMetrics ( { actions$, dates$, lists$, complementaryActions$
   const vtree$ = consolidatedCards$.map(
     R.compose(
       leadTime => div( `Lead Time: ${leadTime} days` ),
-      avgLeadTime,
-      parseLeadTime
+      parseAvgLeadTime
     )
   );
 
