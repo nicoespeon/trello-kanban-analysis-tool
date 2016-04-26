@@ -26,7 +26,7 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
     selected$,
     values$,
     ( props, selected, values ) => div( [
-      label( { htmlFor: props.name }, props.labelText ),
+      label( { htmlFor: props.name }, props.label ),
       select(
         {
           className: R.join( ' ', R.concat( [ 'select' ], props.classNames ) ),

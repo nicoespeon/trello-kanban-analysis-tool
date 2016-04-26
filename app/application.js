@@ -31,7 +31,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const previewTomorrowProps$ = Observable.of( {
     name: 'preview-tomorrow',
-    labelText: 'Preview tomorrow CFD (include today operations)'
+    label: 'Preview tomorrow CFD (include today operations)'
   } );
 
   const previewTomorrow = PreviewTomorrow( {
@@ -46,7 +46,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const boardProps$ = TrelloFetch.boards$
     .map( ( boards ) => ({
       name: 'board',
-      labelText: 'Board',
+      label: 'Board',
       classNames: [ 'browser-default' ],
       select: R.always( 'LydFpONf' ),
       render: ( value ) => R.propOr(
@@ -68,7 +68,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const firstDisplayedListProps$ = Observable.of( {
     name: 'first-displayed-list',
-    labelText: 'Work begins',
+    label: 'Work begins',
     classNames: [ 'browser-default' ],
     select: R.always( 'Backlog' )
   } );
@@ -85,7 +85,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const lastDisplayedListProps$ = Observable.of( {
     name: 'last-displayed-list',
-    labelText: 'Work ends',
+    label: 'Work ends',
     classNames: [ 'browser-default' ],
     select: R.last
   } );

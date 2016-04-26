@@ -19,7 +19,7 @@ function LabeledCheckbox ( { DOM, props$ } ) {
         className: R.join( ' ', R.concat( [ 'checkbox' ], props.classNames ) ),
         checked: checked
       } ),
-      label( { htmlFor: props.name }, props.labelText )
+      label( { htmlFor: props.name }, props.label )
     ] )
   );
 
