@@ -10,6 +10,7 @@ import logDriver from './drivers/Log';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import LabeledCheckbox from './components/LabeledCheckbox/LabeledCheckbox';
+import LabeledDatePicker from './components/LabeledDatePicker/LabeledDatePicker';
 import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton';
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
@@ -127,6 +128,34 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     props$: selectCurrentMonthProps$
   } );
 
+  // Datepicker to select start date
+
+  const StartDatePicker = isolate( LabeledDatePicker );
+
+  const startDatePickerProps$ = Observable.of( {
+    name: 'start-date',
+    label: 'Start Date'
+  } );
+
+  const startDatePicker = StartDatePicker( {
+    DOM,
+    props$: startDatePickerProps$
+  } );
+
+  // Datepicker to select end date
+
+  const EndDatePicker = isolate( LabeledDatePicker );
+
+  const endDatePickerProps$ = Observable.of( {
+    name: 'end-date',
+    label: 'End Date'
+  } );
+
+  const endDatePicker = EndDatePicker( {
+    DOM,
+    props$: endDatePickerProps$
+  } );
+
   // Trello CFD
 
   const trelloCFDProps$ = Observable.of( {
@@ -179,6 +208,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
       trelloCFD.DOM,
       selectLastMonthButton.DOM,
       selectCurrentMonthButton.DOM,
+      startDatePicker.DOM,
+      endDatePicker.DOM,
       previewTomorrow.DOM,
       firstDisplayedListSelect.DOM,
       lastDisplayedListSelect.DOM,
@@ -188,6 +219,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
         trelloCFDVTree,
         selectLastMonthButtonVTree,
         selectCurrentMonthButtonVTree,
+        startDatePickerVTree,
+        endDatePickerVTree,
         previewTomorrowVTree,
         firstDisplayedListVTree,
         lastDisplayedListVTree,
@@ -201,6 +234,10 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
           trelloCFDVTree,
           selectLastMonthButtonVTree,
           selectCurrentMonthButtonVTree
+        ] ),
+        div( '.m-top.row', [
+          div( '.col.s6', [ startDatePickerVTree ] ),
+          div( '.col.s6', [ endDatePickerVTree ] )
         ] ),
         div( '.m-top.row', [
           div( '.col.s12', [ boardVTree ] ),
@@ -220,7 +257,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: trelloDisplayedLists$
+    Log: startDatePicker.changes$
   };
 }
 
