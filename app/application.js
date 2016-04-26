@@ -176,9 +176,14 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     classNames: [ 'btn waves-effect waves-light purple' ]
   } );
 
+  const parseTrelloCFDDate = R.cond( [
+    [ R.isEmpty, R.always( null ) ],
+    [ R.T, R.identity ]
+  ] );
+
   const trelloCFDDates$ = Observable.combineLatest(
-    startDatePicker.selected$,
-    endDatePicker.selected$,
+    startDatePicker.selected$.map( parseTrelloCFDDate ),
+    endDatePicker.selected$.map( parseTrelloCFDDate ),
     ( startSelected, endSelected ) => ({
       startDate: startSelected,
       endDate: endSelected
