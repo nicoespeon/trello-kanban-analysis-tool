@@ -15,7 +15,12 @@ import SelectDatesButton from './components/SelectDatesButton/SelectDatesButton'
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
 import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
 
-import {lastMonth, endOfLastMonth, currentMonth} from './utils/date';
+import {
+  lastMonth,
+  endOfLastMonth,
+  currentMonth,
+  endOfMonth
+} from './utils/date';
 import {getDisplayedLists} from './utils/trello';
 
 function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
@@ -120,13 +125,19 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
   const selectCurrentMonthProps$ = Observable.of( {
     label: 'Current month',
     classNames: [ 'btn waves-effect waves-light' ],
-    startDate: currentMonth
+    startDate: currentMonth,
+    endDate: endOfMonth
   } );
 
   const selectCurrentMonthButton = SelectCurrentMonthButton( {
     DOM,
     props$: selectCurrentMonthProps$
   } );
+
+  const selectedPeriodDates$ = Observable.merge(
+    selectLastMonthButton.dates$,
+    selectCurrentMonthButton.dates$
+  ).startWith( { startDate: currentMonth, endDate: endOfMonth } );
 
   // Datepicker to select start date
 
@@ -139,7 +150,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const startDatePicker = StartDatePicker( {
     DOM,
-    props$: startDatePickerProps$
+    props$: startDatePickerProps$,
+    value$: selectedPeriodDates$.map( R.prop( 'startDate' ) )
   } );
 
   // Datepicker to select end date
@@ -153,7 +165,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
   const endDatePicker = EndDatePicker( {
     DOM,
-    props$: endDatePickerProps$
+    props$: endDatePickerProps$,
+    value$: selectedPeriodDates$.map( R.prop( 'endDate' ) )
   } );
 
   // Trello CFD
@@ -163,10 +176,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     classNames: [ 'btn waves-effect waves-light purple' ]
   } );
 
-  const trelloCFDDates$ = Observable.merge(
-    selectLastMonthButton.dates$,
-    selectCurrentMonthButton.dates$
-  ).startWith( { startDate: currentMonth, endDate: null } );
+  const trelloCFDDates$ = selectedPeriodDates$;
 
   const trelloDisplayedLists$ = Observable.combineLatest(
     trelloLists$,
@@ -244,7 +254,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
           div( '.col.s6', [ firstDisplayedListVTree ] ),
           div( '.col.s6', [ lastDisplayedListVTree ] )
         ] ),
-        trelloKanbanMetricsVTree,
+        div( '.m-top', [ trelloKanbanMetricsVTree ] ),
         div( '.m-top.row', [
           div( '.col.s12', [ previewTomorrowVTree ] )
         ] )
@@ -257,7 +267,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: startDatePicker.changes$
+    Log: startDatePicker.selected$
   };
 }
 

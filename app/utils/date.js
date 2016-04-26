@@ -1,20 +1,27 @@
 import R from 'ramda';
 import moment from 'moment';
 
-// Dates
-
 const _dateFormat = 'YYYY-MM-DD';
+
+// endOf :: Date -> Date
+function _endOf ( month ) {
+  return moment( month )
+    .date( moment( month, _dateFormat ).daysInMonth() )
+    .format( _dateFormat );
+}
+
+// Dates
 
 const lastMonth = moment()
   .month( moment().month() - 1 )
   .date( 1 )
   .format( _dateFormat );
 
-const endOfLastMonth = moment( lastMonth )
-  .date( moment( lastMonth, _dateFormat ).daysInMonth() )
-  .format( _dateFormat );
+const endOfLastMonth = _endOf( lastMonth );
 
 const currentMonth = moment().date( 1 ).format( _dateFormat );
+
+const endOfMonth = _endOf( currentMonth );
 
 const today = moment().format( _dateFormat );
 const tomorrow = moment().add( 1, 'day' ).format( _dateFormat );
@@ -100,12 +107,16 @@ const filterBetweenDates = R.curry( ( startDate, endDate, items ) => R.compose(
 )( items ) );
 
 // daysSpent :: Date -> Date -> Integer
-const daysSpent = ( start, end ) => moment( end ).diff( moment( start ), 'days' );
+const daysSpent = (
+  start,
+  end
+) => moment( end ).diff( moment( start ), 'days' );
 
 export {
   lastMonth,
-  currentMonth,
   endOfLastMonth,
+  currentMonth,
+  endOfMonth,
   today,
   tomorrow,
 

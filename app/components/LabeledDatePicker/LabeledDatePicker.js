@@ -2,29 +2,34 @@ import {div, input, label} from '@cycle/dom';
 import {Observable} from 'rx';
 import R from 'ramda';
 
-function LabeledDatePicker ( { DOM, props$ } ) {
-  const changes$ = DOM
+function LabeledDatePicker ( { DOM, props$, value$ } ) {
+  const newSelected$ = DOM
     .select( '.datepicker' )
     .events( 'change' )
-    .map( ev => ev.target.value )
-    .startWith( null );
+    .map( ev => ev.target.value );
+
+  const selected$ = Observable.merge(
+    value$,
+    newSelected$,
+  );
 
   const vtree$ = Observable.combineLatest(
     props$,
-    changes$,
-    ( props, checked ) => div( [
+    selected$,
+    ( props, selected ) => div( [
       label( { htmlFor: props.name }, props.label ),
       input( {
         type: 'date',
         id: props.name,
-        className: R.join( ' ', R.concat( [ 'datepicker' ], props.classNames ) )
+        className: R.join( ' ', R.concat( [ 'datepicker' ], props.classNames ) ),
+        value: selected
       } )
     ] )
   );
 
   return {
     DOM: vtree$,
-    changes$
+    selected$
   };
 }
 
