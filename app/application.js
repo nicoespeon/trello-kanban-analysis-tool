@@ -176,7 +176,14 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     classNames: [ 'btn waves-effect waves-light purple' ]
   } );
 
-  const trelloCFDDates$ = selectedPeriodDates$;
+  const trelloCFDDates$ = Observable.combineLatest(
+    startDatePicker.selected$,
+    endDatePicker.selected$,
+    ( startSelected, endSelected ) => ({
+      startDate: startSelected,
+      endDate: endSelected
+    })
+  );
 
   const trelloDisplayedLists$ = Observable.combineLatest(
     trelloLists$,
@@ -267,7 +274,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Log: startDatePicker.selected$
+    Log: trelloCFDDates$
   };
 }
 
