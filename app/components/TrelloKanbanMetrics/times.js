@@ -19,7 +19,7 @@ const filterCardsOnPeriod = R.curry( ( { startDate, endDate }, cards ) =>
         R.either( () => R.isNil( endDate ), R.gte( endDate ) ),
         R.either( () => R.isNil( startDate ), R.lte( startDate ) )
       ),
-      R.prop( 'date' ),
+      R.propOr( null, 'date' ),
       R.last,
       R.prop( 'startDates' )
     )

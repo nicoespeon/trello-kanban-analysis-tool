@@ -148,7 +148,6 @@ test( 'filterCardsOnPeriod', ( assert ) => {
       ]
     }
   ];
-
   const expected = [
     {
       id: "56fb8a5af196e52193de6179",
@@ -225,9 +224,15 @@ test( 'filterCardsOnPeriod', ( assert ) => {
   ];
   const datesWithNullStart = { startDate: null, endDate: "2016-04-07" };
 
-  assert.deepEquals( filterCardsOnPeriod( dates, data ), expected, 'should return cards that count for selected period lead time calculation' );
-  assert.deepEquals( filterCardsOnPeriod( dates )( data ), expected, 'should be curried' );
+  const dataWithoutStartDates = [ {
+    id: "5661abfe6c2f11e4db652169",
+    startDates: []
+  } ];
 
+  assert.deepEquals( filterCardsOnPeriod( dates, data ), expected, 'should return cards that count for selected period lead time calculation' );
+  assert.deepEquals( filterCardsOnPeriod( dates, [] ), [], 'should return an empty object if data are empty' );
+  assert.deepEquals( filterCardsOnPeriod( dates, dataWithoutStartDates ), [], 'should omit cards without start dates' );
+  assert.deepEquals( filterCardsOnPeriod( dates )( data ), expected, 'should be curried' );
   assert.deepEquals( filterCardsOnPeriod( datesWithNullEnd, data ), expectedWithNullEnd, 'should take all cards after startDate if endDate is null' );
   assert.deepEquals( filterCardsOnPeriod( datesWithNullStart, data ), expectedWithNullStart, 'should take all cards before endDate if startDate is null' );
   assert.end();
