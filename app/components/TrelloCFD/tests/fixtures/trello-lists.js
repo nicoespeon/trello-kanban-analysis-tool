@@ -3,7 +3,8 @@ export default [
     "id": "4eea4ffc91e31d179270127c",
     "name": "Production [3]",
     "cards": [
-      { "id": "4eea501f91e31d1746098724" }
+      { "id": "4eea501f91e31d1746098724" },
+      { "id": "57361f52d7b59cbae5e6a06c" }
     ]
   },
   {

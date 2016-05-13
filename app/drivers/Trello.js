@@ -1,18 +1,8 @@
 import R from 'ramda';
 import {Observable} from 'rx';
 
-const actionsFilter = 'createCard,deleteCard,updateCard:idList,updateCard:closed';
+const actionsFilter = 'createCard,deleteCard,updateCard:idList,updateCard:closed,copyCard';
 const actionsFields = 'data,date,type';
-
-// To be implemented:
-//
-// - moveCardFromBoard
-// - moveCardToBoard
-// - moveListFromBoard
-// - moveListToBoard
-// - copyBoard
-// - copyCard
-// - unarchive?
 
 // cardActions$ :: String -> Observable
 function cardActions$ ( cardId ) {

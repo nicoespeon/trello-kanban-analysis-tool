@@ -31,7 +31,10 @@ const getCreateActions = R.compose(
   ) ),
   R.filter(
     R.either(
-      R.propEq( 'type', 'createCard' ),
+      R.either(
+        R.propEq( 'type', 'createCard' ),
+        R.propEq( 'type', 'copyCard' ),
+      ),
       R.both(
         R.propEq( 'type', 'updateCard' ),
         R.path( [ 'data', 'listAfter' ] )

@@ -66,6 +66,41 @@ export default [
     }
   },
   {
+    "id": "57361f52d7b59cbae5e6a06d",
+    "data": {
+      "cardSource": {
+        "shortLink": "WYDYZoNs",
+        "idShort": 1846,
+        "name": "Trello Kanban - handle moveCardFromBoard",
+        "id": "573474401cf23797a15da651"
+      },
+      "board": {
+        "shortLink": "u6PxZqrU",
+        "name": "Personal Kanban",
+        "id": "550dab1ad500902c46a86b00"
+      },
+      "list": {
+        "name": "Today",
+        "id": "554f2bf7f50e97ed2c9f50c7"
+      },
+      "card": {
+        "shortLink": "PwvqYK2m",
+        "idShort": 1854,
+        "name": "TEST",
+        "id": "57361f52d7b59cbae5e6a06c"
+      }
+    },
+    "date": "2016-05-13T18:39:14.276Z",
+    "type": "copyCard",
+    "memberCreator": {
+      "id": "51843f636ef14b8a690062dc",
+      "avatarHash": "6a8e591c71d0006179ba98abc5684385",
+      "fullName": "Nicolas Carlo",
+      "initials": "NC",
+      "username": "nicolascarlo"
+    }
+  },
+  {
     "id": "568e35e43b644fceb47d28e3",
     "data": {
       "board": {
