@@ -561,7 +561,7 @@ test( 'parseActions', ( assert ) => {
       content: [
         { list: "4eea4ffc91e31d174600004a", numberOfCards: 5 },
         { list: "4eea4ffc91e31d174600004b", numberOfCards: 6 },
-        { list: "4eea4ffc91e31d174600004c", numberOfCards: 9 },
+        { list: "4eea4ffc91e31d174600004c", numberOfCards: 8 },
         { list: "4eea4ffc91e31d179270004c", numberOfCards: 2 },
         { list: "4eea4ffc91e31d179270127c", numberOfCards: 2 }
       ]
@@ -572,7 +572,7 @@ test( 'parseActions', ( assert ) => {
     content: [
       { list: "4eea4ffc91e31d174600004a", numberOfCards: 5 },
       { list: "4eea4ffc91e31d174600004b", numberOfCards: 6 },
-      { list: "4eea4ffc91e31d174600004c", numberOfCards: 9 },
+      { list: "4eea4ffc91e31d174600004c", numberOfCards: 8 },
       { list: "4eea4ffc91e31d179270004c", numberOfCards: 2 },
       { list: "4eea4ffc91e31d179270127c", numberOfCards: 2 }
     ]

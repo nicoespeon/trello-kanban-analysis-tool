@@ -52,7 +52,10 @@ const getDeleteActions = R.compose(
   ) ),
   R.filter(
     R.either(
-      R.propEq( 'type', 'deleteCard' ),
+      R.propSatisfies(
+        R.contains(R.__, ['deleteCard', 'moveCardFromBoard']),
+        'type'
+      ),
       R.both(
         R.propEq( 'type', 'updateCard' ),
         R.either(
