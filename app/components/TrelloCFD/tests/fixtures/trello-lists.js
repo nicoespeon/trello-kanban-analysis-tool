@@ -12,6 +12,7 @@ export default [
     "name": "Card Preparation [2]",
     "cards": [
       { "id": "4eea501f91e31d1746003424" },
+      { "id": "568d2fa7f9a764efee114e21" },
       { "id": "4eea501f92e31d1746003423" }
     ]
   },

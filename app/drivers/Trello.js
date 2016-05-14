@@ -1,7 +1,7 @@
 import R from 'ramda';
 import {Observable} from 'rx';
 
-const actionsFilter = 'createCard,deleteCard,updateCard:idList,updateCard:closed,copyCard,moveCardFromBoard';
+const actionsFilter = 'createCard,deleteCard,updateCard:idList,updateCard:closed,copyCard,moveCardFromBoard,moveCardToBoard';
 const actionsFields = 'data,date,type';
 
 // cardActions$ :: String -> Observable

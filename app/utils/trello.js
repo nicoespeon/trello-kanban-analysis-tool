@@ -31,9 +31,9 @@ const getCreateActions = R.compose(
   ) ),
   R.filter(
     R.either(
-      R.either(
-        R.propEq( 'type', 'createCard' ),
-        R.propEq( 'type', 'copyCard' ),
+      R.propSatisfies(
+        R.contains(R.__, ['createCard', 'copyCard', 'moveCardToBoard']),
+        'type'
       ),
       R.both(
         R.propEq( 'type', 'updateCard' ),
