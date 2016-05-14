@@ -12,6 +12,39 @@ import {
 test( 'getCreateActions', ( assert ) => {
   const expected = [
     {
+      "id": "5736ecccca848a2a85d3128c",
+      "data": {
+        "list": {
+          "name": "Today",
+          "id": "554f2bf7f50e97ed2c9f50c7"
+        },
+        "board": {
+          "shortLink": "u6PxZqrU",
+          "name": "Personal Kanban",
+          "id": "550dab1ad500902c46a86b00"
+        },
+        "card": {
+          "shortLink": "amTP4KVO",
+          "idShort": 1856,
+          "name": "TEST 2",
+          "id": "5736e4d3df45cda0083ec91b",
+          "closed": false
+        },
+        "old": {
+          "closed": true
+        }
+      },
+      "date": "2016-05-14T09:15:56.046Z",
+      "type": "updateCard",
+      "memberCreator": {
+        "id": "51843f636ef14b8a690062dc",
+        "avatarHash": "6a8e591c71d0006179ba98abc5684385",
+        "fullName": "Nicolas Carlo",
+        "initials": "NC",
+        "username": "nicolascarlo"
+      }
+    },
+    {
       "id": "56a9e6f072d112f8566d3558",
       "data": {
         "cardSource": {

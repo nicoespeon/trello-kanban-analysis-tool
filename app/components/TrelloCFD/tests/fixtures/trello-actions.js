@@ -1,5 +1,38 @@
 export default [
   {
+    "id": "5736ecccca848a2a85d3128c",
+    "data": {
+      "list": {
+        "name": "Production [3]",
+        "id": "4eea4ffc91e31d179270127c"
+      },
+      "board": {
+        "shortLink": "LydFpONf",
+        "name": "Production",
+        "id": "5186542b5dc079967b0037be"
+      },
+      "card": {
+        "shortLink": "amTP4KVO",
+        "idShort": 1856,
+        "name": "TEST 2",
+        "id": "5736e4d3df45cda0083ec91b",
+        "closed": false
+      },
+      "old": {
+        "closed": true
+      }
+    },
+    "date": "2016-03-10T16:05:00.412Z",
+    "type": "updateCard",
+    "memberCreator": {
+      "id": "51843f636ef14b8a690062dc",
+      "avatarHash": "6a8e591c71d0006179ba98abc5684385",
+      "fullName": "Nicolas Carlo",
+      "initials": "NC",
+      "username": "nicolascarlo"
+    }
+  },
+  {
     "id": "56a9e6f072d112f8566d3558",
     "data": {
       "cardSource": {
