@@ -2,6 +2,18 @@ import R from 'ramda';
 
 import {pathOr, lensPath} from './ramda';
 
+const createActions = [
+  'createCard',
+  'copyCard',
+  'moveCardToBoard',
+  'convertToCardFromCheckItem'
+];
+
+const deleteActions = [
+  'deleteCard',
+  'moveCardFromBoard'
+];
+
 // getCreateList :: Action -> List
 const getCreateList = R.converge(
   pathOr,
@@ -32,7 +44,7 @@ const getCreateActions = R.compose(
   R.filter(
     R.either(
       R.propSatisfies(
-        R.contains(R.__, ['createCard', 'copyCard', 'moveCardToBoard']),
+        R.contains( R.__, createActions ),
         'type'
       ),
       R.both(
@@ -53,7 +65,7 @@ const getDeleteActions = R.compose(
   R.filter(
     R.either(
       R.propSatisfies(
-        R.contains(R.__, ['deleteCard', 'moveCardFromBoard']),
+        R.contains( R.__, deleteActions ),
         'type'
       ),
       R.both(
