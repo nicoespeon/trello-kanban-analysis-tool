@@ -54,7 +54,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
       name: 'board',
       label: 'Board',
       classNames: [ 'browser-default' ],
-      select: R.always( 'LydFpONf' ),
+      select: R.head,
       render: ( value ) => R.propOr(
         value,
         'name',
@@ -76,7 +76,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     name: 'first-displayed-list',
     label: 'Work begins',
     classNames: [ 'browser-default' ],
-    select: R.always( 'Backlog' )
+    select: R.head
   } );
 
   const firstDisplayedListSelect = FirstDisplayedListSelect( {
