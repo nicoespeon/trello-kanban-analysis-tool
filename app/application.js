@@ -6,7 +6,6 @@ import R from 'ramda';
 
 import {makeTrelloDriver} from './drivers/Trello';
 import {makeGraphDriver} from './drivers/Graph';
-import logDriver from './drivers/Log';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import LabeledCheckbox from './components/LabeledCheckbox/LabeledCheckbox';
@@ -278,8 +277,7 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
       R.compose( R.head, R.unapply( R.identity ) )
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
-    Graph: trelloCFD.Graph,
-    Log: trelloCFDDates$
+    Graph: trelloCFD.Graph
   };
 }
 
@@ -287,8 +285,7 @@ const drivers = {
   DOM: makeDOMDriver( '#app' ),
   TrelloFetch: makeTrelloDriver(),
   TrelloMissingInfo: makeTrelloDriver(),
-  Graph: makeGraphDriver( '#chart svg' ),
-  Log: logDriver
+  Graph: makeGraphDriver( '#chart svg' )
 };
 
 Cycle.run( main, drivers );
