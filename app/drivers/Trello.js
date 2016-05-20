@@ -98,16 +98,6 @@ function trelloSinkDriver ( input$ ) {
 }
 
 function makeTrelloDriver () {
-  Trello.authorize( {
-    type: 'popup',
-    name: 'Trello Kanban Analysis Tool',
-    scope: { read: true },
-    persist: true,
-    expiration: 'never',
-    success: () => console.log( 'Connected to Trello.' ),
-    error: () => console.log( 'Error on Trello connexion.' )
-  } );
-
   return trelloSinkDriver;
 }
 

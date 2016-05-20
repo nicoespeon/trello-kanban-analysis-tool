@@ -288,4 +288,14 @@ const drivers = {
   Graph: makeGraphDriver( '#chart svg' )
 };
 
-Cycle.run( main, drivers );
+Trello.authorize( {
+  type: 'popup',
+  name: 'Trello Kanban Analysis Tool',
+  scope: { read: true },
+  persist: true,
+  expiration: 'never',
+  success: () => {
+    Cycle.run( main, drivers );
+  },
+  error: () => console.log("Can't connect to Trello")
+} );
