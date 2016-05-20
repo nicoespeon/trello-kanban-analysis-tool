@@ -97,8 +97,4 @@ function trelloSinkDriver ( input$ ) {
   };
 }
 
-function makeTrelloDriver () {
-  return trelloSinkDriver;
-}
-
-export {makeTrelloDriver};
+export {trelloSinkDriver};

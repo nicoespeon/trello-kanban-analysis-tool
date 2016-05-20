@@ -4,7 +4,7 @@ import isolate from '@cycle/isolate';
 import {Observable} from 'rx';
 import R from 'ramda';
 
-import {makeTrelloDriver} from './drivers/Trello';
+import {trelloSinkDriver} from './drivers/Trello';
 import {makeGraphDriver} from './drivers/Graph';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
@@ -283,8 +283,8 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
 
 const drivers = {
   DOM: makeDOMDriver( '#app' ),
-  TrelloFetch: makeTrelloDriver(),
-  TrelloMissingInfo: makeTrelloDriver(),
+  TrelloFetch: trelloSinkDriver,
+  TrelloMissingInfo: trelloSinkDriver,
   Graph: makeGraphDriver( '#chart svg' )
 };
 
