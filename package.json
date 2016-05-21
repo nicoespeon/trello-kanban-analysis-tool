@@ -12,9 +12,10 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "lint": "node_modules/.bin/eslint app/**/*.js",
-    "test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
-    "testdiff": "npm run test | node_modules/.bin/tap-diff"
+    "lint": "node_modules/.bin/eslint app",
+    "unit-test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
+    "unit-test-diff": "npm run unit-test | node_modules/.bin/tap-diff",
+    "test": "npm run lint && npm run unit-test"
   },
   "dependencies": {
     "@cycle/core": "6.0.3",

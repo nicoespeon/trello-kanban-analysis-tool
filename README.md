@@ -29,11 +29,17 @@ Basically, all [brunch commands](https://github.com/brunch/brunch/blob/master/do
 
 You will probably want to use `brunch watch --server` to serve the app locally.
 
-#### `npm run test`
+In case of doubt, you can run `npm test` to check if anything is wrong with source code.
+
+#### `npm run lint`
+
+Lint JavaScript through [ESLint](http://eslint.org/).
+
+#### `npm run unit-test`
 
 Launch unit tests with [Babel tape runner](https://github.com/wavded/babel-tape-runner).
 
-#### `npm run testdiff`
+#### `npm run unit-test-diff`
 
 Launch unit tests through [tap-diff reporter](https://www.npmjs.com/package/tap-diff).
 
