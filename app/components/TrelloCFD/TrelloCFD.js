@@ -1,13 +1,13 @@
-import {button} from '@cycle/dom';
-import {Observable} from 'rx';
+import { button } from '@cycle/dom';
+import { Observable } from 'rx';
 import R from 'ramda';
 
-import {parseActions} from './actions';
-import {parseToGraph} from './graph';
+import { parseActions } from './actions';
+import { parseToGraph } from './graph';
 
-import {today, tomorrow, filterBetweenDates} from '../../utils/date';
+import { today, tomorrow, filterBetweenDates } from '../../utils/date';
 
-function TrelloCFD (
+function TrelloCFD(
   {
     DOM,
     actions$,
@@ -15,22 +15,22 @@ function TrelloCFD (
     displayedLists$,
     dates$,
     props$,
-    previewTomorrow$
+    previewTomorrow$,
   }
 ) {
-  const currentDate$ = previewTomorrow$.map( R.cond( [
-    [ R.equals( true ), R.always( tomorrow ) ],
-    [ R.equals( false ), R.always( today ) ]
-  ] ) );
+  const currentDate$ = previewTomorrow$.map(R.cond([
+    [R.equals(true), R.always(tomorrow)],
+    [R.equals(false), R.always(today)],
+  ]));
 
   const clicks$ = DOM
-    .select( '.button' )
-    .events( 'click' )
-    .startWith( false );
+    .select('.button')
+    .events('click')
+    .startWith(false);
 
-  const vtree$ = props$.map( ( props ) => button(
-    { className: R.join( ' ', R.concat( [ 'button' ], props.classNames ) ) },
-    props.label )
+  const vtree$ = props$.map((props) => button(
+    { className: R.join(' ', R.concat(['button'], props.classNames)) },
+    props.label)
   );
 
   const parsedActions$ = Observable.combineLatest(
@@ -38,10 +38,10 @@ function TrelloCFD (
     lists$,
     actions$,
     currentDate$,
-    ( { startDate, endDate }, lists, actions, currentDate ) => R.compose(
-      filterBetweenDates( startDate, endDate ),
-      parseActions( currentDate, lists )
-    )( actions )
+    ({ startDate, endDate }, lists, actions, currentDate) => R.compose(
+      filterBetweenDates(startDate, endDate),
+      parseActions(currentDate, lists)
+    )(actions)
   );
 
   return {
@@ -51,7 +51,7 @@ function TrelloCFD (
       displayedLists$,
       parsedActions$,
       parseToGraph
-    )
+    ),
   };
 }
 

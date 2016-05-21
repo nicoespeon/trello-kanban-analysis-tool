@@ -1,26 +1,26 @@
 import R from 'ramda';
 
-import {pathOr, lensPath} from './ramda';
+import { pathOr, lensPath } from './ramda';
 
 const createActions = [
   'createCard',
   'copyCard',
   'moveCardToBoard',
-  'convertToCardFromCheckItem'
+  'convertToCardFromCheckItem',
 ];
 
 const deleteActions = [
   'deleteCard',
-  'moveCardFromBoard'
+  'moveCardFromBoard',
 ];
 
 // getCreateList :: Action -> List
 const getCreateList = R.converge(
   pathOr,
   [
-    R.path( [ 'data', 'list' ] ),
-    R.always( [ 'data', 'listAfter' ] ),
-    R.identity
+    R.path(['data', 'list']),
+    R.always(['data', 'listAfter']),
+    R.identity,
   ]
 );
 
@@ -28,30 +28,30 @@ const getCreateList = R.converge(
 const getDeleteList = R.converge(
   pathOr,
   [
-    R.path( [ 'data', 'list' ] ),
-    R.always( [ 'data', 'listBefore' ] ),
-    R.identity
+    R.path(['data', 'list']),
+    R.always(['data', 'listBefore']),
+    R.identity,
   ]
 );
 
 // getCreateActions :: [Action] -> [Action]
 const getCreateActions = R.compose(
-  R.map( ( action ) => R.set(
-    lensPath( [ 'data', 'list' ] ),
-    getCreateList( action ),
+  R.map((action) => R.set(
+    lensPath(['data', 'list']),
+    getCreateList(action),
     action
-  ) ),
+  )),
   R.filter(
     R.either(
       R.propSatisfies(
-        R.contains( R.__, createActions ),
+        R.contains(R.__, createActions),
         'type'
       ),
       R.both(
-        R.propEq( 'type', 'updateCard' ),
+        R.propEq('type', 'updateCard'),
         R.either(
-          R.path( [ 'data', 'listAfter' ] ),
-          R.compose( R.equals( false ), R.path( [ 'data', 'card', 'closed' ] ) )
+          R.path(['data', 'listAfter']),
+          R.compose(R.equals(false), R.path(['data', 'card', 'closed']))
         )
       )
     )
@@ -60,55 +60,56 @@ const getCreateActions = R.compose(
 
 // getDeleteActions :: [Action] -> [Action]
 const getDeleteActions = R.compose(
-  R.map( ( action ) => R.set(
-    lensPath( [ 'data', 'list' ] ),
-    getDeleteList( action ),
+  R.map((action) => R.set(
+    lensPath(['data', 'list']),
+    getDeleteList(action),
     action
-  ) ),
+  )),
   R.filter(
     R.either(
       R.propSatisfies(
-        R.contains( R.__, deleteActions ),
+        R.contains(R.__, deleteActions),
         'type'
       ),
       R.both(
-        R.propEq( 'type', 'updateCard' ),
+        R.propEq('type', 'updateCard'),
         R.either(
-          R.path( [ 'data', 'listBefore' ] ),
-          R.compose( R.equals( true ), R.path( [ 'data', 'card', 'closed' ] ) )
+          R.path(['data', 'listBefore']),
+          R.compose(R.equals(true), R.path(['data', 'card', 'closed']))
         )
       )
     )
   )
 );
 
-// getDisplayedLists :: [{id: String, name: String}] -> String -> String -> [{id: String, name: String}]
-const getDisplayedLists = ( lists, first, last ) => {
-  const names = R.pluck( "name", lists );
+// List = {id: String, name: String}
+// getDisplayedLists :: [List] -> String -> String -> [List]
+const getDisplayedLists = (lists, first, last) => {
+  const names = R.pluck('name', lists);
   return R.slice(
-    R.indexOf( first, names ),
-    R.indexOf( last, names ) + 1 || R.length( lists ),
+    R.indexOf(first, names),
+    R.indexOf(last, names) + 1 || R.length(lists),
     lists
   );
 };
 
 // Pattern for list names with WIP: "Production [3]" -> ["Production", " [3]"]
-const _parsedNamePattern = /(.*?)(\s\[\d+\])$/;
+const parsedNamePattern = /(.*?)(\s\[\d+\])$/;
 
-// parseListName :: String -> [String | Undefined]
-const parseListName = R.cond( [
+// parseListName :: String -> [String | Undefined]
+const parseListName = R.cond([
   [
-    R.test( _parsedNamePattern ),
-    R.compose( R.head, R.tail, R.match( _parsedNamePattern ) )
+    R.test(parsedNamePattern),
+    R.compose(R.head, R.tail, R.match(parsedNamePattern)),
   ],
-  [ R.T, R.identity ]
-] );
+  [R.T, R.identity],
+]);
 
-const getListNameFromId = R.curry( ( lists, id ) => R.compose(
+const getListNameFromId = R.curry((lists, id) => R.compose(
   parseListName,
-  R.propOr( '', 'name' ),
-  R.find( R.propEq( 'id', id ) )
-)( lists ) );
+  R.propOr('', 'name'),
+  R.find(R.propEq('id', id))
+)(lists));
 
 export {
   getCreateList,
@@ -117,5 +118,5 @@ export {
   getDeleteActions,
   getDisplayedLists,
   parseListName,
-  getListNameFromId
+  getListNameFromId,
 };

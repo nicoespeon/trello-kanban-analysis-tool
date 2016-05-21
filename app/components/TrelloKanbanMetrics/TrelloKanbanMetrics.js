@@ -1,25 +1,24 @@
-import {div, table, thead, tr, th, tbody, td} from '@cycle/dom';
-import {Observable} from 'rx';
+import { div, table, thead, tr, th, tbody } from '@cycle/dom';
+import { Observable } from 'rx';
 import R from 'ramda';
 
 import {
   parseStartDatesOnPeriod,
   parseAvgLeadTime,
-  isMissingInformation
+  isMissingInformation,
 } from './times';
-import {splitToPairs} from './lists';
-import {cycleTimeVTreeWithLists} from './vtree';
+import { splitToPairs } from './lists';
+import { cycleTimeVTreeWithLists } from './vtree';
 
-function TrelloKanbanMetrics (
+function TrelloKanbanMetrics(
   {
     actions$,
     dates$,
     lists$,
-    complementaryActions$
+    complementaryActions$,
   }
 ) {
-
-  const listsIds$ = lists$.map( R.pluck( 'id' ) );
+  const listsIds$ = lists$.map(R.pluck('id'));
 
   // Determine missing information
 
@@ -33,7 +32,7 @@ function TrelloKanbanMetrics (
   const complementaryCardsIds$ = complementaryActions$.map(
     R.compose(
       R.uniq,
-      R.map( R.path( [ 'data', 'card', 'id' ] ) ),
+      R.map(R.path(['data', 'card', 'id'])),
       R.flatten
     )
   );
@@ -41,16 +40,16 @@ function TrelloKanbanMetrics (
   const missingInformationCardIds$ = Observable.combineLatest(
     cards$,
     complementaryCardsIds$,
-    ( cards, complementaryCardsIds ) => R.compose(
-      R.pluck( 'id' ),
-      R.filter( isMissingInformation ),
+    (cards, complementaryCardsIds) => R.compose(
+      R.pluck('id'),
+      R.filter(isMissingInformation),
       // Only pick cards which are not already in complementary ones.
       R.differenceWith(
-        R.useWith( R.equals, [ R.prop( 'id' ), R.identity ] ),
+        R.useWith(R.equals, [R.prop('id'), R.identity]),
         R.__,
         complementaryCardsIds
       )
-    )( cards )
+    )(cards)
   );
 
   // Calculate Lead Time from consolidated data
@@ -58,60 +57,60 @@ function TrelloKanbanMetrics (
   const consolidatedActions$ = Observable.combineLatest(
     actions$,
     complementaryActions$,
-    R.useWith( R.concat, [ R.identity, R.flatten ] )
+    R.useWith(R.concat, [R.identity, R.flatten])
   );
 
   const leadTimes$ = Observable.combineLatest(
     dates$,
     consolidatedActions$,
     listsIds$,
-    R.compose( parseAvgLeadTime, parseStartDatesOnPeriod )
+    R.compose(parseAvgLeadTime, parseStartDatesOnPeriod)
   );
 
   const leadTimeVTree$ = leadTimes$.map(
-    leadTime => div( `Lead Time: ${leadTime} days` ),
+    leadTime => div(`Lead Time: ${leadTime} days`)
   );
 
   // Calculate Cycle Times from consolidated data
 
-  const listsGroups$ = listsIds$.map( splitToPairs );
+  const listsGroups$ = listsIds$.map(splitToPairs);
 
   const cycleTimes$ = Observable.combineLatest(
     dates$,
     consolidatedActions$,
     listsGroups$,
-    ( dates, actions, listsGroups ) =>
+    (dates, actions, listsGroups) =>
       R.map(
-        R.compose( parseAvgLeadTime, parseStartDatesOnPeriod( dates, actions ) )
-      )( listsGroups )
+        R.compose(parseAvgLeadTime, parseStartDatesOnPeriod(dates, actions))
+      )(listsGroups)
   );
 
   const cycleTimesVTree$ = Observable.combineLatest(
     lists$,
     listsGroups$,
     cycleTimes$,
-    ( lists, groups, cycleTimes ) =>
-      table( '.striped.responsive-table', [
-        thead( [
-          tr( [ th( 'Lists' ), th( 'Cycle Time' ) ] )
-        ] ),
-        tbody( [
+    (lists, groups, cycleTimes) =>
+      table('.striped.responsive-table', [
+        thead([
+          tr([th('Lists'), th('Cycle Time')]),
+        ]),
+        tbody([
           R.compose(
-            R.map( cycleTimeVTreeWithLists( lists ) ),
+            R.map(cycleTimeVTreeWithLists(lists)),
             R.zip
-          )( groups, cycleTimes )
-        ] )
-      ] )
+          )(groups, cycleTimes),
+        ]),
+      ])
   );
 
   return {
     DOM: Observable.combineLatest(
       leadTimeVTree$,
       cycleTimesVTree$,
-      ( leadTimeVTree, cycleTimesVTree ) =>
-        div( [ leadTimeVTree, cycleTimesVTree ] )
+      (leadTimeVTree, cycleTimesVTree) =>
+        div([leadTimeVTree, cycleTimesVTree])
     ),
-    Trello: missingInformationCardIds$
+    Trello: missingInformationCardIds$,
   };
 }
 

@@ -7,23 +7,23 @@ import {
   fillMissingDates,
   parseDate,
   getCreateActions,
-  getDeleteActions
+  getDeleteActions,
 } from '../../utils/utils';
 
-import {sumNumberOfCards} from './cards';
-import {countCardsPerList, mapListData} from './lists';
+import { sumNumberOfCards } from './cards';
+import { countCardsPerList, mapListData } from './lists';
 
-// _parseActionsWith :: (Number -> b) -> [Action] -> [List]
-function _parseActionsWith ( fn ) {
+// parseActionsWith :: (Number -> b) -> [Action] -> [List]
+function parseActionsWith(fn) {
   return R.compose(
     groupByWith(
-      R.prop( 'date' ),
-      ( a, b ) => ({
+      R.prop('date'),
+      (a, b) => ({
         date: a,
-        content: R.compose( countCardsPerList( fn ), mapListData )( b )
+        content: R.compose(countCardsPerList(fn), mapListData)(b),
       })
     ),
-    R.map( R.over( R.lensProp( 'date' ), parseDate ) )
+    R.map(R.over(R.lensProp('date'), parseDate))
   );
 }
 
@@ -32,59 +32,57 @@ function _parseActionsWith ( fn ) {
 // going back through time, starting from today.
 
 // parseCreateActions :: [Action] -> [List]
-const parseCreateActions = _parseActionsWith( R.negate );
+const parseCreateActions = parseActionsWith(R.negate);
 
 // parseDeleteActions :: [Action] -> [List]
-const parseDeleteActions = _parseActionsWith( R.identity );
+const parseDeleteActions = parseActionsWith(R.identity);
 
 // parseCreateActionsFrom :: [Action] -> [List]
-const parseCreateActionsFrom = R.compose( parseCreateActions, getCreateActions );
+const parseCreateActionsFrom = R.compose(parseCreateActions, getCreateActions);
 
 // parseDeleteActionsFrom :: [Action] -> [List]
-const parseDeleteActionsFrom = R.compose( parseDeleteActions, getDeleteActions );
+const parseDeleteActionsFrom = R.compose(parseDeleteActions, getDeleteActions);
 
-// consolidateContent :: [{list: String, numberOfCards: Number}] -> [{list: String, numberOfCards: Number}]
+// CardsList = {list: String, numberOfCards: Number}
+// consolidateContent :: [CardsList] -> [CardsList]
 const consolidateContent = groupByWith(
-  R.prop( 'list' ),
-  ( a, b ) => ({ list: a, numberOfCards: sumNumberOfCards( b ) })
+  R.prop('list'),
+  (a, b) => ({ list: a, numberOfCards: sumNumberOfCards(b) })
 );
 
-// consolidateActions :: [{list: String, numberOfCards: Number}] -> [List] -> [List]
-const consolidateActions = ( initialContent, actions ) => {
-  return R.compose(
+// consolidateActions :: [CardsList] -> [List] -> [List]
+const consolidateActions = (initialContent, actions) => R.compose(
     fillMissingDates,
     uniqByDateDesc,
     R.scan(
-      ( a, b ) => R.over(
-        R.lensProp( 'content' ),
-        R.compose( consolidateContent, R.concat( R.prop( 'content', a ) ) ),
+      (a, b) => R.over(
+        R.lensProp('content'),
+        R.compose(consolidateContent, R.concat(R.prop('content', a))),
         b
       ),
       initialContent
     ),
     sortByDateDesc
-  )( actions );
-};
+  )(actions);
 
 // parseCurrentStatus :: String -> [{id: String, cards: Array}] -> [List]
-const parseCurrentStatus = R.curry( ( date, list ) => ({
-  date: date,
+const parseCurrentStatus = R.curry((date, list) => ({
+  date,
   content: R.compose(
-    R.unary( R.reverse ),
-    R.map( a => ({ list: a.id, numberOfCards: R.length( a.cards ) }) )
-  )( list )
-}) );
+    R.unary(R.reverse),
+    R.map(a => ({ list: a.id, numberOfCards: R.length(a.cards) }))
+  )(list),
+}));
 
 // parseActions :: String -> [{id: String, cards: Array}] -> [Action] -> [List]
-const parseActions = R.curry( ( date, lists, actions ) => {
-  return consolidateActions(
-    parseCurrentStatus( date, lists ),
+const parseActions = R.curry((date, lists, actions) => consolidateActions(
+    parseCurrentStatus(date, lists),
     R.concat(
-      parseCreateActionsFrom( actions ),
-      parseDeleteActionsFrom( actions )
+      parseCreateActionsFrom(actions),
+      parseDeleteActionsFrom(actions)
     )
-  );
-} );
+  )
+);
 
 export {
   parseCreateActions,
@@ -96,5 +94,5 @@ export {
   consolidateContent,
   consolidateActions,
   parseCurrentStatus,
-  parseActions
+  parseActions,
 };

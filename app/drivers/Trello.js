@@ -1,5 +1,5 @@
 import R from 'ramda';
-import {Observable} from 'rx';
+import { Observable } from 'rx';
 
 const actionsFilter = [
   'createCard',
@@ -9,92 +9,92 @@ const actionsFilter = [
   'copyCard',
   'moveCardFromBoard',
   'moveCardToBoard',
-  'convertToCardFromCheckItem'
+  'convertToCardFromCheckItem',
 ].join(',');
 const actionsFields = 'data,date,type';
 
 // cardActions$ :: String -> Observable
-function cardActions$ ( cardId ) {
-  return Observable.create( ( observer ) => {
+function cardActions$(cardId) {
+  return Observable.create((observer) => {
     Trello.get(
-      '/cards/' + cardId + '/actions',
+      `/cards/${cardId}/actions`,
       {
         filter: actionsFilter,
         limit: 1000,
         fields: actionsFields,
-        memberCreator: false
+        memberCreator: false,
       },
-      ( data ) => {
-        observer.onNext( data );
+      (data) => {
+        observer.onNext(data);
         observer.onCompleted();
       },
-      observer.onError.bind( observer )
+      observer.onError.bind(observer)
     );
-  } );
+  });
 }
 
-function trelloSinkDriver ( input$ ) {
+function trelloSinkDriver(input$) {
   return {
-    boards$: Observable.create( ( observer ) => {
+    boards$: Observable.create((observer) => {
       Trello.get(
         '/members/me/boards',
         {
           filter: 'open',
-          fields: 'name,shortLink'
+          fields: 'name,shortLink',
         },
-        ( data ) => {
-          observer.onNext( data );
+        (data) => {
+          observer.onNext(data);
           observer.onCompleted();
         },
-        observer.onError.bind( observer )
+        observer.onError.bind(observer)
       );
-    } ),
+    }),
 
-    actions$: Observable.create( ( observer ) => {
-      input$.subscribe( ( boardId ) => {
+    actions$: Observable.create((observer) => {
+      input$.subscribe((boardId) => {
         Trello.get(
-          '/boards/' + boardId + '/actions',
+          `/boards/${boardId}/actions`,
           {
             filter: actionsFilter,
             fields: actionsFields,
-            limit: 1000
+            limit: 1000,
           },
-          observer.onNext.bind( observer ),
-          observer.onError.bind( observer )
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
         );
-      } );
-    } ),
+      });
+    }),
 
-    lists$: Observable.create( ( observer ) => {
-      input$.subscribe( ( boardId ) => {
+    lists$: Observable.create((observer) => {
+      input$.subscribe((boardId) => {
         Trello.get(
-          '/boards/' + boardId + '/lists',
+          `/boards/${boardId}/lists`,
           {
             fields: 'name',
             cards: 'open',
-            card_fields: ''
+            card_fields: '',
           },
-          observer.onNext.bind( observer ),
-          observer.onError.bind( observer )
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
         );
-      } );
-    } ),
+      });
+    }),
 
-    cardsActions$$: Observable.create( ( observer ) => {
+    cardsActions$$: Observable.create((observer) => {
       input$
-        .filter( R.compose( R.not, R.isEmpty ) )
-        .subscribe( ( cardIds ) => {
+        .filter(R.compose(R.not, R.isEmpty))
+        .subscribe((cardIds) => {
           observer.onNext(
             Observable.zip.apply(
               null,
               cardIds
-                .map( cardActions$ )
-                .concat( R.unapply( R.identity ) )
+                .map(cardActions$)
+                .concat(R.unapply(R.identity))
             )
           );
-        } );
-    } )
+        });
+    }),
   };
 }
 
-export {trelloSinkDriver};
+export { trelloSinkDriver };

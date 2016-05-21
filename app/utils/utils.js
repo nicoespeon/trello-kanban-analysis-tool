@@ -5,9 +5,9 @@ import * as ramda from './ramda';
 import * as trello from './trello';
 import * as utility from './utility';
 
-export default R.mergeAll( [
+export default R.mergeAll([
   date,
   ramda,
   trello,
-  utility
-] );
+  utility,
+]);

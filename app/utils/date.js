@@ -1,116 +1,119 @@
 import R from 'ramda';
 import moment from 'moment';
 
-const _dateFormat = 'YYYY-MM-DD';
+const dateFormat = 'YYYY-MM-DD';
 
-// endOf :: Date -> Date
-function _endOf ( month ) {
-  return moment( month )
-    .date( moment( month, _dateFormat ).daysInMonth() )
-    .format( _dateFormat );
+// endOf :: Date -> Date
+function endOf(month) {
+  return moment(month)
+    .date(moment(month, dateFormat).daysInMonth())
+    .format(dateFormat);
 }
 
 // Dates
 
 const lastMonth = moment()
-  .month( moment().month() - 1 )
-  .date( 1 )
-  .format( _dateFormat );
+  .month(moment().month() - 1)
+  .date(1)
+  .format(dateFormat);
 
-const endOfLastMonth = _endOf( lastMonth );
+const endOfLastMonth = endOf(lastMonth);
 
-const currentMonth = moment().date( 1 ).format( _dateFormat );
+const currentMonth = moment().date(1).format(dateFormat);
 
-const endOfMonth = _endOf( currentMonth );
+const endOfMonth = endOf(currentMonth);
 
-const today = moment().format( _dateFormat );
-const tomorrow = moment().add( 1, 'day' ).format( _dateFormat );
+const today = moment().format(dateFormat);
+const tomorrow = moment().add(1, 'day').format(dateFormat);
 
 // parseDate :: String -> String
-const parseDate = R.compose( R.head, R.split( 'T' ) );
+const parseDate = R.compose(R.head, R.split('T'));
 
 // sortByDate :: [{date: String}] -> [{date: String}]
-const sortByDate = R.sortBy( R.prop( 'date' ) );
+const sortByDate = R.sortBy(R.prop('date'));
 
 // sortByDateDesc :: [{date: String}] -> [{date: String}]
 const sortByDateDesc = R.compose(
-  R.unary( R.reverse ),
+  R.unary(R.reverse),
   sortByDate
 );
 
 // uniqByDateDesc :: [{date: String}] -> [{date: String}]
 const uniqByDateDesc = R.compose(
-  R.uniqBy( R.prop( 'date' ) ),
+  R.uniqBy(R.prop('date')),
   R.reverse
 );
 
 // nextDay :: String -> String
-const nextDay = ( date ) => moment( date ).add( 1, 'days' ).format( _dateFormat );
+const nextDay = (date) => moment(date).add(1, 'days').format(dateFormat);
 
-// _withNextDay :: [{date: String}] -> [{date: String}]
-const _withNextDay = R.over( R.lensProp( 'date' ), nextDay );
+// withNextDay :: [{date: String}] -> [{date: String}]
+const withNextDay = R.over(R.lensProp('date'), nextDay);
 
-// _wasPreviousDateOf :: [{date: String}] -> [{date: String}] -> Boolean
-const _wasPreviousDateOf = R.curry( ( a, b ) => {
-  return R.propEq( 'date', nextDay( R.prop( 'date', b ) ), a );
-} );
+// wasPreviousDateOf :: [{date: String}] -> [{date: String}] -> Boolean
+const wasPreviousDateOf = R.curry((a, b) => R.propEq(
+  'date',
+  nextDay(R.prop('date', b)),
+  a
+));
 
-// _scanMissingDate :: [{date: String|undefined}|[{date: String}]] -> [{date: String}] -> [{date: String}|[{date: String}]]
-function _scanMissingDate ( a, b ) {
+// Date = {date: String}
+// scanMissingDate :: [{date: String|undefined}|[Date]] -> [Date] -> [Date|[Date]]
+function scanMissingDate(a, b) {
   return R.compose(
-    R.cond( [
+    R.cond([
       [
-        R.either( R.isEmpty, _wasPreviousDateOf( b ) ),
-        R.always( b )
+        R.either(R.isEmpty, wasPreviousDateOf(b)),
+        R.always(b),
       ],
       [
         R.T,
-        ( a ) => [
-          _withNextDay( a ),
-          _scanMissingDate( _withNextDay( a ), b )
-        ]
-      ]
-    ] ),
+        (x) => [
+          withNextDay(x),
+          scanMissingDate(withNextDay(x), b),
+        ],
+      ],
+    ]),
     R.last,
     R.flatten,
-    R.concat( [] )
-  )( a );
+    R.concat([])
+  )(a);
 }
 
 // fillMissingDates :: [{date: String}] -> [{date: String}]
 const fillMissingDates = R.compose(
   R.tail,
   R.flatten,
-  R.scan( _scanMissingDate, {} ),
+  R.scan(scanMissingDate, {}),
   sortByDate
 );
 
-// _filterByDate :: (String -> String -> Boolean) -> String -> [{date: String}] -> [{date: String}]
-const _filterByDate = R.curry( ( fn, date, items ) => R.filter(
+// filterByDate :: (String -> String -> Boolean) -> String -> [{date: String}] -> [{date: String}]
+const filterByDate = R.curry((fn, date, items) => R.filter(
   R.propSatisfies(
-    x => R.or( R.isNil( date ), fn( x, date ) ),
+    x => R.or(R.isNil(date), fn(x, date)),
     'date'
   ),
   items
-) );
+));
 
-// filterBeforeDate :: String -> [{date: String}] -> [{date: String}]
-const filterBeforeDate = _filterByDate( R.lt );
+// filterBeforeDate :: String -> [{date: String}] -> [{date: String}]
+const filterBeforeDate = filterByDate(R.lt);
 
-// filterAfterDate :: String -> [{date: String}] -> [{date: String}]
-const filterAfterDate = _filterByDate( R.gte );
+// filterAfterDate :: String -> [{date: String}] -> [{date: String}]
+const filterAfterDate = filterByDate(R.gte);
 
-// filterBetweenDates :: String -> String -> [{date: String}] -> [{date: String}]
-const filterBetweenDates = R.curry( ( startDate, endDate, items ) => R.compose(
-  filterBeforeDate( endDate ),
-  filterAfterDate( startDate )
-)( items ) );
+// filterBetweenDates :: String -> String -> [{date: String}] -> [{date: String}]
+const filterBetweenDates = R.curry((startDate, endDate, items) => R.compose(
+  filterBeforeDate(endDate),
+  filterAfterDate(startDate)
+)(items));
 
 // daysSpent :: Date -> Date -> Integer
 const daysSpent = (
   start,
   end
-) => moment( end ).diff( moment( start ), 'days' );
+) => moment(end).diff(moment(start), 'days');
 
 export {
   lastMonth,
@@ -129,5 +132,5 @@ export {
   filterBeforeDate,
   filterAfterDate,
   filterBetweenDates,
-  daysSpent
+  daysSpent,
 };

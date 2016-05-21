@@ -1,20 +1,20 @@
-import {div, select, option, label} from '@cycle/dom';
-import {Observable} from 'rx';
+import { div, select, option, label } from '@cycle/dom';
+import { Observable } from 'rx';
 import R from 'ramda';
 
-function LabeledSelect ( { DOM, props$, values$ } ) {
+function LabeledSelect({ DOM, props$, values$ }) {
   const newSelected$ = DOM
-    .select( '.select' )
-    .events( 'input' )
-    .map( ev => ev.target.value )
-    .startWith( null );
+    .select('.select')
+    .events('input')
+    .map(ev => ev.target.value)
+    .startWith(null);
 
   const selected$ = Observable.combineLatest(
     props$,
     values$,
     newSelected$,
-    ( props, values, newSelected ) => R.defaultTo(
-      props.select( values ),
+    (props, values, newSelected) => R.defaultTo(
+      props.select(values),
       newSelected
     )
   );
@@ -22,30 +22,30 @@ function LabeledSelect ( { DOM, props$, values$ } ) {
   const propsDefaults = { render: R.identity };
 
   const vtree$ = Observable.combineLatest(
-    props$.map( R.merge( propsDefaults ) ),
+    props$.map(R.merge(propsDefaults)),
     selected$,
     values$,
-    ( props, selected, values ) => div( [
-      label( { htmlFor: props.name }, props.label ),
+    (props, selected, values) => div([
+      label({ htmlFor: props.name }, props.label),
       select(
         {
-          className: R.join( ' ', R.concat( [ 'select' ], props.classNames ) ),
-          name: props.name
+          className: R.join(' ', R.concat(['select'], props.classNames)),
+          name: props.name,
         },
-        [ R.map( value => R.cond( [
+        [R.map(value => R.cond([
           [
-            R.equals( selected ),
-            R.always( option( { value: value, selected: true }, props.render( value ) ) )
+            R.equals(selected),
+            R.always(option({ value, selected: true }, props.render(value))),
           ],
-          [ R.T, R.always( option( {value: value}, props.render( value ) ) ) ]
-        ] )( value ), values ) ]
-      )
-    ] )
+          [R.T, R.always(option({ value }, props.render(value)))],
+        ])(value), values)]
+      ),
+    ])
   );
 
   return {
     DOM: vtree$,
-    selected$
+    selected$,
   };
 }
 

@@ -1,11 +1,11 @@
 import Cycle from '@cycle/core';
-import {makeDOMDriver, div, h1, small, input, label} from '@cycle/dom';
+import { makeDOMDriver, div, h1, small } from '@cycle/dom';
 import isolate from '@cycle/isolate';
-import {Observable} from 'rx';
+import { Observable } from 'rx';
 import R from 'ramda';
 
-import {trelloSinkDriver} from './drivers/Trello';
-import {makeGraphDriver} from './drivers/Graph';
+import { trelloSinkDriver } from './drivers/Trello';
+import { makeGraphDriver } from './drivers/Graph';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import LabeledCheckbox from './components/LabeledCheckbox/LabeledCheckbox';
@@ -18,174 +18,174 @@ import {
   lastMonth,
   endOfLastMonth,
   currentMonth,
-  endOfMonth
+  endOfMonth,
 } from './utils/date';
-import {getDisplayedLists} from './utils/trello';
+import { getDisplayedLists } from './utils/trello';
 
-function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
+function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   const publishedTrelloLists$ = TrelloFetch.lists$.publish();
   const publishedTrelloActions$ = TrelloFetch.actions$.publish();
   const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
 
-  const trelloLists$ = publishedTrelloLists$.startWith( [] );
-  const trelloActions$ = publishedTrelloActions$.startWith( [] );
+  const trelloLists$ = publishedTrelloLists$.startWith([]);
+  const trelloActions$ = publishedTrelloActions$.startWith([]);
 
   // Checkbox to preview tomorrow CFD
 
-  const PreviewTomorrow = isolate( LabeledCheckbox );
+  const PreviewTomorrow = isolate(LabeledCheckbox);
 
-  const previewTomorrowProps$ = Observable.of( {
+  const previewTomorrowProps$ = Observable.of({
     name: 'preview-tomorrow',
-    label: 'Preview tomorrow CFD (include today operations)'
-  } );
+    label: 'Preview tomorrow CFD (include today operations)',
+  });
 
-  const previewTomorrow = PreviewTomorrow( {
+  const previewTomorrow = PreviewTomorrow({
     DOM,
-    props$: previewTomorrowProps$
-  } );
+    props$: previewTomorrowProps$,
+  });
 
   // Select to choose the displayed board
 
-  const BoardSelect = isolate( LabeledSelect );
+  const BoardSelect = isolate(LabeledSelect);
 
   const boardProps$ = TrelloFetch.boards$
-    .map( ( boards ) => ({
+    .map((boards) => ({
       name: 'board',
       label: 'Board',
-      classNames: [ 'browser-default' ],
+      classNames: ['browser-default'],
       select: R.head,
-      render: ( value ) => R.propOr(
+      render: (value) => R.propOr(
         value,
         'name',
-        R.find( R.propEq( 'shortLink', value ), boards )
-      )
-    }) );
+        R.find(R.propEq('shortLink', value), boards)
+      ),
+    }));
 
-  const boardSelect = BoardSelect( {
+  const boardSelect = BoardSelect({
     DOM,
     props$: boardProps$,
-    values$: TrelloFetch.boards$.map( R.pluck( 'shortLink' ) )
-  } );
+    values$: TrelloFetch.boards$.map(R.pluck('shortLink')),
+  });
 
   // Select to choose the first displayed list
 
-  const FirstDisplayedListSelect = isolate( LabeledSelect );
+  const FirstDisplayedListSelect = isolate(LabeledSelect);
 
-  const firstDisplayedListProps$ = Observable.of( {
+  const firstDisplayedListProps$ = Observable.of({
     name: 'first-displayed-list',
     label: 'Work begins',
-    classNames: [ 'browser-default' ],
-    select: R.head
-  } );
+    classNames: ['browser-default'],
+    select: R.head,
+  });
 
-  const firstDisplayedListSelect = FirstDisplayedListSelect( {
+  const firstDisplayedListSelect = FirstDisplayedListSelect({
     DOM,
     props$: firstDisplayedListProps$,
-    values$: trelloLists$.map( R.pluck( 'name' ) )
-  } );
+    values$: trelloLists$.map(R.pluck('name')),
+  });
 
   // Select to choose the last displayed list
 
-  const LastDisplayedListSelect = isolate( LabeledSelect );
+  const LastDisplayedListSelect = isolate(LabeledSelect);
 
-  const lastDisplayedListProps$ = Observable.of( {
+  const lastDisplayedListProps$ = Observable.of({
     name: 'last-displayed-list',
     label: 'Work ends',
-    classNames: [ 'browser-default' ],
-    select: R.last
-  } );
+    classNames: ['browser-default'],
+    select: R.last,
+  });
 
-  const lastDisplayedListSelect = LastDisplayedListSelect( {
+  const lastDisplayedListSelect = LastDisplayedListSelect({
     DOM,
     props$: lastDisplayedListProps$,
-    values$: trelloLists$.map( R.pluck( 'name' ) )
-  } );
+    values$: trelloLists$.map(R.pluck('name')),
+  });
 
   // Button to select last month period
 
-  const SelectLastMonthButton = isolate( SelectDatesButton );
+  const SelectLastMonthButton = isolate(SelectDatesButton);
 
-  const selectLastMonthProps$ = Observable.of( {
+  const selectLastMonthProps$ = Observable.of({
     label: 'Last month',
-    classNames: [ 'btn waves-effect waves-light' ],
+    classNames: ['btn waves-effect waves-light'],
     startDate: lastMonth,
-    endDate: endOfLastMonth
-  } );
+    endDate: endOfLastMonth,
+  });
 
-  const selectLastMonthButton = SelectLastMonthButton( {
+  const selectLastMonthButton = SelectLastMonthButton({
     DOM,
-    props$: selectLastMonthProps$
-  } );
+    props$: selectLastMonthProps$,
+  });
 
   // Button to select current month period
 
-  const SelectCurrentMonthButton = isolate( SelectDatesButton );
+  const SelectCurrentMonthButton = isolate(SelectDatesButton);
 
-  const selectCurrentMonthProps$ = Observable.of( {
+  const selectCurrentMonthProps$ = Observable.of({
     label: 'Current month',
-    classNames: [ 'btn waves-effect waves-light' ],
+    classNames: ['btn waves-effect waves-light'],
     startDate: currentMonth,
-    endDate: endOfMonth
-  } );
+    endDate: endOfMonth,
+  });
 
-  const selectCurrentMonthButton = SelectCurrentMonthButton( {
+  const selectCurrentMonthButton = SelectCurrentMonthButton({
     DOM,
-    props$: selectCurrentMonthProps$
-  } );
+    props$: selectCurrentMonthProps$,
+  });
 
   const selectedPeriodDates$ = Observable.merge(
     selectLastMonthButton.dates$,
     selectCurrentMonthButton.dates$
-  ).startWith( { startDate: currentMonth, endDate: endOfMonth } );
+  ).startWith({ startDate: currentMonth, endDate: endOfMonth });
 
   // Datepicker to select start date
 
-  const StartDatePicker = isolate( LabeledDatePicker );
+  const StartDatePicker = isolate(LabeledDatePicker);
 
-  const startDatePickerProps$ = Observable.of( {
+  const startDatePickerProps$ = Observable.of({
     name: 'start-date',
-    label: 'Start Date'
-  } );
+    label: 'Start Date',
+  });
 
-  const startDatePicker = StartDatePicker( {
+  const startDatePicker = StartDatePicker({
     DOM,
     props$: startDatePickerProps$,
-    value$: selectedPeriodDates$.map( R.prop( 'startDate' ) )
-  } );
+    value$: selectedPeriodDates$.map(R.prop('startDate')),
+  });
 
   // Datepicker to select end date
 
-  const EndDatePicker = isolate( LabeledDatePicker );
+  const EndDatePicker = isolate(LabeledDatePicker);
 
-  const endDatePickerProps$ = Observable.of( {
+  const endDatePickerProps$ = Observable.of({
     name: 'end-date',
-    label: 'End Date'
-  } );
+    label: 'End Date',
+  });
 
-  const endDatePicker = EndDatePicker( {
+  const endDatePicker = EndDatePicker({
     DOM,
     props$: endDatePickerProps$,
-    value$: selectedPeriodDates$.map( R.prop( 'endDate' ) )
-  } );
+    value$: selectedPeriodDates$.map(R.prop('endDate')),
+  });
 
   // Trello CFD
 
-  const trelloCFDProps$ = Observable.of( {
+  const trelloCFDProps$ = Observable.of({
     label: 'Get actions',
-    classNames: [ 'btn waves-effect waves-light purple' ]
-  } );
+    classNames: ['btn waves-effect waves-light purple'],
+  });
 
-  const parseTrelloCFDDate = R.cond( [
-    [ R.isEmpty, R.always( null ) ],
-    [ R.T, R.identity ]
-  ] );
+  const parseTrelloCFDDate = R.cond([
+    [R.isEmpty, R.always(null)],
+    [R.T, R.identity],
+  ]);
 
   const trelloCFDDates$ = Observable.combineLatest(
-    startDatePicker.selected$.map( parseTrelloCFDDate ),
-    endDatePicker.selected$.map( parseTrelloCFDDate ),
-    ( startSelected, endSelected ) => ({
+    startDatePicker.selected$.map(parseTrelloCFDDate),
+    endDatePicker.selected$.map(parseTrelloCFDDate),
+    (startSelected, endSelected) => ({
       startDate: startSelected,
-      endDate: endSelected
+      endDate: endSelected,
     })
   );
 
@@ -196,27 +196,27 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
     getDisplayedLists
   );
 
-  const trelloCFD = TrelloCFD( {
+  const trelloCFD = TrelloCFD({
     DOM,
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
     dates$: trelloCFDDates$,
     props$: trelloCFDProps$,
-    previewTomorrow$: previewTomorrow.checked$
-  } );
+    previewTomorrow$: previewTomorrow.checked$,
+  });
 
   // Trello Kanban metrics
 
-  const trelloKanbanMetrics = TrelloKanbanMetrics( {
+  const trelloKanbanMetrics = TrelloKanbanMetrics({
     actions$: trelloActions$,
     dates$: trelloCFDDates$,
     lists$: trelloDisplayedLists$,
     complementaryActions$: publishedTrelloCardsActions$$
       .switch()
-      .startWith( [] )
-      .scan( R.concat )
-  } );
+      .startWith([])
+      .scan(R.concat),
+  });
 
   // Connect
   publishedTrelloLists$.connect();
@@ -246,56 +246,56 @@ function main ( { DOM, TrelloFetch, TrelloMissingInfo } ) {
         firstDisplayedListVTree,
         lastDisplayedListVTree,
         trelloKanbanMetricsVTree
-      ) => div( '.container', [
-        h1( '.title.center-align', [
+      ) => div('.container', [
+        h1('.title.center-align', [
           'TKAT ',
-          small( 'Trello Kanban Analysis Tool' )
-        ] ),
-        div( '.center-align-around', [
+          small('Trello Kanban Analysis Tool'),
+        ]),
+        div('.center-align-around', [
           trelloCFDVTree,
           selectLastMonthButtonVTree,
-          selectCurrentMonthButtonVTree
-        ] ),
-        div( '.m-top.row', [
-          div( '.col.s6', [ startDatePickerVTree ] ),
-          div( '.col.s6', [ endDatePickerVTree ] )
-        ] ),
-        div( '.m-top.row', [
-          div( '.col.s12', [ boardVTree ] ),
-          div( '.col.s6', [ firstDisplayedListVTree ] ),
-          div( '.col.s6', [ lastDisplayedListVTree ] )
-        ] ),
-        div( '.m-top', [ trelloKanbanMetricsVTree ] ),
-        div( '.m-top.row', [
-          div( '.col.s12', [ previewTomorrowVTree ] )
-        ] )
-      ] )
+          selectCurrentMonthButtonVTree,
+        ]),
+        div('.m-top.row', [
+          div('.col.s6', [startDatePickerVTree]),
+          div('.col.s6', [endDatePickerVTree]),
+        ]),
+        div('.m-top.row', [
+          div('.col.s12', [boardVTree]),
+          div('.col.s6', [firstDisplayedListVTree]),
+          div('.col.s6', [lastDisplayedListVTree]),
+        ]),
+        div('.m-top', [trelloKanbanMetricsVTree]),
+        div('.m-top.row', [
+          div('.col.s12', [previewTomorrowVTree]),
+        ]),
+      ])
     ),
     TrelloFetch: Observable.combineLatest(
       boardSelect.selected$,
       trelloCFD.Trello,
-      R.compose( R.head, R.unapply( R.identity ) )
+      R.compose(R.head, R.unapply(R.identity))
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
-    Graph: trelloCFD.Graph
+    Graph: trelloCFD.Graph,
   };
 }
 
 const drivers = {
-  DOM: makeDOMDriver( '#app' ),
+  DOM: makeDOMDriver('#app'),
   TrelloFetch: trelloSinkDriver,
   TrelloMissingInfo: trelloSinkDriver,
-  Graph: makeGraphDriver( '#chart svg' )
+  Graph: makeGraphDriver('#chart svg'),
 };
 
-Trello.authorize( {
+Trello.authorize({
   type: 'popup',
   name: 'Trello Kanban Analysis Tool',
   scope: { read: true },
   persist: true,
   expiration: 'never',
   success: () => {
-    Cycle.run( main, drivers );
+    Cycle.run(main, drivers);
   },
-  error: () => console.log("Can't connect to Trello")
-} );
+  error: () => console.log("Can't connect to Trello"),
+});
