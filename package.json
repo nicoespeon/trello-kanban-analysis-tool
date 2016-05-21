@@ -2,8 +2,14 @@
   "name": "tkat",
   "version": "0.0.0",
   "description": "Analyse Kanban metrics from a Trello board",
+  "keywords": [
+    "trello",
+    "kanban",
+    "CFD"
+  ],
   "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
   "private": true,
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
