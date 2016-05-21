@@ -45,6 +45,12 @@ Launch unit tests with [Babel tape runner](https://github.com/wavded/babel-tape-
 
 Launch unit tests through [tap-diff reporter](https://www.npmjs.com/package/tap-diff).
 
+### Contributing
+
+That would be amazing :metal:
+
+Please have a look at [the CONTRIBUTING.md file](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/develop/CONTRIBUTING.md) before you do so.
+
 ## Versioning
 
 This project uses [SemVer](http://semver.org/) as a guideline for versioning.
