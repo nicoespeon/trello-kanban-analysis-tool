@@ -24,6 +24,7 @@ Let's suppose you've got [node.js](https://nodejs.org) and [npm](https://www.npm
 - Clone the repo: `git clone git://github.com/nicoespeon/trello-kanban-analysis-tool.git`
 - Install dependencies: `npm install`
 - Ensure you've got [brunch](http://brunch.io/) installed globally: `npm install -g brunch`
+- Run `brunch watch --server` to get a running application
 
 ### Available commands
 
