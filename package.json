@@ -1,19 +1,49 @@
 {
-  "name": "trello-kanban",
-  "version": "0.0.0",
-  "description": "",
+  "name": "tkat",
+  "version": "0.1.0",
+  "description": "Analyse Kanban metrics from a Trello board",
+  "keywords": [
+    "trello",
+    "kanban",
+    "CFD"
+  ],
+  "author": "Nicolas Carlo <nicolascarlo.espeon@gmail.com>",
+  "private": true,
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "node_modules/.bin/eslint app",
+    "unit-test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
+    "unit-test-diff": "npm run unit-test | node_modules/.bin/tap-diff",
+    "test": "npm run lint && npm run unit-test"
   },
-  "author": "",
-  "private": true,
   "dependencies": {
+    "@cycle/core": "6.0.3",
+    "@cycle/dom": "9.1.0",
+    "@cycle/isolate": "1.2.0",
+    "autoprefixer": "6.3.6",
+    "moment": "2.12.0",
+    "nvd3": "1.8.2",
+    "ramda": "0.19.1",
+    "rx": "4.1.0"
+  },
+  "devDependencies": {
     "auto-reload-brunch": "1.8.0",
     "babel": "5.8.23",
     "babel-brunch": "5.1.2",
-    "brunch": "2.0.4",
+    "babel-plugin-ramda": "0.1.2",
+    "babel-tape-runner": "1.2.0",
+    "brunch": "2.6.2",
+    "css-brunch": "2.0.0",
+    "eslint": "2.10.2",
+    "eslint-config-airbnb": "9.0.1",
+    "eslint-plugin-import": "1.8.0",
+    "eslint-plugin-jsx-a11y": "1.2.2",
+    "eslint-plugin-react": "5.1.1",
     "javascript-brunch": "1.7.1",
-    "sass-brunch": "1.9.1"
+    "postcss-brunch": "0.5.0",
+    "sass-brunch": "1.9.1",
+    "tap-diff": "0.1.0",
+    "tape": "4.4.0"
   }
 }
