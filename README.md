@@ -2,7 +2,9 @@
 
 # TKAT (Trello Kanban Analysis Tool)
 
-A JavaScript library to analyse Kanban metrics from a Trello board.
+A JavaScript library to analyze Kanban metrics from a Trello board.
+
+Here is [the online application](http://www.nicoespeon.com/trello-kanban-analysis-tool/).
 
 ## What it is
 
@@ -19,7 +21,9 @@ If you are curious about the context and Trello-Kanban stuff, [I wrote a whole p
 
 ## How to use it
 
-Let's suppose you've got [node.js](https://nodejs.org) and [npm](https://www.npmjs.com/) installed.
+As a user, you can simply go with [the online application](http://www.nicoespeon.com/trello-kanban-analysis-tool/).
+
+If you want to run it locally, let's suppose you've got [node.js](https://nodejs.org) and [npm](https://www.npmjs.com/) installed.
 
 - Clone the repo: `git clone git://github.com/nicoespeon/trello-kanban-analysis-tool.git`
 - Install dependencies: `npm install`
