@@ -15,7 +15,9 @@
     "lint": "node_modules/.bin/eslint app",
     "unit-test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
     "unit-test-diff": "npm run unit-test | node_modules/.bin/tap-diff",
-    "test": "npm run lint && npm run unit-test"
+    "test": "npm run lint && npm run unit-test",
+    "release": "npm test && rm -rf public && brunch b -p && touch public/.nojekyll",
+    "deploy": "npm run release && (cd public && git init && git add . && git commit -m \"Deploy to GitHub Pages\" && git push --force \"git@github.com:nicoespeon/trello-kanban-analysis-tool.git\" master:gh-pages)"
   },
   "dependencies": {
     "@cycle/core": "6.0.3",
