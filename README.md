@@ -4,6 +4,9 @@
 
 A JavaScript library to analyse Kanban metrics from a Trello board.
 
+![TKAT - Cycle Times](https://cdn-images-1.medium.com/max/1600/1*w013ZiO5dqFOxUwFXBOwVA.png)
+![TKAT - CFD](https://cdn-images-1.medium.com/max/1600/1*Vrh8lfC_u58NwMmK1OElCw.png)
+
 ## What it is
 
 This started as a side project for practicing functional programming using:
