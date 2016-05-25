@@ -10,7 +10,17 @@ function makeGraphDriver(selector) {
           .y(R.last)
           .clipEdge(true)
           .showControls(false)
-          .useInteractiveGuideline(true);
+          .useInteractiveGuideline(true)
+          .color([
+            '#61BD4F',
+            '#0079BF',
+            '#FFAB4A',
+            '#FF80CE',
+            '#F2D600',
+            '#42548E',
+            '#EB5A46',
+            '#C377E0',
+          ]);
 
         chart.xAxis
           .showMaxMin(false)

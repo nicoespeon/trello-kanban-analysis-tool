@@ -107,7 +107,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
 
   const selectLastMonthProps$ = Observable.of({
     label: 'Last month',
-    classNames: ['btn waves-effect waves-light'],
+    classNames: ['btn waves-effect waves-light trello-blue'],
     startDate: lastMonth,
     endDate: endOfLastMonth,
   });
@@ -123,7 +123,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
 
   const selectCurrentMonthProps$ = Observable.of({
     label: 'Current month',
-    classNames: ['btn waves-effect waves-light'],
+    classNames: ['btn waves-effect waves-light trello-blue'],
     startDate: currentMonth,
     endDate: endOfMonth,
   });
@@ -172,7 +172,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
 
   const trelloCFDProps$ = Observable.of({
     label: 'Get actions',
-    classNames: ['btn waves-effect waves-light purple'],
+    classNames: ['btn waves-effect waves-light trello-green'],
   });
 
   const parseTrelloCFDDate = R.cond([
@@ -246,28 +246,30 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
         firstDisplayedListVTree,
         lastDisplayedListVTree,
         trelloKanbanMetricsVTree
-      ) => div('.container', [
-        h1('.title.center-align', [
+      ) => div([
+        h1('.title.center-align.trello-blue.white-text', [
           'TKAT ',
-          small('Trello Kanban Analysis Tool'),
+          small('.trello-blue-100-text', '(Trello Kanban Analysis Tool)'),
         ]),
-        div('.center-align-around', [
-          trelloCFDVTree,
-          selectLastMonthButtonVTree,
-          selectCurrentMonthButtonVTree,
-        ]),
-        div('.m-top.row', [
-          div('.col.s6', [startDatePickerVTree]),
-          div('.col.s6', [endDatePickerVTree]),
-        ]),
-        div('.m-top.row', [
-          div('.col.s12', [boardVTree]),
-          div('.col.s6', [firstDisplayedListVTree]),
-          div('.col.s6', [lastDisplayedListVTree]),
-        ]),
-        div('.m-top', [trelloKanbanMetricsVTree]),
-        div('.m-top.row', [
-          div('.col.s12', [previewTomorrowVTree]),
+        div('.container', [
+          div('.center-align-around', [
+            trelloCFDVTree,
+            selectLastMonthButtonVTree,
+            selectCurrentMonthButtonVTree,
+          ]),
+          div('.m-top.row', [
+            div('.col.s6', [startDatePickerVTree]),
+            div('.col.s6', [endDatePickerVTree]),
+          ]),
+          div('.m-top.row', [
+            div('.col.s12', [boardVTree]),
+            div('.col.s6', [firstDisplayedListVTree]),
+            div('.col.s6', [lastDisplayedListVTree]),
+          ]),
+          div('.m-top', [trelloKanbanMetricsVTree]),
+          div('.m-top.row', [
+            div('.col.s12', [previewTomorrowVTree]),
+          ]),
         ]),
       ])
     ),
