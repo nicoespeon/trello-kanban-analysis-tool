@@ -252,6 +252,11 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
           small('.trello-blue-100-text', '(Trello Kanban Analysis Tool)'),
         ]),
         div('.container', [
+          div('.m-top.row', [
+            div('.col.s6', [boardVTree]),
+            div('.col.s3', [firstDisplayedListVTree]),
+            div('.col.s3', [lastDisplayedListVTree]),
+          ]),
           div('.center-align-around', [
             trelloCFDVTree,
             selectLastMonthButtonVTree,
@@ -260,11 +265,6 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
           div('.m-top.row', [
             div('.col.s6', [startDatePickerVTree]),
             div('.col.s6', [endDatePickerVTree]),
-          ]),
-          div('.m-top.row', [
-            div('.col.s12', [boardVTree]),
-            div('.col.s6', [firstDisplayedListVTree]),
-            div('.col.s6', [lastDisplayedListVTree]),
           ]),
           div('.m-top', [trelloKanbanMetricsVTree]),
           div('.m-top.row', [
