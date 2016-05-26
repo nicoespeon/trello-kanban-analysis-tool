@@ -1,6 +1,13 @@
+@import 'variables';
+
 body,
 .nvd3 text {
   font-family: "Facit", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: $trello-text;
+}
+
+label {
+  color: $trello-text-quiet;
 }
 
 .title {
@@ -34,7 +41,7 @@ body,
 
 // GitHub corner
 .github-corner:hover .octo-arm {
-  animation:octocat-wave 560ms ease-in-out;
+  animation: octocat-wave 560ms ease-in-out;
 }
 
 @keyframes octocat-wave {
@@ -45,9 +52,9 @@ body,
 
 @media (max-width:500px){
   .github-corner:hover .octo-arm {
-    animation:none
+    animation: none;
   }
   .github-corner .octo-arm {
-    animation:octocat-wave 560ms ease-in-out;
+    animation: octocat-wave 560ms ease-in-out;
   }
 }

@@ -1,4 +1,5 @@
-// Trello colors are picked from https://trello.com/about/branding
+@import 'variables';
+
 .trello-blue-100-text {
-  color: #BCD9EA;
+  color: $trello-blue-100 !important;
 }
