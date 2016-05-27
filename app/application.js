@@ -22,7 +22,7 @@ import {
 } from './utils/date';
 import { getDisplayedLists } from './utils/trello';
 
-function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
+function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) {
   const publishedTrelloLists$ = TrelloFetch.lists$.publish();
   const publishedTrelloActions$ = TrelloFetch.actions$.publish();
   const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
@@ -40,7 +40,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const previewTomorrow = PreviewTomorrow({
-    DOM,
+    DOM: DOMAboveChart,
     props$: previewTomorrowProps$,
   });
 
@@ -62,7 +62,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
     }));
 
   const boardSelect = BoardSelect({
-    DOM,
+    DOM: DOMAboveChart,
     props$: boardProps$,
     values$: TrelloFetch.boards$.map(R.pluck('shortLink')),
   });
@@ -79,7 +79,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const firstDisplayedListSelect = FirstDisplayedListSelect({
-    DOM,
+    DOM: DOMAboveChart,
     props$: firstDisplayedListProps$,
     values$: trelloLists$.map(R.pluck('name')),
   });
@@ -96,7 +96,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const lastDisplayedListSelect = LastDisplayedListSelect({
-    DOM,
+    DOM: DOMAboveChart,
     props$: lastDisplayedListProps$,
     values$: trelloLists$.map(R.pluck('name')),
   });
@@ -113,7 +113,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const selectLastMonthButton = SelectLastMonthButton({
-    DOM,
+    DOM: DOMAboveChart,
     props$: selectLastMonthProps$,
   });
 
@@ -129,7 +129,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const selectCurrentMonthButton = SelectCurrentMonthButton({
-    DOM,
+    DOM: DOMAboveChart,
     props$: selectCurrentMonthProps$,
   });
 
@@ -148,7 +148,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const startDatePicker = StartDatePicker({
-    DOM,
+    DOM: DOMAboveChart,
     props$: startDatePickerProps$,
     value$: selectedPeriodDates$.map(R.prop('startDate')),
   });
@@ -163,7 +163,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   });
 
   const endDatePicker = EndDatePicker({
-    DOM,
+    DOM: DOMAboveChart,
     props$: endDatePickerProps$,
     value$: selectedPeriodDates$.map(R.prop('endDate')),
   });
@@ -197,7 +197,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   );
 
   const trelloCFD = TrelloCFD({
-    DOM,
+    DOM: DOMBelowChart,
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
@@ -224,7 +224,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
   publishedTrelloCardsActions$$.connect();
 
   return {
-    DOM: Observable.combineLatest(
+    DOMAboveChart: Observable.combineLatest(
       boardSelect.DOM,
       trelloCFD.DOM,
       selectLastMonthButton.DOM,
@@ -234,7 +234,6 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
       previewTomorrow.DOM,
       firstDisplayedListSelect.DOM,
       lastDisplayedListSelect.DOM,
-      trelloKanbanMetrics.DOM,
       (
         boardVTree,
         trelloCFDVTree,
@@ -244,8 +243,7 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
         endDatePickerVTree,
         previewTomorrowVTree,
         firstDisplayedListVTree,
-        lastDisplayedListVTree,
-        trelloKanbanMetricsVTree
+        lastDisplayedListVTree
       ) => div([
         h1('.title.center-align.trello-blue.white-text', [
           'TKAT ',
@@ -257,21 +255,24 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
             div('.col.s3', [firstDisplayedListVTree]),
             div('.col.s3', [lastDisplayedListVTree]),
           ]),
+          div('.m-top.row', [
+            div('.col.s6', [startDatePickerVTree]),
+            div('.col.s6', [endDatePickerVTree]),
+          ]),
           div('.center-align-around', [
             trelloCFDVTree,
             selectLastMonthButtonVTree,
             selectCurrentMonthButtonVTree,
           ]),
           div('.m-top.row', [
-            div('.col.s6', [startDatePickerVTree]),
-            div('.col.s6', [endDatePickerVTree]),
-          ]),
-          div('.m-top', [trelloKanbanMetricsVTree]),
-          div('.m-top.row', [
             div('.col.s12', [previewTomorrowVTree]),
           ]),
         ]),
       ])
+    ),
+    DOMBelowChart: trelloKanbanMetrics.DOM.map(
+      (trelloKanbanMetricsVTree) =>
+        div('.container.m-top', [trelloKanbanMetricsVTree])
     ),
     TrelloFetch: Observable.combineLatest(
       boardSelect.selected$,
@@ -284,7 +285,8 @@ function main({ DOM, TrelloFetch, TrelloMissingInfo }) {
 }
 
 const drivers = {
-  DOM: makeDOMDriver('#app'),
+  DOMAboveChart: makeDOMDriver('#above-chart'),
+  DOMBelowChart: makeDOMDriver('#below-chart'),
   TrelloFetch: trelloSinkDriver,
   TrelloMissingInfo: trelloSinkDriver,
   Graph: makeGraphDriver('#chart svg'),
