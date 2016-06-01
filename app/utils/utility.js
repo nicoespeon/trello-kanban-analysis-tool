@@ -2,11 +2,10 @@ import R from 'ramda';
 
 // countByWith :: (a -> String) -> (String,Number -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const countByWith = R.curry((prop, fn, data) => R.compose(
-    R.map(R.apply(fn)),
-    R.toPairs,
-    R.countBy(prop)
-  )(data)
-);
+  R.map(R.apply(fn)),
+  R.toPairs,
+  R.countBy(prop)
+)(data));
 
 // groupByWith :: (a -> String) -> (String,[a] -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const groupByWith = R.curry((prop, fn, data) => R.cond([
@@ -19,10 +18,13 @@ const groupByWith = R.curry((prop, fn, data) => R.cond([
       ),
   ],
     [R.T, R.always([])],
-])(data)
-);
+])(data));
+
+// round :: Number -> Number
+const round = (x) => Math.round(x * 100) / 100;
 
 export {
   countByWith,
   groupByWith,
+  round,
 };

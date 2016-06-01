@@ -5,6 +5,7 @@ import R from 'ramda';
 import {
   parseStartDatesOnPeriod,
   parseAvgLeadTime,
+  calculateThroughput,
   isMissingInformation,
 } from './times';
 import { splitToPairs } from './lists';
@@ -71,6 +72,18 @@ function TrelloKanbanMetrics(
     leadTime => div(`Lead Time: ${leadTime} days`)
   );
 
+  // Calculate Throughput from consolidated data
+
+  const throughput$ = Observable.combineLatest(
+    dates$,
+    cards$,
+    calculateThroughput
+  );
+
+  const throughputVTree$ = throughput$.map(
+    throughput => div(`Throughput: ${throughput} cards / day`)
+  );
+
   // Calculate Cycle Times from consolidated data
 
   const listsGroups$ = listsIds$.map(splitToPairs);
@@ -106,9 +119,10 @@ function TrelloKanbanMetrics(
   return {
     DOM: Observable.combineLatest(
       leadTimeVTree$,
+      throughputVTree$,
       cycleTimesVTree$,
-      (leadTimeVTree, cycleTimesVTree) =>
-        div([leadTimeVTree, cycleTimesVTree])
+      (leadTimeVTree, throughputVTree, cycleTimesVTree) =>
+        div([leadTimeVTree, throughputVTree, cycleTimesVTree])
     ),
     Trello: missingInformationCardIds$,
   };

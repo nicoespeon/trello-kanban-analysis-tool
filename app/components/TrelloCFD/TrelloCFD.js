@@ -5,7 +5,7 @@ import R from 'ramda';
 import { parseActions } from './actions';
 import { parseToGraph } from './graph';
 
-import { today, tomorrow, filterBetweenDates } from '../../utils/date';
+import { today, tomorrow, filterBetweenDates, nextDay } from '../../utils/date';
 
 function TrelloCFD(
   {
@@ -39,7 +39,7 @@ function TrelloCFD(
     actions$,
     currentDate$,
     ({ startDate, endDate }, lists, actions, currentDate) => R.compose(
-      filterBetweenDates(startDate, endDate),
+      filterBetweenDates(startDate, nextDay(endDate)),
       parseActions(currentDate, lists)
     )(actions)
   );

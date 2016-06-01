@@ -6,6 +6,7 @@ import {
   groupByWith,
   getCreateList,
   getCreateActions,
+  round,
 } from '../../utils/utils';
 
 // StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]
@@ -16,7 +17,7 @@ const filterCardsOnPeriod = R.curry(({ startDate, endDate }, cards) =>
   R.filter(
     R.compose(
       R.both(
-        R.either(() => R.isNil(endDate), R.gte(endDate)),
+        R.either(() => R.isNil(endDate), R.gt(endDate)),
         R.either(() => R.isNil(startDate), R.lte(startDate))
       ),
       R.propOr(null, 'date'),
@@ -104,6 +105,19 @@ const parseLeadTime = R.map(card => ({
 // parseAvgLeadTime :: StartDates -> Integer
 const parseAvgLeadTime = R.compose(avgLeadTime, parseLeadTime);
 
+// calculateThroughput :: {startDate: date, endDate: date} -> StartDates -> Number
+const calculateThroughput = R.compose(
+  round,
+  R.defaultTo(0),
+  R.converge(
+    R.divide,
+    [
+      R.compose(R.length, filterCardsOnPeriod),
+      (dates) => daysSpent(dates.startDate, dates.endDate),
+    ]
+  )
+);
+
 // isMissingInformation :: StartDates -> Boolean
 const isMissingInformation = R.compose(
   R.both(
@@ -124,5 +138,6 @@ export {
   avgLeadTime,
   parseLeadTime,
   parseAvgLeadTime,
+  calculateThroughput,
   isMissingInformation,
 };

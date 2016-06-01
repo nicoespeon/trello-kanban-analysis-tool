@@ -23,6 +23,7 @@ function LabeledDatePicker({ DOM, props$, value$ }) {
         id: props.name,
         className: R.join(' ', R.concat(['datepicker'], props.classNames)),
         value: selected,
+        max: props.max,
       }),
     ])
   );
