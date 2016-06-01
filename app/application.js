@@ -33,105 +33,76 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
 
   // Checkbox to preview tomorrow CFD
 
-  const PreviewTomorrow = isolate(LabeledCheckbox);
-
-  const previewTomorrowProps$ = Observable.of({
-    name: 'preview-tomorrow',
-    label: 'Preview tomorrow CFD (include today operations)',
+  const previewTomorrow = isolate(LabeledCheckbox)({
+    DOM: DOMAboveChart,
+    props$: Observable.of({
+      name: 'preview-tomorrow',
+      label: 'Preview tomorrow CFD (include today operations)',
+    }),
   });
 
-  const previewTomorrow = PreviewTomorrow({
-    DOM: DOMAboveChart,
-    props$: previewTomorrowProps$,
+  // Selects to choose displayed board and lists
+
+  const parseBoardProps = (boards) => ({
+    name: 'board',
+    label: 'Board',
+    classNames: ['browser-default'],
+    select: R.head,
+    render: (value) => R.propOr(
+      value,
+      'name',
+      R.find(R.propEq('shortLink', value), boards)
+    ),
   });
 
-  // Select to choose the displayed board
-
-  const BoardSelect = isolate(LabeledSelect);
-
-  const boardProps$ = TrelloFetch.boards$
-    .map((boards) => ({
-      name: 'board',
-      label: 'Board',
-      classNames: ['browser-default'],
-      select: R.head,
-      render: (value) => R.propOr(
-        value,
-        'name',
-        R.find(R.propEq('shortLink', value), boards)
-      ),
-    }));
-
-  const boardSelect = BoardSelect({
+  const boardSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: boardProps$,
+    props$: TrelloFetch.boards$.map(parseBoardProps),
     values$: TrelloFetch.boards$.map(R.pluck('shortLink')),
   });
 
-  // Select to choose the first displayed list
-
-  const FirstDisplayedListSelect = isolate(LabeledSelect);
-
-  const firstDisplayedListProps$ = Observable.of({
-    name: 'first-displayed-list',
-    label: 'Work begins',
-    classNames: ['browser-default'],
-    select: R.head,
-  });
-
-  const firstDisplayedListSelect = FirstDisplayedListSelect({
+  const firstDisplayedListSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: firstDisplayedListProps$,
+    props$: Observable.of({
+      name: 'first-displayed-list',
+      label: 'Work begins',
+      classNames: ['browser-default'],
+      select: R.head,
+    }),
     values$: trelloLists$.map(R.pluck('name')),
   });
 
-  // Select to choose the last displayed list
-
-  const LastDisplayedListSelect = isolate(LabeledSelect);
-
-  const lastDisplayedListProps$ = Observable.of({
-    name: 'last-displayed-list',
-    label: 'Work ends',
-    classNames: ['browser-default'],
-    select: R.last,
-  });
-
-  const lastDisplayedListSelect = LastDisplayedListSelect({
+  const lastDisplayedListSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: lastDisplayedListProps$,
+    props$: Observable.of({
+      name: 'last-displayed-list',
+      label: 'Work ends',
+      classNames: ['browser-default'],
+      select: R.last,
+    }),
     values$: trelloLists$.map(R.pluck('name')),
   });
 
-  // Button to select last month period
+  // Buttons to select period
 
-  const SelectLastMonthButton = isolate(SelectDatesButton);
-
-  const selectLastMonthProps$ = Observable.of({
-    label: 'Last month',
-    classNames: ['btn waves-effect waves-light trello-blue'],
-    startDate: lastMonth,
-    endDate: endOfLastMonth,
-  });
-
-  const selectLastMonthButton = SelectLastMonthButton({
+  const selectLastMonthButton = isolate(SelectDatesButton)({
     DOM: DOMAboveChart,
-    props$: selectLastMonthProps$,
+    props$: Observable.of({
+      label: 'Last month',
+      classNames: ['btn waves-effect waves-light trello-blue'],
+      startDate: lastMonth,
+      endDate: endOfLastMonth,
+    }),
   });
 
-  // Button to select current month period
-
-  const SelectCurrentMonthButton = isolate(SelectDatesButton);
-
-  const selectCurrentMonthProps$ = Observable.of({
-    label: 'Current month',
-    classNames: ['btn waves-effect waves-light trello-blue'],
-    startDate: currentMonth,
-    endDate: today,
-  });
-
-  const selectCurrentMonthButton = SelectCurrentMonthButton({
+  const selectCurrentMonthButton = isolate(SelectDatesButton)({
     DOM: DOMAboveChart,
-    props$: selectCurrentMonthProps$,
+    props$: Observable.of({
+      label: 'Current month',
+      classNames: ['btn waves-effect waves-light trello-blue'],
+      startDate: currentMonth,
+      endDate: today,
+    }),
   });
 
   const selectedPeriodDates$ = Observable.merge(
@@ -139,44 +110,29 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
     selectCurrentMonthButton.dates$
   ).startWith({ startDate: currentMonth, endDate: today });
 
-  // Datepicker to select start date
+  // Datepickers to select dates
 
-  const StartDatePicker = isolate(LabeledDatePicker);
-
-  const startDatePickerProps$ = Observable.of({
-    name: 'start-date',
-    label: 'Start Date',
-    max: today,
-  });
-
-  const startDatePicker = StartDatePicker({
+  const startDatePicker = isolate(LabeledDatePicker)({
     DOM: DOMAboveChart,
-    props$: startDatePickerProps$,
+    props$: Observable.of({
+      name: 'start-date',
+      label: 'Start Date',
+      max: today,
+    }),
     value$: selectedPeriodDates$.map(R.prop('startDate')),
   });
 
-  // Datepicker to select end date
-
-  const EndDatePicker = isolate(LabeledDatePicker);
-
-  const endDatePickerProps$ = Observable.of({
-    name: 'end-date',
-    label: 'End Date',
-    max: today,
-  });
-
-  const endDatePicker = EndDatePicker({
+  const endDatePicker = isolate(LabeledDatePicker)({
     DOM: DOMAboveChart,
-    props$: endDatePickerProps$,
+    props$: Observable.of({
+      name: 'end-date',
+      label: 'End Date',
+      max: today,
+    }),
     value$: selectedPeriodDates$.map(R.prop('endDate')),
   });
 
   // Trello CFD
-
-  const trelloCFDProps$ = Observable.of({
-    label: 'Get actions',
-    classNames: ['btn waves-effect waves-light trello-green'],
-  });
 
   const parseTrelloCFDDate = R.cond([
     [R.isEmpty, R.always(null)],
@@ -206,7 +162,10 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
     dates$: trelloCFDDates$,
-    props$: trelloCFDProps$,
+    props$: Observable.of({
+      label: 'Get actions',
+      classNames: ['btn waves-effect waves-light trello-green'],
+    }),
     previewTomorrow$: previewTomorrow.checked$,
   });
 
