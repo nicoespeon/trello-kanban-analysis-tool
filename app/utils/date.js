@@ -16,13 +16,8 @@ const lastMonth = moment()
   .month(moment().month() - 1)
   .date(1)
   .format(dateFormat);
-
 const endOfLastMonth = endOf(lastMonth);
-
 const currentMonth = moment().date(1).format(dateFormat);
-
-const endOfMonth = endOf(currentMonth);
-
 const today = moment().format(dateFormat);
 const tomorrow = moment().add(1, 'day').format(dateFormat);
 
@@ -119,7 +114,6 @@ export {
   lastMonth,
   endOfLastMonth,
   currentMonth,
-  endOfMonth,
   today,
   tomorrow,
 

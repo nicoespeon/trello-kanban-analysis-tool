@@ -18,7 +18,7 @@ import {
   lastMonth,
   endOfLastMonth,
   currentMonth,
-  endOfMonth,
+  today,
 } from './utils/date';
 import { getDisplayedLists } from './utils/trello';
 
@@ -125,7 +125,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
     label: 'Current month',
     classNames: ['btn waves-effect waves-light trello-blue'],
     startDate: currentMonth,
-    endDate: endOfMonth,
+    endDate: today,
   });
 
   const selectCurrentMonthButton = SelectCurrentMonthButton({
@@ -136,7 +136,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
   const selectedPeriodDates$ = Observable.merge(
     selectLastMonthButton.dates$,
     selectCurrentMonthButton.dates$
-  ).startWith({ startDate: currentMonth, endDate: endOfMonth });
+  ).startWith({ startDate: currentMonth, endDate: today });
 
   // Datepicker to select start date
 
@@ -145,6 +145,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
   const startDatePickerProps$ = Observable.of({
     name: 'start-date',
     label: 'Start Date',
+    max: today,
   });
 
   const startDatePicker = StartDatePicker({
@@ -160,6 +161,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
   const endDatePickerProps$ = Observable.of({
     name: 'end-date',
     label: 'End Date',
+    max: today,
   });
 
   const endDatePicker = EndDatePicker({
