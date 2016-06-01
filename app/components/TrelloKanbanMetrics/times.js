@@ -104,6 +104,18 @@ const parseLeadTime = R.map(card => ({
 // parseAvgLeadTime :: StartDates -> Integer
 const parseAvgLeadTime = R.compose(avgLeadTime, parseLeadTime);
 
+// calculateThroughput :: {startDate: date, endDate: date} -> StartDates -> Number
+const calculateThroughput = R.compose(
+  R.defaultTo(0),
+  R.converge(
+    R.divide,
+    [
+      R.compose(R.length, filterCardsOnPeriod),
+      (dates) => daysSpent(dates.startDate, dates.endDate),
+    ]
+  )
+);
+
 // isMissingInformation :: StartDates -> Boolean
 const isMissingInformation = R.compose(
   R.both(
@@ -124,5 +136,6 @@ export {
   avgLeadTime,
   parseLeadTime,
   parseAvgLeadTime,
+  calculateThroughput,
   isMissingInformation,
 };

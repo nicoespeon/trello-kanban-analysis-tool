@@ -8,6 +8,7 @@ import {
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime,
+  calculateThroughput,
   isMissingInformation,
 } from '../times';
 
@@ -451,6 +452,101 @@ test('avgLeadTime', (assert) => {
     avgLeadTime(dataAvgFloat),
     6,
     'should return a rounded average lead time'
+  );
+  assert.end();
+});
+
+test('calculateThroughput', (assert) => {
+  const cards = [
+    {
+      id: '5661abfe6c2f11e4db652169',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-10' },
+        { list: '53a775adc6ff397a74274486', date: '2016-05-06' },
+        { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+    {
+      id: '56407211e6dfdc9c01244836',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-01' },
+        { list: '53a775adc6ff397a74274486', date: '2016-04-03' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-04' },
+      ],
+    },
+    {
+      id: '564077e6e6dfdc9c01244836',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+        { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      ],
+    },
+    {
+      id: '570768ca19fde6c4a98714b5',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: null },
+        { list: '53a775adc6ff397a74274486', date: null },
+        { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+    {
+      id: '56fb8a5af196e52193de6179',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: null },
+        { list: '53a775adc6ff397a74274486', date: '2016-04-07' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+      ],
+    },
+    {
+      id: '56f3e734a5ab9295bcdb29d6',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-07' },
+        { list: '53a775adc6ff397a74274486', date: null },
+        { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+    {
+      id: '56f2a2265985b75e2c6e59c4',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-01-23' },
+        { list: '53a775adc6ff397a74274486', date: '2016-02-07' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-06' },
+      ],
+    },
+    {
+      id: '56f2a2265985b7599c6e59c4',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-01-24' },
+        { list: '53a775adc6ff397a74274486', date: '2016-02-09' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-05' },
+      ],
+    },
+    {
+      id: '56dc003c5a0885d45c5f5ca4',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: null },
+        { list: '53a775adc6ff397a74274486', date: '2016-02-08' },
+        { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+  ];
+  const period = { startDate: '2016-04-05', endDate: '2016-04-07' };
+
+  assert.equals(
+    calculateThroughput(period, cards),
+    1.5,
+    'should return the number of cards that completed the cycle per day for the period'
+  );
+  assert.equals(
+    calculateThroughput(period, []),
+    0,
+    'should return 0 if no card is given'
+  );
+  assert.equals(
+    calculateThroughput({ startDate: null, endDate: null }, cards),
+    0,
+    'should return 0 if no valid period is given'
   );
   assert.end();
 });
