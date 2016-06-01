@@ -159,14 +159,6 @@ test('filterCardsOnPeriod', (assert) => {
   ];
   const expected = [
     {
-      id: '56fb8a5af196e52193de6179',
-      startDates: [
-        { list: '563b1afeb758fc0e81a3c1b6', date: null },
-        { list: '53a775adc6ff397a74274486', date: '2016-04-07' },
-        { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
-      ],
-    },
-    {
       id: '56f2a2265985b75e2c6e59c4',
       startDates: [
         { list: '563b1afeb758fc0e81a3c1b6', date: '2016-01-23' },
@@ -206,14 +198,6 @@ test('filterCardsOnPeriod', (assert) => {
   const datesWithNullEnd = { startDate: '2016-02-12', endDate: null };
 
   const expectedWithNullStart = [
-    {
-      id: '56fb8a5af196e52193de6179',
-      startDates: [
-        { list: '563b1afeb758fc0e81a3c1b6', date: null },
-        { list: '53a775adc6ff397a74274486', date: '2016-04-07' },
-        { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
-      ],
-    },
     {
       id: '56f2a2265985b75e2c6e59c4',
       startDates: [
@@ -501,7 +485,7 @@ test('calculateThroughput', (assert) => {
     {
       id: '56f3e734a5ab9295bcdb29d6',
       startDates: [
-        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-07' },
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
         { list: '53a775adc6ff397a74274486', date: null },
         { list: '5450ed6ad166fa6110790030', date: null },
       ],
@@ -526,7 +510,7 @@ test('calculateThroughput', (assert) => {
       id: '56dc003c5a0885d45c5f5ca4',
       startDates: [
         { list: '563b1afeb758fc0e81a3c1b6', date: null },
-        { list: '53a775adc6ff397a74274486', date: '2016-02-08' },
+        { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
         { list: '5450ed6ad166fa6110790030', date: null },
       ],
     },
@@ -535,7 +519,7 @@ test('calculateThroughput', (assert) => {
 
   assert.equals(
     calculateThroughput(period, cards),
-    1.5,
+    1,
     'should return the number of cards that completed the cycle per day for the period'
   );
   assert.equals(
