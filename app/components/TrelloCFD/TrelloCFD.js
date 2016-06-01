@@ -23,15 +23,6 @@ function TrelloCFD(
     [R.equals(false), R.always(today)],
   ]));
 
-  const period$ = Observable.combineLatest(
-    previewTomorrow$,
-    dates$,
-    (previewTomorrow, { startDate, endDate }) => ({
-      startDate,
-      endDate: previewTomorrow ? tomorrow : endDate,
-    })
-  );
-
   const clicks$ = DOM
     .select('.button')
     .events('click')
@@ -43,7 +34,7 @@ function TrelloCFD(
   );
 
   const parsedActions$ = Observable.combineLatest(
-    period$,
+    dates$,
     lists$,
     actions$,
     currentDate$,

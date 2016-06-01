@@ -19,6 +19,7 @@ import {
   endOfLastMonth,
   currentMonth,
   today,
+  tomorrow,
 } from './utils/date';
 import { getDisplayedLists } from './utils/trello';
 
@@ -185,9 +186,10 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
   const trelloCFDDates$ = Observable.combineLatest(
     startDatePicker.selected$.map(parseTrelloCFDDate),
     endDatePicker.selected$.map(parseTrelloCFDDate),
-    (startSelected, endSelected) => ({
+    previewTomorrow.checked$,
+    (startSelected, endSelected, previewTomorrowChecked) => ({
       startDate: startSelected,
-      endDate: endSelected,
+      endDate: previewTomorrowChecked ? tomorrow : endSelected,
     })
   );
 
