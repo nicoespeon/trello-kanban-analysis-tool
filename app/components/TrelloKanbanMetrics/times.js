@@ -6,6 +6,7 @@ import {
   groupByWith,
   getCreateList,
   getCreateActions,
+  round,
 } from '../../utils/utils';
 
 // StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]
@@ -106,6 +107,7 @@ const parseAvgLeadTime = R.compose(avgLeadTime, parseLeadTime);
 
 // calculateThroughput :: {startDate: date, endDate: date} -> StartDates -> Number
 const calculateThroughput = R.compose(
+  round,
   R.defaultTo(0),
   R.converge(
     R.divide,

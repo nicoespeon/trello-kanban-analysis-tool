@@ -479,7 +479,7 @@ test('calculateThroughput', (assert) => {
       startDates: [
         { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
         { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
-        { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-21' },
       ],
     },
     {
@@ -547,6 +547,11 @@ test('calculateThroughput', (assert) => {
     calculateThroughput({ startDate: null, endDate: null }, cards),
     0,
     'should return 0 if no valid period is given'
+  );
+  assert.equals(
+    calculateThroughput({ startDate: '2016-04-05', endDate: '2016-04-12' }, cards),
+    0.43,
+    'should return a rounded result'
   );
   assert.end();
 });
