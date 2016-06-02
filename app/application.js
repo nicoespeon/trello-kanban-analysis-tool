@@ -70,23 +70,25 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
 
   const firstDisplayedListSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: Observable.of({
-      name: 'first-displayed-list',
-      label: 'Work begins',
-      classNames: ['browser-default'],
-      select: R.head,
-    }),
+    props$: Storage.local.getItem('firstDisplayedList').first()
+      .map((storedList) => ({
+        name: 'first-displayed-list',
+        label: 'Work begins',
+        classNames: ['browser-default'],
+        select: (values) => R.defaultTo(R.head(values), storedList),
+      })),
     values$: trelloLists$.map(R.pluck('name')),
   });
 
   const lastDisplayedListSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: Observable.of({
-      name: 'last-displayed-list',
-      label: 'Work ends',
-      classNames: ['browser-default'],
-      select: R.last,
-    }),
+    props$: Storage.local.getItem('lastDisplayedList').first()
+      .map((storedList) => ({
+        name: 'last-displayed-list',
+        label: 'Work ends',
+        classNames: ['browser-default'],
+        select: (values) => R.defaultTo(R.last(values), storedList),
+      })),
     values$: trelloLists$.map(R.pluck('name')),
   });
 
@@ -251,8 +253,14 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
-    Storage: boardSelect.selected$
-      .map(selected => ({ key: 'selectedBoard', value: selected })),
+    Storage: Observable.merge(
+      boardSelect.selected$
+        .map(selected => ({ key: 'selectedBoard', value: selected })),
+      firstDisplayedListSelect.selected$
+        .map(selected => ({ key: 'firstDisplayedList', value: selected })),
+      lastDisplayedListSelect.selected$
+        .map(selected => ({ key: 'lastDisplayedList', value: selected }))
+    ),
   };
 }
 
