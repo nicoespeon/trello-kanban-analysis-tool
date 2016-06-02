@@ -114,10 +114,19 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     }),
   });
 
-  const selectedPeriodDates$ = Observable.merge(
-    selectLastMonthButton.dates$,
-    selectCurrentMonthButton.dates$
-  ).startWith({ startDate: currentMonth, endDate: today });
+  const selectPeriod$ = Observable.concat(
+    Observable.combineLatest(
+      Storage.local.getItem('selectedStartDate').first()
+        .map(R.defaultTo(currentMonth)),
+      Storage.local.getItem('selectedEndDate').first()
+        .map(R.defaultTo(today)),
+      (startDate, endDate) => ({ startDate, endDate })
+    ),
+    Observable.merge(
+      selectLastMonthButton.dates$,
+      selectCurrentMonthButton.dates$
+    )
+  );
 
   // Datepickers to select dates
 
@@ -128,7 +137,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
       label: 'Start Date',
       max: today,
     }),
-    value$: selectedPeriodDates$.map(R.prop('startDate')),
+    value$: selectPeriod$.map(R.prop('startDate')),
   });
 
   const endDatePicker = isolate(LabeledDatePicker)({
@@ -138,19 +147,19 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
       label: 'End Date',
       max: today,
     }),
-    value$: selectedPeriodDates$.map(R.prop('endDate')),
+    value$: selectPeriod$.map(R.prop('endDate')),
   });
 
   // Trello CFD
 
-  const parseTrelloCFDDate = R.cond([
+  const parseSelectedDate = R.cond([
     [R.isEmpty, R.always(null)],
     [R.T, R.identity],
   ]);
 
-  const trelloCFDDates$ = Observable.combineLatest(
-    startDatePicker.selected$.map(parseTrelloCFDDate),
-    endDatePicker.selected$.map(parseTrelloCFDDate),
+  const selectedDates$ = Observable.combineLatest(
+    startDatePicker.selected$.map(parseSelectedDate),
+    endDatePicker.selected$.map(parseSelectedDate),
     previewTomorrow.checked$,
     (startSelected, endSelected, previewTomorrowChecked) => ({
       startDate: startSelected,
@@ -170,7 +179,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
-    dates$: trelloCFDDates$,
+    dates$: selectedDates$,
     props$: Observable.of({
       label: 'Get actions',
       classNames: ['btn waves-effect waves-light trello-green'],
@@ -182,7 +191,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
 
   const trelloKanbanMetrics = TrelloKanbanMetrics({
     actions$: trelloActions$,
-    dates$: trelloCFDDates$,
+    dates$: selectedDates$,
     lists$: trelloDisplayedLists$,
     complementaryActions$: publishedTrelloCardsActions$$
       .switch()
@@ -259,7 +268,11 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
       firstDisplayedListSelect.selected$
         .map(selected => ({ key: 'firstDisplayedList', value: selected })),
       lastDisplayedListSelect.selected$
-        .map(selected => ({ key: 'lastDisplayedList', value: selected }))
+        .map(selected => ({ key: 'lastDisplayedList', value: selected })),
+      selectedDates$
+        .map(period => ({ key: 'selectedStartDate', value: period.startDate })),
+      selectedDates$
+        .map(period => ({ key: 'selectedEndDate', value: period.endDate }))
     ),
   };
 }
