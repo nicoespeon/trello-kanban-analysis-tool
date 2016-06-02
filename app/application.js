@@ -22,6 +22,7 @@ import {
   today,
   tomorrow,
 } from './utils/date';
+import { argsToArray } from './utils/utility';
 import { getDisplayedLists } from './utils/trello';
 
 function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, Storage }) {
@@ -258,7 +259,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     TrelloFetch: Observable.combineLatest(
       boardSelect.selected$,
       trelloCFD.Trello,
-      R.compose(R.head, R.unapply(R.identity))
+      R.compose(R.head, argsToArray)
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,

@@ -1,5 +1,8 @@
 import R from 'ramda';
 
+// argsToArray :: (a, …) -> [a, …]
+const argsToArray = R.unapply(R.identity);
+
 // countByWith :: (a -> String) -> (String,Number -> {B: b, C: c}) -> [a] -> [{B: b, C: c}]
 const countByWith = R.curry((prop, fn, data) => R.compose(
   R.map(R.apply(fn)),
@@ -24,6 +27,7 @@ const groupByWith = R.curry((prop, fn, data) => R.cond([
 const round = (x) => Math.round(x * 100) / 100;
 
 export {
+  argsToArray,
   countByWith,
   groupByWith,
   round,
