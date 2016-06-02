@@ -1,6 +1,7 @@
 import Cycle from '@cycle/core';
 import { makeDOMDriver, div, h1, small } from '@cycle/dom';
 import isolate from '@cycle/isolate';
+import storageDriver from '@cycle/storage';
 import { Observable } from 'rx';
 import R from 'ramda';
 
@@ -23,7 +24,7 @@ import {
 } from './utils/date';
 import { getDisplayedLists } from './utils/trello';
 
-function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) {
+function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, Storage }) {
   const publishedTrelloLists$ = TrelloFetch.lists$.publish();
   const publishedTrelloActions$ = TrelloFetch.actions$.publish();
   const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
@@ -43,21 +44,27 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
 
   // Selects to choose displayed board and lists
 
-  const parseBoardProps = (boards) => ({
-    name: 'board',
-    label: 'Board',
-    classNames: ['browser-default'],
-    select: R.head,
-    render: (value) => R.propOr(
-      value,
-      'name',
-      R.find(R.propEq('shortLink', value), boards)
-    ),
-  });
+  const boardSelectProps$ = Observable.combineLatest(
+    TrelloFetch.boards$,
+    Storage.local.getItem('selectedBoard').first(),
+    (boards, storedBoard) => ({
+      name: 'board',
+      label: 'Board',
+      classNames: ['browser-default'],
+      select: (values) => R.defaultTo(R.head(values), storedBoard),
+
+      // Render board names instead of shortLink when possible.
+      render: (shortLink) => R.propOr(
+        shortLink,
+        'name',
+        R.find(R.propEq('shortLink', shortLink), boards)
+      ),
+    })
+  );
 
   const boardSelect = isolate(LabeledSelect)({
     DOM: DOMAboveChart,
-    props$: TrelloFetch.boards$.map(parseBoardProps),
+    props$: boardSelectProps$,
     values$: TrelloFetch.boards$.map(R.pluck('shortLink')),
   });
 
@@ -244,6 +251,8 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo }) 
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
+    Storage: boardSelect.selected$
+      .map(selected => ({ key: 'selectedBoard', value: selected })),
   };
 }
 
@@ -253,6 +262,7 @@ const drivers = {
   TrelloFetch: trelloSinkDriver,
   TrelloMissingInfo: trelloSinkDriver,
   Graph: makeGraphDriver('#chart svg'),
+  Storage: storageDriver,
 };
 
 Trello.authorize({
