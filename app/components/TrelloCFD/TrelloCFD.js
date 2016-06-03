@@ -52,6 +52,12 @@ function TrelloCFD(
       parsedActions$,
       parseToGraph
     ),
+    CSV: Observable.of([
+      ['', '2016-01-01', '2016-01-02', '2016-01-03'],
+      ['Backlog', 1, 2, 2],
+      ['Card Preparation', 4, 0, 3],
+      ['QA', 4, 0, 3],
+    ]),
   };
 }
 
