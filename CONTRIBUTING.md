@@ -34,11 +34,11 @@ Once you send a Pull Request, your code will be check with [Travis CI](https://t
 
 Please follow our coding standards as best as you can to keep consistency over code.
 
-The [.editorconfig](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/develop/.editorconfig) file should help you configure your IDE to do so.
+The [.editorconfig](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/.editorconfig) file should help you configure your IDE to do so.
 
 ### JS (ES2015)
 
-This project uses [ESLint](http://eslint.org/) to ensure consistency, following [these rules(https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/develop/.eslintrc.js)
+This project uses [ESLint](http://eslint.org/) to ensure consistency, following [these rules(https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/.eslintrc.js)
 
 You can run the linter with `npm run lint`.
 
