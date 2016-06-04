@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 function exportToCSVDriver(input$) {
   // `data` should be formatted as an Array of Arrays (= lines).
   // e.g: `[["name1", "city1", "other info"], ["name2", "city2", "more info"]]`
@@ -12,7 +14,8 @@ function exportToCSVDriver(input$) {
 
     const link = document.createElement('a');
     link.setAttribute('href', encodeURI(csvContent));
-    link.setAttribute('download', 'trello-cfd.csv');
+    const head = R.head(data);
+    link.setAttribute('download', `cfd-from-${head[1]}-to-${R.last(head)}.csv`);
 
     // Required for FF
     document.body.appendChild(link);
