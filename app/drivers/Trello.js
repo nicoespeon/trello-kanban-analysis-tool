@@ -1,6 +1,8 @@
 import R from 'ramda';
 import { Observable } from 'rx';
 
+import { argsToArray } from '../utils/utility';
+
 const actionsFilter = [
   'createCard',
   'deleteCard',
@@ -89,7 +91,7 @@ function trelloSinkDriver(input$) {
               null,
               cardIds
                 .map(cardActions$)
-                .concat(R.unapply(R.identity))
+                .concat(argsToArray)
             )
           );
         });

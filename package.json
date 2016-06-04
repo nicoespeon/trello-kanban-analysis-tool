@@ -1,6 +1,6 @@
 {
   "name": "tkat",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Analyse Kanban metrics from a Trello board",
   "keywords": [
     "trello",

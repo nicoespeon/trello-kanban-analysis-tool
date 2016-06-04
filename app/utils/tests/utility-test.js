@@ -2,10 +2,20 @@ import { test } from 'tape';
 import R from 'ramda';
 
 import {
+  argsToArray,
   countByWith,
   groupByWith,
   round,
 } from '../utility';
+
+test('argsToArray', (assert) => {
+  assert.deepEquals(
+    argsToArray(1, 'lorem', 3),
+    [1, 'lorem', 3],
+    'should convert arguments into an array'
+  );
+  assert.end();
+});
 
 test('countByWith', (assert) => {
   const data = [1.0, 1.1, 1.2, 2.0, 3.0, 2.2];

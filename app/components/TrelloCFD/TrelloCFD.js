@@ -4,6 +4,7 @@ import R from 'ramda';
 
 import { parseActions } from './actions';
 import { parseToGraph } from './graph';
+import { graphToCSV } from './csv';
 
 import { today, tomorrow, filterBetweenDates, nextDay } from '../../utils/date';
 
@@ -44,14 +45,17 @@ function TrelloCFD(
     )(actions)
   );
 
+  const graph$ = Observable.combineLatest(
+    displayedLists$,
+    parsedActions$,
+    parseToGraph
+  );
+
   return {
     DOM: vtree$,
     Trello: clicks$,
-    Graph: Observable.combineLatest(
-      displayedLists$,
-      parsedActions$,
-      parseToGraph
-    ),
+    Graph: graph$,
+    CSV: graph$.map(graphToCSV),
   };
 }
 

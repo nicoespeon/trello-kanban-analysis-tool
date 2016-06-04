@@ -57,7 +57,7 @@ Launch unit tests through [tap-diff reporter](https://www.npmjs.com/package/tap-
 
 That would be amazing :metal:
 
-Please have a look at [the CONTRIBUTING.md file](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/develop/CONTRIBUTING.md) before you do so.
+Please have a look at [the CONTRIBUTING.md file](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/CONTRIBUTING.md) before you do so.
 
 ## Versioning
 
@@ -89,6 +89,6 @@ That mean releases will be numbered with `<major>.<minor>.<patch>` format, regar
 
 ## Copyright and License
 
-Copyright (c) 2016 [Nicolas CARLO](https://twitter.com/nicoespeon) under [the MIT license](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/develop/LICENSE.md).
+Copyright (c) 2016 [Nicolas CARLO](https://twitter.com/nicoespeon) under [the MIT license](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/LICENSE.md).
 
 :confused: [What does that mean?](http://choosealicense.com/licenses/mit/)

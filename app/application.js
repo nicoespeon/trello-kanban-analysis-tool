@@ -1,5 +1,5 @@
 import Cycle from '@cycle/core';
-import { makeDOMDriver, div, h1, small } from '@cycle/dom';
+import { makeDOMDriver, div, h1, small, button } from '@cycle/dom';
 import isolate from '@cycle/isolate';
 import storageDriver from '@cycle/storage';
 import { Observable } from 'rx';
@@ -7,6 +7,7 @@ import R from 'ramda';
 
 import { trelloSinkDriver } from './drivers/Trello';
 import { makeGraphDriver } from './drivers/Graph';
+import { exportToCSVDriver } from './drivers/ExportToCSV';
 
 import LabeledSelect from './components/LabeledSelect/LabeledSelect';
 import LabeledCheckbox from './components/LabeledCheckbox/LabeledCheckbox';
@@ -22,6 +23,7 @@ import {
   today,
   tomorrow,
 } from './utils/date';
+import { argsToArray } from './utils/utility';
 import { getDisplayedLists } from './utils/trello';
 
 function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, Storage }) {
@@ -199,6 +201,10 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
       .scan(R.concat),
   });
 
+  // Download button clicks
+
+  const downloadClicks$ = DOMBelowChart.select('.download-btn').events('click');
+
   // Connect
   publishedTrelloLists$.connect();
   publishedTrelloActions$.connect();
@@ -253,15 +259,27 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     ),
     DOMBelowChart: trelloKanbanMetrics.DOM.map(
       (trelloKanbanMetricsVTree) =>
-        div('.container.m-top', [trelloKanbanMetricsVTree])
+        div('.container', [
+          div('.center-align', [
+            button(
+              '.download-btn.btn.waves-effect.waves-light.trello-blue',
+              'Download .csv'
+            ),
+          ]),
+          div('.m-top.m-bottom', [trelloKanbanMetricsVTree]),
+        ])
     ),
     TrelloFetch: Observable.combineLatest(
       boardSelect.selected$,
       trelloCFD.Trello,
-      R.compose(R.head, R.unapply(R.identity))
+      R.compose(R.head, argsToArray)
     ),
     TrelloMissingInfo: trelloKanbanMetrics.Trello,
     Graph: trelloCFD.Graph,
+    ExportToCSV: downloadClicks$.withLatestFrom(
+      trelloCFD.CSV,
+      R.compose(R.last, argsToArray)
+    ),
     Storage: Observable.merge(
       boardSelect.selected$
         .map(selected => ({ key: 'selectedBoard', value: selected })),
@@ -284,6 +302,7 @@ const drivers = {
   TrelloMissingInfo: trelloSinkDriver,
   Graph: makeGraphDriver('#chart svg'),
   Storage: storageDriver,
+  ExportToCSV: exportToCSVDriver,
 };
 
 Trello.authorize({
