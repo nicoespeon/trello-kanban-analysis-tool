@@ -183,7 +183,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
     displayedLists$: trelloDisplayedLists$,
     dates$: selectedDates$,
     props$: Observable.of({
-      label: 'Get actions',
+      label: 'Refresh data',
       classNames: ['btn waves-effect waves-light trello-green'],
     }),
     previewTomorrow$: previewTomorrow.checked$,
