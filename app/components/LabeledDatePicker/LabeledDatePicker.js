@@ -5,8 +5,9 @@ import R from 'ramda';
 function LabeledDatePicker({ DOM, props$, value$ }) {
   const newSelected$ = DOM
     .select('.datepicker')
-    .events('change')
-    .map(ev => ev.target.value);
+    .events('focusout')
+    .map(ev => ev.target.value)
+    .distinctUntilChanged();
 
   const selected$ = Observable.merge(
     value$,
