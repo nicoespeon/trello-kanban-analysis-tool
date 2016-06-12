@@ -5,7 +5,8 @@ import R from 'ramda';
 function LabeledDatePicker({ DOM, props$, value$ }) {
   const newSelected$ = DOM
     .select('.datepicker')
-    .events('focusout')
+    .events('change')
+    .debounce(500)
     .map(ev => ev.target.value)
     .distinctUntilChanged();
 
