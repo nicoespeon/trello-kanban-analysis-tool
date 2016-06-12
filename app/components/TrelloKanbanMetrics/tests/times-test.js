@@ -255,7 +255,7 @@ test('parseStartDates', (assert) => {
       id: '56f2a2265985b75e2c6e59c4',
       startDates: [
         { list: '563b1afeb758fc0e81a3c1b6', date: '2016-01-23' },
-        { list: '53a775adc6ff397a74274486', date: '2016-02-07' },
+        { list: '53a775adc6ff397a74274486', date: '2016-02-12' },
         { list: '5450ed6ad166fa6110790030', date: '2016-02-12' },
       ],
     },

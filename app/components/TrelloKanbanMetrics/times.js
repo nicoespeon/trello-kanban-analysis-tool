@@ -99,6 +99,7 @@ const startDatesFromActions = (actions, lists) => R.map(
 
 // parseStartDates :: [Action] -> [String] -> StartDates
 const parseStartDates = R.curry((actions, lists) => R.compose(
+  consolidateInnerStartDates,
   groupByWith(
     R.path(['data', 'card', 'id']),
     (cardId, cardActions) => ({
