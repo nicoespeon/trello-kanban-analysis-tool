@@ -6,7 +6,9 @@ function LabeledDatePicker({ DOM, props$, value$ }) {
   const newSelected$ = DOM
     .select('.datepicker')
     .events('change')
-    .map(ev => ev.target.value);
+    .debounce(500)
+    .map(ev => ev.target.value)
+    .distinctUntilChanged();
 
   const selected$ = Observable.merge(
     value$,
