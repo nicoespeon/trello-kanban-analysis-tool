@@ -27,6 +27,55 @@ const filterCardsOnPeriod = R.curry(({ startDate, endDate }, cards) =>
   )(cards)
 );
 
+// getHeadingNullDates :: [{date: Date}] -> [{date: Date}]
+const filterHeadingNullDates = R.compose(
+  R.takeWhile(
+    R.compose(R.isNil, R.prop('date'))
+  ),
+  R.defaultTo([])
+);
+
+// rejectHeadingNullDates :: [{date: Date}] -> [{date: Date}]
+const rejectHeadingNullDates = R.compose(
+  R.converge(
+    R.difference,
+    [R.identity, filterHeadingNullDates]
+  ),
+  R.defaultTo([])
+);
+
+// consolidateNullDates :: [{date: Date}] -> [{date: Date}]
+const consolidateNullDates = R.compose(
+  // Start from the end so we know the "next" start date to be set.
+  R.reverse,
+  R.reduceRight(
+    (startDates, nextDate) => R.concat(
+      startDates,
+      R.over(
+        R.lensProp('date'),
+        R.defaultTo(
+          R.propOr(null, 'date', R.last(startDates))
+        )
+      )(nextDate)
+    ),
+    []
+  )
+);
+
+// consolidateInnerStartDates :: [{list: String, date: Date}] -> [{list: String, date: Date}]
+const consolidateInnerStartDates = R.map(
+  R.over(
+    R.lensProp('startDates'),
+    R.converge(
+      R.concat,
+      [
+        filterHeadingNullDates,
+        R.compose(consolidateNullDates, rejectHeadingNullDates),
+      ]
+    )
+  )
+);
+
 // startDatesFromActions :: [Action] -> [String] -> [{list: String, date: Date}]
 const startDatesFromActions = (actions, lists) => R.map(
   (list) => ({
@@ -132,6 +181,10 @@ const isMissingInformation = R.compose(
 
 export {
   filterCardsOnPeriod,
+  filterHeadingNullDates,
+  rejectHeadingNullDates,
+  consolidateNullDates,
+  consolidateInnerStartDates,
   parseStartDates,
   parseStartDatesOnPeriod,
   leadTimeFromDates,
