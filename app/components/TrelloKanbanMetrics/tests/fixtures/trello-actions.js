@@ -1272,8 +1272,8 @@ export default [
         id: '5450ed6ad166fa6110790030',
       },
       listBefore: {
-        name: 'Tests QA [2]',
-        id: '53a775adc6ff397a74274486',
+        name: 'Production [3]',
+        id: '563b1afeb758fc0e81a3c1b6',
       },
       board: {
         shortLink: 'LydFpONf',
@@ -1323,43 +1323,6 @@ export default [
     },
     date: '2016-02-08T08:16:10.499Z',
     type: 'createCard',
-    memberCreator: {
-      id: '519b3898bb87e0891c0026b0',
-      avatarHash: '302673eff8f1cd92651a1ec70fb53cd8',
-      fullName: 'Fabien Bernard',
-      initials: 'FB',
-      username: 'fabien0102',
-    },
-  },
-  {
-    id: '570169ca19fde6c4a98714b6',
-    data: {
-      listAfter: {
-        name: 'Tests QA [2]',
-        id: '53a775adc6ff397a74274486',
-      },
-      listBefore: {
-        name: 'Production [3]',
-        id: '563b1afeb758fc0e81a3c1b6',
-      },
-      board: {
-        shortLink: 'LydFpONf',
-        name: 'Production',
-        id: '5186542b5dc079967b0037be',
-      },
-      card: {
-        shortLink: 'ZenP1YKv',
-        idShort: 2748,
-        name: 'Envoi d’emails pour relancer joueurs devenus inactifs',
-        id: '56f2a2265985b75e2c6e59c4',
-        desc: 'https://github.com/metidia/vinoga-api/pull/297\n\n# Use case\n\nJadis nous avions des emails de relance qui faisaient revenir un certain nombre de joueurs qui avaient drop. L’email était bien tourné et qualitativement bien perçu. C’est Mixpanel qui gérait ça.\n\nL’idée serait de faire des emails + notification FB de relance (D7, D15, D27) pour faire revenir dans le jeu ceux qui ont drop.\n\n# SMART Objective\n\nTaux de retour (= # clics sur lien / # emails envoyés) de l’email supérieur à 3%.\n[À valider] Taux de retour (= # retour sur le jeu / # notification envoyées) supérieur à 3%\n\n## On Success\n\nOn garde l’email, ça contribue à la rétention !\n\n## On Failure\n\nSe poser la question si c’est nécessaire en fonction de la performance.',
-      },
-      old: {
-        idList: '563b1afeb758fc0e81a3c1b6',
-      },
-    },
-    date: '2016-02-07T16:15:32.132Z',
-    type: 'updateCard',
     memberCreator: {
       id: '519b3898bb87e0891c0026b0',
       avatarHash: '302673eff8f1cd92651a1ec70fb53cd8',

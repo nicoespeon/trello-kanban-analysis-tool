@@ -3,6 +3,10 @@ import { test } from 'tape';
 import trelloActions from './fixtures/trello-actions';
 
 import {
+  filterHeadingNullDates,
+  rejectHeadingNullDates,
+  consolidateNullDates,
+  consolidateInnerStartDates,
   parseStartDates,
   filterCardsOnPeriod,
   leadTimeFromDates,
@@ -11,6 +15,199 @@ import {
   calculateThroughput,
   isMissingInformation,
 } from '../times';
+
+test('filterHeadingNullDates', (assert) => {
+  assert.deepEquals(
+    [
+      { list: '563b1afeb758fc0e81a3c1b6', date: null },
+      { list: '501b1afeb758fc0e81a3c1b6', date: null },
+    ],
+    filterHeadingNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: null },
+      { list: '501b1afeb758fc0e81a3c1b6', date: null },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+    ]),
+    'should return heading objects with null date'
+  );
+  assert.deepEquals(
+    [],
+    filterHeadingNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '53a775adc6ff397a74274486', date: null },
+      { list: '553975adc6ff397a74274486', date: null },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      { list: '5100ed6ad166fa6110790030', date: null },
+    ]),
+    'should return an empty array if there is no heading object with null date'
+  );
+  assert.deepEquals(
+    [],
+    filterHeadingNullDates(undefined),
+    'should return an empty array if input is undefined'
+  );
+  assert.end();
+});
+
+test('rejectHeadingNullDates', (assert) => {
+  assert.deepEquals(
+    [
+      { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+    ],
+    rejectHeadingNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: null },
+      { list: '501b1afeb758fc0e81a3c1b6', date: null },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+    ]),
+    'should return the collection without heading objects with null date'
+  );
+  assert.deepEquals(
+    [
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '53a775adc6ff397a74274486', date: null },
+      { list: '553975adc6ff397a74274486', date: null },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      { list: '5100ed6ad166fa6110790030', date: null },
+    ],
+    rejectHeadingNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '53a775adc6ff397a74274486', date: null },
+      { list: '553975adc6ff397a74274486', date: null },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      { list: '5100ed6ad166fa6110790030', date: null },
+    ]),
+    'should return the whole collection if there is no heading object with null date'
+  );
+  assert.deepEquals(
+    [],
+    rejectHeadingNullDates(undefined),
+    'should return an empty array if input is undefined'
+  );
+  assert.end();
+});
+
+test('consolidateNullDates', (assert) => {
+  assert.deepEquals(
+    [
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '5ab91afeb758fc0e81a3c1b6', date: '2016-04-08' },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-12' },
+      { list: '553975adc6ff397a74274486', date: '2016-04-12' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      { list: '5100ed6ad166fa6110790030', date: '2016-04-20' },
+    ],
+      consolidateNullDates([
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+        { list: '5ab91afeb758fc0e81a3c1b6', date: '2016-04-08' },
+        { list: '53a775adc6ff397a74274486', date: null },
+        { list: '553975adc6ff397a74274486', date: null },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+        { list: '5100ed6ad166fa6110790030', date: '2016-04-20' },
+      ]),
+      'should set null start dates to the value of the next list that has one'
+    );
+  assert.deepEquals(
+    [
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '501b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+    ],
+    consolidateNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: null },
+      { list: '501b1afeb758fc0e81a3c1b6', date: null },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+    ]),
+    'should set heading null start dates to the value of the next list that has one'
+  );
+  assert.deepEquals(
+    [
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-10' },
+      { list: '53a775adc6ff397a74274486', date: '2016-05-06' },
+      { list: '5450ed6ad166fa6110790030', date: null },
+    ],
+    consolidateNullDates([
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-10' },
+      { list: '53a775adc6ff397a74274486', date: '2016-05-06' },
+      { list: '5450ed6ad166fa6110790030', date: null },
+    ]),
+    'should not set trailing null dates'
+  );
+  assert.end();
+});
+
+test('consolidateInnerStartDates', (assert) => {
+  const expected = [
+    {
+      id: '5661abfe6c2f11e4db652169',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-10' },
+        { list: '53a775adc6ff397a74274486', date: '2016-05-06' },
+        { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+    {
+      id: '564077e6e6dfdc9c01244836',
+      startDates: [
+      { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+      { list: '5ab91afeb758fc0e81a3c1b6', date: '2016-04-08' },
+      { list: '53a775adc6ff397a74274486', date: '2016-04-12' },
+      { list: '553975adc6ff397a74274486', date: '2016-04-12' },
+      { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+      { list: '5100ed6ad166fa6110790030', date: '2016-04-20' },
+      ],
+    },
+    {
+      id: '56fb8a5af196e52193de6179',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: null },
+        { list: '501b1afeb758fc0e81a3c1b6', date: null },
+        { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+      ],
+    },
+  ];
+  const data = [
+    {
+      id: '5661abfe6c2f11e4db652169',
+      startDates: [
+          { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-10' },
+          { list: '53a775adc6ff397a74274486', date: '2016-05-06' },
+          { list: '5450ed6ad166fa6110790030', date: null },
+      ],
+    },
+    {
+      id: '564077e6e6dfdc9c01244836',
+      startDates: [
+        { list: '563b1afeb758fc0e81a3c1b6', date: '2016-04-06' },
+        { list: '5ab91afeb758fc0e81a3c1b6', date: '2016-04-08' },
+        { list: '53a775adc6ff397a74274486', date: null },
+        { list: '553975adc6ff397a74274486', date: null },
+        { list: '5450ed6ad166fa6110790030', date: '2016-04-12' },
+        { list: '5100ed6ad166fa6110790030', date: '2016-04-20' },
+      ],
+    },
+    {
+      id: '56fb8a5af196e52193de6179',
+      startDates: [
+          { list: '563b1afeb758fc0e81a3c1b6', date: null },
+          { list: '501b1afeb758fc0e81a3c1b6', date: null },
+          { list: '53a775adc6ff397a74274486', date: '2016-04-06' },
+          { list: '5450ed6ad166fa6110790030', date: '2016-04-07' },
+      ],
+    },
+  ];
+
+  assert.deepEquals(
+    expected,
+    consolidateInnerStartDates(data),
+    'should correctly set null start dates to the value of the next list that has one'
+  );
+  assert.end();
+});
 
 test('parseStartDates', (assert) => {
   const expected = [
@@ -58,7 +255,7 @@ test('parseStartDates', (assert) => {
       id: '56f2a2265985b75e2c6e59c4',
       startDates: [
         { list: '563b1afeb758fc0e81a3c1b6', date: '2016-01-23' },
-        { list: '53a775adc6ff397a74274486', date: '2016-02-07' },
+        { list: '53a775adc6ff397a74274486', date: '2016-02-12' },
         { list: '5450ed6ad166fa6110790030', date: '2016-02-12' },
       ],
     },
