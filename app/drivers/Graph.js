@@ -35,6 +35,10 @@ function makeGraphDriver(selector) {
           .duration(500)
           .call(chart);
 
+        // Force tooltips to be removed after data refresh.
+        // See: https://github.com/nvd3-community/nvd3/issues/100
+        d3.selectAll(`${selector} + .nvtooltip`).remove();
+
         nv.utils.windowResize(chart.update);
 
         return chart;
