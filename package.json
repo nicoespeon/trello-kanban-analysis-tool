@@ -12,6 +12,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
+    "start": "brunch w -s",
     "lint": "node_modules/.bin/eslint app",
     "unit-test": "node_modules/.bin/babel-tape-runner app/**/*-test.js",
     "unit-test-diff": "npm run unit-test | node_modules/.bin/tap-diff",
