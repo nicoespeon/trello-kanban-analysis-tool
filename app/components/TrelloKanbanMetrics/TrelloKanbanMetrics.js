@@ -4,7 +4,7 @@ import R from 'ramda';
 
 import {
   parseStartDatesOnPeriod,
-  parseAvgLeadTime,
+  calculateLeadTime,
   calculateThroughput,
   isMissingInformation,
 } from './times';
@@ -65,7 +65,7 @@ function TrelloKanbanMetrics(
     dates$,
     consolidatedActions$,
     listsIds$,
-    R.compose(parseAvgLeadTime, parseStartDatesOnPeriod)
+    calculateLeadTime
   );
 
   const leadTimeVTree$ = leadTimes$.map(
@@ -92,10 +92,9 @@ function TrelloKanbanMetrics(
     dates$,
     consolidatedActions$,
     listsGroups$,
-    (dates, actions, listsGroups) =>
-      R.map(
-        R.compose(parseAvgLeadTime, parseStartDatesOnPeriod(dates, actions))
-      )(listsGroups)
+    (dates, actions, listsGroups) => R.map(
+      calculateLeadTime(dates, actions)
+    )(listsGroups)
   );
 
   const cycleTimesVTree$ = Observable.combineLatest(

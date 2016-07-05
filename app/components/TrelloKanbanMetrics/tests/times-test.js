@@ -8,6 +8,7 @@ import {
   leadTimeFromDates,
   parseLeadTime,
   avgLeadTime,
+  calculateLeadTime,
   calculateThroughput,
   isMissingInformation,
 } from '../times';
@@ -436,6 +437,22 @@ test('avgLeadTime', (assert) => {
     avgLeadTime(dataAvgFloat),
     6,
     'should return a rounded average lead time'
+  );
+  assert.end();
+});
+
+test('calculateLeadTime', (assert) => {
+  const dates = { startDate: '2016-02-12', endDate: '2016-04-07' };
+  const lists = [
+    '563b1afeb758fc0e81a3c1b6',
+    '53a775adc6ff397a74274486',
+    '5450ed6ad166fa6110790030',
+  ];
+
+  assert.equal(
+    calculateLeadTime(dates, trelloActions, lists),
+    20,
+    'should calculate lead time from given data'
   );
   assert.end();
 });
