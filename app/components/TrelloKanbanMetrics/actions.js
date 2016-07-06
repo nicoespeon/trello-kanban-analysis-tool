@@ -68,10 +68,22 @@ const getDetailedMoveAction = R.curry((lists, action) => R.compose(
   getUpdatedLists(action)
 )(lists));
 
+// consolidateSkippedLists :: [String] -> [Action] -> [Action]
+const consolidateSkippedLists = (lists) => R.compose(
+  R.flatten,
+  R.map(
+    R.cond([
+      [hasSkippedList(lists), getDetailedMoveAction(lists)],
+      [R.T, R.identity],
+    ])
+  )
+);
+
 export {
   getNext,
   hasSkippedList,
   getUpdatedLists,
   setMoveActionLists,
   getDetailedMoveAction,
+  consolidateSkippedLists,
 };
