@@ -9,6 +9,7 @@ import {
   round,
 } from '../../utils/utils';
 
+// Dates :: {startDate: date, endDate: date}
 // StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]
 // LeadTimes :: [{id: a, leadTime: Integer}]
 
@@ -105,7 +106,13 @@ const parseLeadTime = R.map(card => ({
 // parseAvgLeadTime :: StartDates -> Integer
 const parseAvgLeadTime = R.compose(avgLeadTime, parseLeadTime);
 
-// calculateThroughput :: {startDate: date, endDate: date} -> StartDates -> Number
+// calculateLeadTime :: Dates -> Actions -> [String] -> Integer
+const calculateLeadTime = R.curry((dates, actions, lists) => R.compose(
+  parseAvgLeadTime,
+  parseStartDatesOnPeriod(dates, actions)
+)(lists));
+
+// calculateThroughput :: Dates -> StartDates -> Number
 const calculateThroughput = R.compose(
   round,
   R.defaultTo(0),
@@ -138,6 +145,7 @@ export {
   avgLeadTime,
   parseLeadTime,
   parseAvgLeadTime,
+  calculateLeadTime,
   calculateThroughput,
   isMissingInformation,
 };

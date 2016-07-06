@@ -1,7 +1,7 @@
 import R from 'ramda';
 import { Observable } from 'rx';
 
-import { argsToArray } from '../utils/utility';
+import { argsToArray } from '../utils/function';
 
 const actionsFilter = [
   'createCard',
