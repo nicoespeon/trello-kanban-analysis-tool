@@ -8,6 +8,7 @@ import {
   calculateThroughput,
   isMissingInformation,
 } from './times';
+import { consolidateActions } from './actions';
 import { splitToPairs } from './lists';
 import { cycleTimeVTreeWithLists } from './vtree';
 
@@ -58,7 +59,8 @@ function TrelloKanbanMetrics(
   const consolidatedActions$ = Observable.combineLatest(
     actions$,
     complementaryActions$,
-    R.useWith(R.concat, [R.identity, R.flatten])
+    listsIds$,
+    consolidateActions
   );
 
   const leadTimes$ = Observable.combineLatest(

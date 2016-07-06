@@ -79,6 +79,12 @@ const consolidateSkippedLists = (lists) => R.compose(
   )
 );
 
+// consolidateActions :: [Action] -> [[Action]] -> [String] -> [Action]
+const consolidateActions = (actions, complementaryActions, lists) => R.compose(
+  consolidateSkippedLists(lists),
+  R.useWith(R.concat, [R.identity, R.flatten])
+)(actions, complementaryActions);
+
 export {
   getNext,
   hasSkippedList,
@@ -86,4 +92,5 @@ export {
   setMoveActionLists,
   getDetailedMoveAction,
   consolidateSkippedLists,
+  consolidateActions,
 };
