@@ -77,7 +77,10 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
         name: 'first-displayed-list',
         label: 'Work begins',
         classNames: ['browser-default'],
-        select: (values) => R.defaultTo(R.head(values), storedList),
+        select: R.cond([
+          [R.contains(storedList), R.always(storedList)],
+          [R.T, R.head],
+        ]),
       })),
     values$: trelloLists$.map(R.pluck('name')),
   });
@@ -89,7 +92,10 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
         name: 'last-displayed-list',
         label: 'Work ends',
         classNames: ['browser-default'],
-        select: (values) => R.defaultTo(R.last(values), storedList),
+        select: R.cond([
+          [R.contains(storedList), R.always(storedList)],
+          [R.T, R.last],
+        ]),
       })),
     values$: trelloLists$.map(R.pluck('name')),
   });

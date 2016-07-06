@@ -13,10 +13,10 @@ function LabeledSelect({ DOM, props$, values$ }) {
     props$,
     values$,
     newSelected$,
-    (props, values, newSelected) => R.defaultTo(
-      props.select(values),
-      newSelected
-    )
+    (props, values, newSelected) => R.cond([
+      [R.contains(newSelected), R.always(newSelected)],
+      [R.T, props.select],
+    ])(values)
   );
 
   const propsDefaults = { render: R.identity };
