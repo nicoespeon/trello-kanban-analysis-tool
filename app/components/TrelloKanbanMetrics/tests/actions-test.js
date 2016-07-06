@@ -5,6 +5,7 @@ import {
   hasSkippedList,
   getUpdatedLists,
   setMoveActionLists,
+  getDetailedMoveAction,
 } from '../actions';
 
 test('getNext', (assert) => {
@@ -119,6 +120,51 @@ test('setMoveActionLists', (assert) => {
     setMoveActionLists(action)(lists),
     expected,
     'should return the given action parsed with the given couple of list ids'
+  );
+  assert.end();
+});
+
+test('getDetailedMoveAction', (assert) => {
+  const lists = ['list-0', 'list-1', 'list-2', 'list-3', 'list-4', 'list-5'];
+  const action = {
+    data: {
+      listAfter: { id: 'list-4' },
+      listBefore: { id: 'list-1' },
+    },
+    date: '2016-05-06T22:52:38.318Z',
+    type: 'updateCard',
+  };
+  const expected = [
+    {
+      data: {
+        listAfter: { id: 'list-4' },
+        listBefore: { id: 'list-3' },
+      },
+      date: '2016-05-06T22:52:38.318Z',
+      type: 'updateCard',
+    },
+    {
+      data: {
+        listAfter: { id: 'list-3' },
+        listBefore: { id: 'list-2' },
+      },
+      date: '2016-05-06T22:52:38.318Z',
+      type: 'updateCard',
+    },
+    {
+      data: {
+        listAfter: { id: 'list-2' },
+        listBefore: { id: 'list-1' },
+      },
+      date: '2016-05-06T22:52:38.318Z',
+      type: 'updateCard',
+    },
+  ];
+
+  assert.deepEqual(
+    getDetailedMoveAction(lists, action),
+    expected,
+    'should return a list of move actions going through all skipped lists'
   );
   assert.end();
 });
