@@ -1,5 +1,7 @@
 import R from 'ramda';
 
+import { lensPath } from '../../utils/ramda';
+
 // getNext :: [String] -> String -> String
 const getNext = (lists, value) => R.compose(
   R.defaultTo(null),
@@ -51,8 +53,15 @@ const getUpdatedLists = (action) => R.converge(
   ]
 );
 
+// setMoveActionLists :: Action -> [String, String] -> Action
+const setMoveActionLists = R.curry((action, lists) => R.compose(
+  R.set(lensPath(['data', 'listAfter', 'id']), R.last(lists)),
+  R.set(lensPath(['data', 'listBefore', 'id']), R.head(lists))
+)(action));
+
 export {
   getNext,
   hasSkippedList,
   getUpdatedLists,
+  setMoveActionLists,
 };
