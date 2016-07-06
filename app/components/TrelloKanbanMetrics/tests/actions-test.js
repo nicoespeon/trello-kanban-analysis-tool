@@ -213,6 +213,15 @@ test('consolidateSkippedLists', (assert) => {
       date: '2016-04-08T08:16:10.499Z',
       type: 'createCard',
     },
+    // Backward move actions are omitted from the output
+    {
+      data: {
+        listAfter: { id: 'list-1' },
+        listBefore: { id: 'list-3' },
+      },
+      date: '2016-03-06T22:52:38.318Z',
+      type: 'updateCard',
+    },
   ];
   const lists = [
     'list-1',
