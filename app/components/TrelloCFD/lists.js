@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-import { countByWith } from '../../utils/utility';
+import { countByWith } from '../../utils/relation';
 
 // allLists :: [List] -> [String]
 const allLists = R.compose(
