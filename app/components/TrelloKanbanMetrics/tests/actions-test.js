@@ -3,6 +3,7 @@ import { test } from 'tape';
 import {
   getNext,
   hasSkippedList,
+  getUpdatedLists,
 } from '../actions';
 
 test('getNext', (assert) => {
@@ -75,6 +76,23 @@ test('hasSkippedList', (assert) => {
     false,
     'should return false if given action is not a movement'
   );
+  assert.end();
+});
+
+test('getUpdatedLists', (assert) => {
+  const action = {
+    data: {
+      listAfter: { id: 'list-4' },
+      listBefore: { id: 'list-2' },
+    },
+    type: 'updateCard',
+  };
+  const lists = ['list-1', 'list-2', 'list-3', 'list-4', 'list-5'];
+
+  assert.deepEqual(
+    getUpdatedLists(action)(lists),
+    ['list-2', 'list-3', 'list-4'],
+  'should return lists from the given ones that are updated by the given move action');
   assert.end();
 });
 

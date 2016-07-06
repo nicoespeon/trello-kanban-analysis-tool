@@ -35,7 +35,24 @@ const hasSkippedList = R.curry((lists, action) => R.cond([
   ],
 ])(action));
 
+// findIndexWhereEquals :: a -> [a] -> Number
+const findIndexWhereEquals = R.compose(R.findIndex, R.equals);
+
+// getUpdatedLists :: Action -> [String] -> [String]
+const getUpdatedLists = (action) => R.converge(
+  R.slice,
+  [
+    findIndexWhereEquals(listBeforeId(action)),
+    R.compose(
+      R.inc,
+      findIndexWhereEquals(listAfterId(action))
+    ),
+    R.identity,
+  ]
+);
+
 export {
   getNext,
   hasSkippedList,
+  getUpdatedLists,
 };
