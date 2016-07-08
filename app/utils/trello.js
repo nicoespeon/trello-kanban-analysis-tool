@@ -1,7 +1,5 @@
 import R from 'ramda';
 
-import { pathOr, lensPath } from './ramda';
-
 const createActions = [
   'createCard',
   'copyCard',
@@ -16,7 +14,7 @@ const deleteActions = [
 
 // getCreateList :: Action -> List
 const getCreateList = R.converge(
-  pathOr,
+  R.pathOr,
   [
     R.path(['data', 'list']),
     R.always(['data', 'listAfter']),
@@ -26,7 +24,7 @@ const getCreateList = R.converge(
 
 // getDeleteList :: Action -> List
 const getDeleteList = R.converge(
-  pathOr,
+  R.pathOr,
   [
     R.path(['data', 'list']),
     R.always(['data', 'listBefore']),
@@ -37,7 +35,7 @@ const getDeleteList = R.converge(
 // getCreateActions :: [Action] -> [Action]
 const getCreateActions = R.compose(
   R.map((action) => R.set(
-    lensPath(['data', 'list']),
+    R.lensPath(['data', 'list']),
     getCreateList(action),
     action
   )),
@@ -61,7 +59,7 @@ const getCreateActions = R.compose(
 // getDeleteActions :: [Action] -> [Action]
 const getDeleteActions = R.compose(
   R.map((action) => R.set(
-    lensPath(['data', 'list']),
+    R.lensPath(['data', 'list']),
     getDeleteList(action),
     action
   )),

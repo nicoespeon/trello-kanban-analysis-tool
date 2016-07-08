@@ -10,7 +10,7 @@ const groupByWith = R.curry((prop, fn, data) => R.cond([
         R.groupBy(prop)
       ),
   ],
-    [R.T, R.always([])],
+  [R.T, R.always([])],
 ])(data));
 
 export {
