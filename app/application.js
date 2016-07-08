@@ -22,9 +22,9 @@ import {
   currentMonth,
   today,
   tomorrow,
-  argsToArray,
-  getDisplayedLists,
-} from './utils/utils';
+} from './utils/date';
+import { getDisplayedLists } from './utils/trello';
+import { argsToArray } from './utils/function';
 
 function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, Storage }) {
   const publishedTrelloLists$ = TrelloFetch.lists$.publish();
