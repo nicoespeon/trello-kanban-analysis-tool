@@ -1,13 +1,9 @@
 import R from 'ramda';
 
-import {
-  parseDate,
-  daysSpent,
-  groupByWith,
-  getCreateList,
-  getCreateActions,
-  round,
-} from '../../utils/utils';
+import { parseDate, daysSpent } from '../../utils/date';
+import { groupByWith } from '../../utils/list';
+import { getCreateList, getCreateActions } from '../../utils/trello';
+import { round } from '../../utils/number';
 
 // Dates :: {startDate: date, endDate: date}
 // StartDates :: [{id: a, startDates: [{list: String, date: Date}]}]

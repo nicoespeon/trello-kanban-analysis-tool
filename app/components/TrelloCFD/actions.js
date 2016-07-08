@@ -1,14 +1,13 @@
 import R from 'ramda';
 
 import {
-  groupByWith,
   sortByDateDesc,
   uniqByDateDesc,
   fillMissingDates,
   parseDate,
-  getCreateActions,
-  getDeleteActions,
-} from '../../utils/utils';
+} from '../../utils/date';
+import { groupByWith } from '../../utils/list';
+import { getCreateActions, getDeleteActions } from '../../utils/trello';
 
 import { sumNumberOfCards } from './cards';
 import { countCardsPerList, mapListData } from './lists';
