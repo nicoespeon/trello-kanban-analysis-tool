@@ -12,9 +12,6 @@ module.exports = config:
     ignored: /-test\.js/
 
   plugins:
-    babel:
-      loose: 'all'
-
     postcss:
       processors: [
         require('autoprefixer')(['last 8 versions'])
