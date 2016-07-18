@@ -183,7 +183,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   );
 
   const trelloCFD = TrelloCFD({
-    DOM: DOMBelowChart,
+    DOM: DOMAboveChart,
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
