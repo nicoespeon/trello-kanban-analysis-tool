@@ -15,10 +15,10 @@ import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMe
 import { getDisplayedLists } from './utils/trello';
 import { argsToArray } from './utils/function';
 
-function main({ DOMControls, DOMMetrics, TrelloFetch, TrelloMissingInfo, Storage }) {
-  const publishedTrelloLists$ = TrelloFetch.lists$.publish();
-  const publishedTrelloActions$ = TrelloFetch.actions$.publish();
-  const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
+function main({ DOMControls, DOMMetrics, Trello, Storage }) {
+  const publishedTrelloLists$ = Trello.lists$.publish();
+  const publishedTrelloActions$ = Trello.actions$.publish();
+  const publishedTrelloCardsActions$$ = Trello.cardsActions$$.publish();
 
   const trelloLists$ = publishedTrelloLists$.startWith([]);
   const trelloActions$ = publishedTrelloActions$.startWith([]);
@@ -27,10 +27,18 @@ function main({ DOMControls, DOMMetrics, TrelloFetch, TrelloMissingInfo, Storage
 
   const controls = Controls({
     DOM: DOMControls,
-    boards$: TrelloFetch.boards$,
+    boards$: Trello.boards$,
     lists$: trelloLists$,
     Storage,
   });
+
+  // Determine when we need to fetch board data from controls.
+
+  const fetchBoard$ = Observable.combineLatest(
+    controls.selectedBoard$,
+    controls.refreshClicks$,
+    (boardId) => ({ type: 'fetch', boardId })
+  );
 
   // Compute displayed lists from controls.
 
@@ -95,12 +103,7 @@ function main({ DOMControls, DOMMetrics, TrelloFetch, TrelloMissingInfo, Storage
           div('.m-top.m-bottom', [trelloKanbanMetricsVTree]),
         ])
     ),
-    TrelloFetch: Observable.combineLatest(
-      controls.selectedBoard$,
-      controls.refreshClicks$,
-      R.compose(R.head, argsToArray)
-    ),
-    TrelloMissingInfo: trelloKanbanMetrics.Trello,
+    Trello: Observable.merge(fetchBoard$, trelloKanbanMetrics.Trello),
     Graph: trelloCFD.Graph,
     ExportToCSV: downloadClicks$.withLatestFrom(
       trelloCFD.CSV,
@@ -113,8 +116,7 @@ function main({ DOMControls, DOMMetrics, TrelloFetch, TrelloMissingInfo, Storage
 const drivers = {
   DOMControls: makeDOMDriver('#controls'),
   DOMMetrics: makeDOMDriver('#metrics'),
-  TrelloFetch: trelloSinkDriver,
-  TrelloMissingInfo: trelloSinkDriver,
+  Trello: trelloSinkDriver,
   Graph: makeGraphDriver('#chart svg'),
   Storage: storageDriver,
   ExportToCSV: exportToCSVDriver,

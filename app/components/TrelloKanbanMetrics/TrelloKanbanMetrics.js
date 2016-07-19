@@ -125,7 +125,10 @@ function TrelloKanbanMetrics(
       (leadTimeVTree, throughputVTree, cycleTimesVTree) =>
         div([leadTimeVTree, throughputVTree, cycleTimesVTree])
     ),
-    Trello: missingInformationCardIds$,
+    Trello: missingInformationCardIds$.map(cardIds => ({
+      type: 'fetchMissing',
+      cardIds,
+    })),
   };
 }
 
