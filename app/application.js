@@ -26,7 +26,7 @@ import {
 import { getDisplayedLists } from './utils/trello';
 import { argsToArray } from './utils/function';
 
-function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, Storage }) {
+function main({ DOMControls, DOMMetrics, TrelloFetch, TrelloMissingInfo, Storage }) {
   const publishedTrelloLists$ = TrelloFetch.lists$.publish();
   const publishedTrelloActions$ = TrelloFetch.actions$.publish();
   const publishedTrelloCardsActions$$ = TrelloMissingInfo.cardsActions$$.publish();
@@ -37,7 +37,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   // Checkbox to preview tomorrow CFD
 
   const previewTomorrow = isolate(LabeledCheckbox)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Observable.of({
       name: 'preview-tomorrow',
       label: 'Preview tomorrow CFD (include today operations)',
@@ -65,13 +65,13 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   );
 
   const boardSelect = isolate(LabeledSelect)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: boardSelectProps$,
     values$: TrelloFetch.boards$.map(R.pluck('shortLink')),
   });
 
   const firstDisplayedListSelect = isolate(LabeledSelect)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Storage.local.getItem('firstDisplayedList').first()
       .map((storedList) => ({
         name: 'first-displayed-list',
@@ -86,7 +86,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   });
 
   const lastDisplayedListSelect = isolate(LabeledSelect)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Storage.local.getItem('lastDisplayedList').first()
       .map((storedList) => ({
         name: 'last-displayed-list',
@@ -103,7 +103,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   // Buttons to select period
 
   const selectLastMonthButton = isolate(SelectDatesButton)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Observable.of({
       label: 'Last month',
       classNames: ['btn waves-effect waves-light trello-blue'],
@@ -113,7 +113,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   });
 
   const selectCurrentMonthButton = isolate(SelectDatesButton)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Observable.of({
       label: 'Current month',
       classNames: ['btn waves-effect waves-light trello-blue'],
@@ -139,7 +139,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   // Datepickers to select dates
 
   const startDatePicker = isolate(LabeledDatePicker)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Observable.of({
       name: 'start-date',
       label: 'Start Date',
@@ -149,7 +149,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   });
 
   const endDatePicker = isolate(LabeledDatePicker)({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     props$: Observable.of({
       name: 'end-date',
       label: 'End Date',
@@ -183,7 +183,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   );
 
   const trelloCFD = TrelloCFD({
-    DOM: DOMAboveChart,
+    DOM: DOMControls,
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
@@ -209,7 +209,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
 
   // Download button clicks
 
-  const downloadClicks$ = DOMBelowChart.select('.download-btn').events('click');
+  const downloadClicks$ = DOMMetrics.select('.download-btn').events('click');
 
   // Connect
   publishedTrelloLists$.connect();
@@ -217,7 +217,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
   publishedTrelloCardsActions$$.connect();
 
   return {
-    DOMAboveChart: Observable.combineLatest(
+    DOMControls: Observable.combineLatest(
       boardSelect.DOM,
       trelloCFD.DOM,
       selectLastMonthButton.DOM,
@@ -263,7 +263,7 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
         ]),
       ])
     ),
-    DOMBelowChart: trelloKanbanMetrics.DOM.map(
+    DOMMetrics: trelloKanbanMetrics.DOM.map(
       (trelloKanbanMetricsVTree) =>
         div('.container', [
           div('.center-align', [
@@ -302,8 +302,8 @@ function main({ DOMAboveChart, DOMBelowChart, TrelloFetch, TrelloMissingInfo, St
 }
 
 const drivers = {
-  DOMAboveChart: makeDOMDriver('#above-chart'),
-  DOMBelowChart: makeDOMDriver('#below-chart'),
+  DOMControls: makeDOMDriver('#controls'),
+  DOMMetrics: makeDOMDriver('#metrics'),
   TrelloFetch: trelloSinkDriver,
   TrelloMissingInfo: trelloSinkDriver,
   Graph: makeGraphDriver('#chart svg'),
