@@ -9,7 +9,7 @@ import { makeGraphDriver } from './drivers/Graph';
 import { exportToCSVDriver } from './drivers/ExportToCSV';
 
 import Controls from './components/Controls/Controls';
-import TrelloCFD from './components/TrelloCFD/TrelloCFD';
+import CumulativeFlowDiagram from './components/CumulativeFlowDiagram/CumulativeFlowDiagram';
 import Metrics from './components/Metrics/Metrics';
 
 import { getDisplayedLists } from './utils/trello';
@@ -49,9 +49,9 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
     getDisplayedLists
   );
 
-  // Trello CFD
+  // Cumulative Flow Diagram
 
-  const trelloCFD = TrelloCFD({
+  const cumulativeFlowDiagram = CumulativeFlowDiagram({
     actions$: trelloActions$,
     lists$: trelloLists$,
     displayedLists$: trelloDisplayedLists$,
@@ -104,9 +104,9 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
         ])
     ),
     Trello: Observable.merge(fetchBoard$, metrics.Trello),
-    Graph: trelloCFD.Graph,
+    Graph: cumulativeFlowDiagram.Graph,
     ExportToCSV: downloadClicks$.withLatestFrom(
-      trelloCFD.CSV,
+      cumulativeFlowDiagram.CSV,
       R.compose(R.last, argsToArray)
     ),
     Storage: controls.Storage,

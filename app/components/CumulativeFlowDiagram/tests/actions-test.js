@@ -167,7 +167,7 @@ test('consolidateContent', (assert) => {
   assert.end();
 });
 
-test('TrelloCFD#consolidateActions', (assert) => {
+test('CumulativeFlowDiagram#consolidateActions', (assert) => {
   const expected = [
     {
       date: '2016-02-03',

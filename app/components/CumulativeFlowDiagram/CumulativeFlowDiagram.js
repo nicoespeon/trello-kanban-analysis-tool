@@ -7,7 +7,7 @@ import { graphToCSV } from './csv';
 
 import { today, tomorrow, filterBetweenDates, nextDay } from '../../utils/date';
 
-function TrelloCFD(
+function CumulativeFlowDiagram(
   {
     actions$,
     lists$,
@@ -44,4 +44,4 @@ function TrelloCFD(
   };
 }
 
-export default TrelloCFD;
+export default CumulativeFlowDiagram;
