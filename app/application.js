@@ -10,7 +10,7 @@ import { exportToCSVDriver } from './drivers/ExportToCSV';
 
 import Controls from './components/Controls/Controls';
 import TrelloCFD from './components/TrelloCFD/TrelloCFD';
-import TrelloKanbanMetrics from './components/TrelloKanbanMetrics/TrelloKanbanMetrics';
+import Metrics from './components/Metrics/Metrics';
 
 import { getDisplayedLists } from './utils/trello';
 import { argsToArray } from './utils/function';
@@ -59,9 +59,9 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
     previewTomorrow$: controls.previewTomorrow$,
   });
 
-  // Trello Kanban metrics
+  // Metrics
 
-  const trelloKanbanMetrics = TrelloKanbanMetrics({
+  const metrics = Metrics({
     actions$: trelloActions$,
     dates$: controls.selectedDates$,
     lists$: trelloDisplayedLists$,
@@ -91,8 +91,8 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
           controlsVTree,
         ])
     ),
-    DOMMetrics: trelloKanbanMetrics.DOM.map(
-      (trelloKanbanMetricsVTree) =>
+    DOMMetrics: metrics.DOM.map(
+      (metricsVTree) =>
         div('.container', [
           div('.center-align', [
             button(
@@ -100,10 +100,10 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
               'Download .csv'
             ),
           ]),
-          div('.m-top.m-bottom', [trelloKanbanMetricsVTree]),
+          div('.m-top.m-bottom', [metricsVTree]),
         ])
     ),
-    Trello: Observable.merge(fetchBoard$, trelloKanbanMetrics.Trello),
+    Trello: Observable.merge(fetchBoard$, metrics.Trello),
     Graph: trelloCFD.Graph,
     ExportToCSV: downloadClicks$.withLatestFrom(
       trelloCFD.CSV,

@@ -12,7 +12,7 @@ import { consolidateActions } from './actions';
 import { splitToPairs } from './lists';
 import { cycleTimeVTreeWithLists } from './vtree';
 
-function TrelloKanbanMetrics(
+function Metrics(
   {
     actions$,
     dates$,
@@ -132,4 +132,4 @@ function TrelloKanbanMetrics(
   };
 }
 
-export default TrelloKanbanMetrics;
+export default Metrics;
