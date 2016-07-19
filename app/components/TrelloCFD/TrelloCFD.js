@@ -1,4 +1,3 @@
-import { button } from '@cycle/dom';
 import { Observable } from 'rx';
 import R from 'ramda';
 
@@ -10,12 +9,10 @@ import { today, tomorrow, filterBetweenDates, nextDay } from '../../utils/date';
 
 function TrelloCFD(
   {
-    DOM,
     actions$,
     lists$,
     displayedLists$,
     dates$,
-    props$,
     previewTomorrow$,
   }
 ) {
@@ -23,16 +20,6 @@ function TrelloCFD(
     [R.equals(true), R.always(tomorrow)],
     [R.equals(false), R.always(today)],
   ]));
-
-  const clicks$ = DOM
-    .select('.button')
-    .events('click')
-    .startWith(false);
-
-  const vtree$ = props$.map((props) => button(
-    { className: R.join(' ', R.concat(['button'], props.classNames)) },
-    props.label)
-  );
 
   const parsedActions$ = Observable.combineLatest(
     dates$,
@@ -52,8 +39,6 @@ function TrelloCFD(
   );
 
   return {
-    DOM: vtree$,
-    Trello: clicks$,
     Graph: graph$,
     CSV: graph$.map(graphToCSV),
   };
