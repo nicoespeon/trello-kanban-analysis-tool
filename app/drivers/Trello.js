@@ -38,18 +38,22 @@ function cardActions$(cardId) {
 function trelloSinkDriver(input$) {
   return {
     boards$: Observable.create((observer) => {
-      Trello.get(
-        '/members/me/boards',
-        {
-          filter: 'open',
-          fields: 'name,shortLink',
-        },
-        (data) => {
-          observer.onNext(data);
-          observer.onCompleted();
-        },
-        observer.onError.bind(observer)
-      );
+      input$
+        .filter(R.propEq('type', 'getBoards'))
+        .subscribe(() => {
+          Trello.get(
+            '/members/me/boards',
+            {
+              filter: 'open',
+              fields: 'name,shortLink',
+            },
+            (data) => {
+              observer.onNext(data);
+              observer.onCompleted();
+            },
+            observer.onError.bind(observer)
+          );
+        });
     }),
 
     actions$: Observable.create((observer) => {
