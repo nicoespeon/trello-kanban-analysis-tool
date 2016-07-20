@@ -36,54 +36,89 @@ function cardActions$(cardId) {
 }
 
 function trelloSinkDriver(input$) {
+  const appName = 'Trello Kanban Analysis Tool';
+
   return {
+    authorize$: Observable.create((observer) => {
+      input$
+      .filter(R.propEq('type', 'authorize'))
+      .subscribe(({ interactive = true }) => {
+        Trello.authorize({
+          type: 'popup',
+          interactive,
+          name: appName,
+          scope: { read: true },
+          persist: true,
+          expiration: 'never',
+          success: () => {
+            observer.onNext();
+            observer.onCompleted();
+          },
+          error: (error) => R.when(
+            R.identity,
+            observer.onError.bind(observer, error)
+          )(interactive),
+        });
+      });
+    }),
+
     boards$: Observable.create((observer) => {
-      Trello.get(
-        '/members/me/boards',
-        {
-          filter: 'open',
-          fields: 'name,shortLink',
-        },
-        (data) => {
-          observer.onNext(data);
-          observer.onCompleted();
-        },
-        observer.onError.bind(observer)
-      );
+      input$
+        .filter(R.propEq('type', 'getBoards'))
+        .subscribe(() => {
+          Trello.get(
+            '/members/me/boards',
+            {
+              filter: 'open',
+              fields: 'name,shortLink',
+            },
+            (data) => {
+              observer.onNext(data);
+              observer.onCompleted();
+            },
+            observer.onError.bind(observer)
+          );
+        });
     }),
 
     actions$: Observable.create((observer) => {
-      input$.subscribe((boardId) => {
-        Trello.get(
-          `/boards/${boardId}/actions`,
-          {
-            filter: actionsFilter,
-            fields: actionsFields,
-            limit: 1000,
-          },
-          observer.onNext.bind(observer),
-          observer.onError.bind(observer)
-        );
-      });
+      input$
+        .filter(R.propEq('type', 'fetch'))
+        .subscribe(({ boardId }) => {
+          Trello.get(
+            `/boards/${boardId}/actions`,
+            {
+              filter: actionsFilter,
+              fields: actionsFields,
+              limit: 1000,
+            },
+            observer.onNext.bind(observer),
+            observer.onError.bind(observer)
+          );
+        });
     }),
 
     lists$: Observable.create((observer) => {
-      input$.subscribe((boardId) => {
-        Trello.get(
-          `/boards/${boardId}/lists`,
-          {
-            fields: 'name',
-            cards: 'open',
-            card_fields: '',
-          },
-          observer.onNext.bind(observer),
-          observer.onError.bind(observer)
-        );
-      });
+      input$
+        .filter(R.propEq('type', 'fetch'))
+        .subscribe(({ boardId }) => {
+          Trello.get(
+            `/boards/${boardId}/lists`,
+            {
+              fields: 'name',
+              cards: 'open',
+              card_fields: '',
+            },
+            observer.onNext.bind(observer),
+            observer.onError.bind(observer)
+          );
+        });
     }),
 
     cardsActions$$: Observable.create((observer) => {
       input$
+        .filter(R.propEq('type', 'fetchMissing'))
+        .map(R.prop('cardIds'))
         .filter(R.compose(R.not, R.isEmpty))
         .subscribe((cardIds) => {
           observer.onNext(

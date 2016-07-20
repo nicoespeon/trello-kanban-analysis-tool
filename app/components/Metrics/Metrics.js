@@ -12,7 +12,7 @@ import { consolidateActions } from './actions';
 import { splitToPairs } from './lists';
 import { cycleTimeVTreeWithLists } from './vtree';
 
-function TrelloKanbanMetrics(
+function Metrics(
   {
     actions$,
     dates$,
@@ -125,8 +125,11 @@ function TrelloKanbanMetrics(
       (leadTimeVTree, throughputVTree, cycleTimesVTree) =>
         div([leadTimeVTree, throughputVTree, cycleTimesVTree])
     ),
-    Trello: missingInformationCardIds$,
+    Trello: missingInformationCardIds$.map(cardIds => ({
+      type: 'fetchMissing',
+      cardIds,
+    })),
   };
 }
 
-export default TrelloKanbanMetrics;
+export default Metrics;

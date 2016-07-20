@@ -195,7 +195,7 @@ test('consolidateSkippedLists', (assert) => {
   assert.end();
 });
 
-test('TrelloKanbanMetrics#consolidateActions', (assert) => {
+test('Metrics#consolidateActions', (assert) => {
   const actions = [
     {
       id: '5725936511e835ed2cb67d0f',
