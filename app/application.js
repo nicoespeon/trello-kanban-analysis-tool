@@ -4,7 +4,7 @@ import storageDriver from '@cycle/storage';
 import { Observable } from 'rx';
 import R from 'ramda';
 
-import { trelloSinkDriver } from './drivers/Trello';
+import { makeTrelloSinkDriver } from './drivers/Trello';
 import { makeGraphDriver } from './drivers/Graph';
 import { exportToCSVDriver } from './drivers/ExportToCSV';
 
@@ -57,17 +57,12 @@ function renderMetrics(isLogged$, vtree$) {
 }
 
 function main({ DOMControls, DOMMetrics, Trello, Storage }) {
-  const publishedTrelloAuthorize$ = Trello.authorize$.publish();
-  const publishedTrelloLists$ = Trello.lists$.publish();
-  const publishedTrelloActions$ = Trello.actions$.publish();
-  const publishedTrelloCardsActions$$ = Trello.cardsActions$$.publish();
-
-  const trelloLists$ = publishedTrelloLists$.startWith([]);
-  const trelloActions$ = publishedTrelloActions$.startWith([]);
+  const trelloLists$ = Trello.get('lists').startWith([]);
+  const trelloActions$ = Trello.get('actions').startWith([]);
 
   // Authorization (= Trello login).
 
-  const isLogged$ = publishedTrelloAuthorize$.map(true).startWith(false);
+  const isLogged$ = Trello.get('authorize').map(true).startWith(false);
   const authorize$ = DOMControls.select('.auth-btn')
     .events('click')
     .map(R.always({ type: 'authorize' }))
@@ -82,7 +77,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 
   const controls = Controls({
     DOM: DOMControls,
-    boards$: Trello.boards$,
+    boards$: Trello.get('boards'),
     lists$: trelloLists$,
     Storage,
   });
@@ -120,7 +115,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
     actions$: trelloActions$,
     dates$: controls.selectedDates$,
     lists$: trelloDisplayedLists$,
-    complementaryActions$: publishedTrelloCardsActions$$
+    complementaryActions$: Trello.get('cardsActions')
       .switch()
       .startWith([])
       .scan(R.concat),
@@ -129,12 +124,6 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
   // Download button clicks
 
   const downloadClicks$ = DOMMetrics.select('.download-btn').events('click');
-
-  // Connect
-  publishedTrelloAuthorize$.connect();
-  publishedTrelloLists$.connect();
-  publishedTrelloActions$.connect();
-  publishedTrelloCardsActions$$.connect();
 
   return {
     DOMControls: renderControls(isLogged$, controls.DOM),
@@ -157,7 +146,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 const drivers = {
   DOMControls: makeDOMDriver('#controls'),
   DOMMetrics: makeDOMDriver('#metrics'),
-  Trello: trelloSinkDriver,
+  Trello: makeTrelloSinkDriver('Trello Kanban Analysis Tool'),
   Graph: makeGraphDriver('#chart svg'),
   Storage: storageDriver,
   ExportToCSV: exportToCSVDriver,

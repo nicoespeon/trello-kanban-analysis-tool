@@ -15,6 +15,90 @@ const actionsFilter = [
 ].join(',');
 const actionsFields = 'data,date,type';
 
+function createAuthorize$(appName, input$) {
+  return Observable.create((observer) => {
+    input$
+    .filter(R.propEq('type', 'authorize'))
+    .subscribe(({ interactive = true }) => {
+      Trello.authorize({
+        type: 'popup',
+        interactive,
+        name: appName,
+        scope: { read: true },
+        persist: true,
+        expiration: 'never',
+        success: () => {
+          observer.onNext();
+          observer.onCompleted();
+        },
+        error: (error) => R.when(
+          R.identity,
+          observer.onError.bind(observer, error)
+        )(interactive),
+      });
+    });
+  });
+}
+
+function createBoards$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'getBoards'))
+      .subscribe(() => {
+        Trello.get(
+          '/members/me/boards',
+          {
+            filter: 'open',
+            fields: 'name,shortLink',
+          },
+          (data) => {
+            observer.onNext(data);
+            observer.onCompleted();
+          },
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
+function createActions$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetch'))
+      .subscribe(({ boardId }) => {
+        Trello.get(
+          `/boards/${boardId}/actions`,
+          {
+            filter: actionsFilter,
+            fields: actionsFields,
+            limit: 1000,
+          },
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
+function createLists$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetch'))
+      .subscribe(({ boardId }) => {
+        Trello.get(
+          `/boards/${boardId}/lists`,
+          {
+            fields: 'name',
+            cards: 'open',
+            card_fields: '',
+          },
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
 // cardActions$ :: String -> Observable
 function cardActions$(cardId) {
   return Observable.create((observer) => {
@@ -35,103 +119,47 @@ function cardActions$(cardId) {
   });
 }
 
-function trelloSinkDriver(input$) {
-  const appName = 'Trello Kanban Analysis Tool';
-
-  return {
-    authorize$: Observable.create((observer) => {
-      input$
-      .filter(R.propEq('type', 'authorize'))
-      .subscribe(({ interactive = true }) => {
-        Trello.authorize({
-          type: 'popup',
-          interactive,
-          name: appName,
-          scope: { read: true },
-          persist: true,
-          expiration: 'never',
-          success: () => {
-            observer.onNext();
-            observer.onCompleted();
-          },
-          error: (error) => R.when(
-            R.identity,
-            observer.onError.bind(observer, error)
-          )(interactive),
-        });
+function createCardsActions$$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetchMissing'))
+      .map(R.prop('cardIds'))
+      .filter(R.compose(R.not, R.isEmpty))
+      .subscribe((cardIds) => {
+        observer.onNext(
+          Observable.zip.apply(
+            null,
+            cardIds
+              .map(cardActions$)
+              .concat(argsToArray)
+          )
+        );
       });
-    }),
+  });
+}
 
-    boards$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'getBoards'))
-        .subscribe(() => {
-          Trello.get(
-            '/members/me/boards',
-            {
-              filter: 'open',
-              fields: 'name,shortLink',
-            },
-            (data) => {
-              observer.onNext(data);
-              observer.onCompleted();
-            },
-            observer.onError.bind(observer)
-          );
-        });
-    }),
+function makeTrelloSinkDriver(appName) {
+  return (input$) => {
+    const factories = {
+      authorize: createAuthorize$(appName, input$).publish(),
+      boards: createBoards$(input$),
+      actions: createActions$(input$).publish(),
+      lists: createLists$(input$).publish(),
+      cardsActions: createCardsActions$$(input$).publish(),
+    };
 
-    actions$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetch'))
-        .subscribe(({ boardId }) => {
-          Trello.get(
-            `/boards/${boardId}/actions`,
-            {
-              filter: actionsFilter,
-              fields: actionsFields,
-              limit: 1000,
-            },
-            observer.onNext.bind(observer),
-            observer.onError.bind(observer)
-          );
-        });
-    }),
+    // Connect hot observables so they start emitting.
+    factories.authorize.connect();
+    factories.actions.connect();
+    factories.lists.connect();
+    factories.cardsActions.connect();
 
-    lists$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetch'))
-        .subscribe(({ boardId }) => {
-          Trello.get(
-            `/boards/${boardId}/lists`,
-            {
-              fields: 'name',
-              cards: 'open',
-              card_fields: '',
-            },
-            observer.onNext.bind(observer),
-            observer.onError.bind(observer)
-          );
-        });
-    }),
-
-    cardsActions$$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetchMissing'))
-        .map(R.prop('cardIds'))
-        .filter(R.compose(R.not, R.isEmpty))
-        .subscribe((cardIds) => {
-          observer.onNext(
-            Observable.zip.apply(
-              null,
-              cardIds
-                .map(cardActions$)
-                .concat(argsToArray)
-            )
-          );
-        });
-    }),
+    return {
+      get(type) {
+        return factories[type];
+      },
+    };
   };
 }
 
-export { trelloSinkDriver };
+export { makeTrelloSinkDriver };
