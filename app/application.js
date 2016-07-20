@@ -57,7 +57,6 @@ function renderMetrics(isLogged$, vtree$) {
 }
 
 function main({ DOMControls, DOMMetrics, Trello, Storage }) {
-  const publishedTrelloAuthorize$ = Trello.authorize$.publish();
   const publishedTrelloLists$ = Trello.lists$.publish();
   const publishedTrelloActions$ = Trello.actions$.publish();
   const publishedTrelloCardsActions$$ = Trello.cardsActions$$.publish();
@@ -67,7 +66,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 
   // Authorization (= Trello login).
 
-  const isLogged$ = publishedTrelloAuthorize$.map(true).startWith(false);
+  const isLogged$ = Trello.get('authorize').map(true).startWith(false);
   const authorize$ = DOMControls.select('.auth-btn')
     .events('click')
     .map(R.always({ type: 'authorize' }))
@@ -131,7 +130,6 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
   const downloadClicks$ = DOMMetrics.select('.download-btn').events('click');
 
   // Connect
-  publishedTrelloAuthorize$.connect();
   publishedTrelloLists$.connect();
   publishedTrelloActions$.connect();
   publishedTrelloCardsActions$$.connect();

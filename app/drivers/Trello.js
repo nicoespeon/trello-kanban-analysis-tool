@@ -35,32 +35,45 @@ function cardActions$(cardId) {
   });
 }
 
+function createAuthorize$(appName, input$) {
+  return Observable.create((observer) => {
+    input$
+    .filter(R.propEq('type', 'authorize'))
+    .subscribe(({ interactive = true }) => {
+      Trello.authorize({
+        type: 'popup',
+        interactive,
+        name: appName,
+        scope: { read: true },
+        persist: true,
+        expiration: 'never',
+        success: () => {
+          observer.onNext();
+          observer.onCompleted();
+        },
+        error: (error) => R.when(
+          R.identity,
+          observer.onError.bind(observer, error)
+        )(interactive),
+      });
+    });
+  });
+}
+
 function trelloSinkDriver(input$) {
   const appName = 'Trello Kanban Analysis Tool';
 
+  const factories = {
+    authorize: createAuthorize$(appName, input$).publish(),
+  };
+
+  // Connect hot observables so they start emitting.
+  factories.authorize.connect();
+
   return {
-    authorize$: Observable.create((observer) => {
-      input$
-      .filter(R.propEq('type', 'authorize'))
-      .subscribe(({ interactive = true }) => {
-        Trello.authorize({
-          type: 'popup',
-          interactive,
-          name: appName,
-          scope: { read: true },
-          persist: true,
-          expiration: 'never',
-          success: () => {
-            observer.onNext();
-            observer.onCompleted();
-          },
-          error: (error) => R.when(
-            R.identity,
-            observer.onError.bind(observer, error)
-          )(interactive),
-        });
-      });
-    }),
+    get(type) {
+      return factories[type];
+    },
 
     boards$: Observable.create((observer) => {
       input$
