@@ -36,7 +36,28 @@ function cardActions$(cardId) {
 }
 
 function trelloSinkDriver(input$) {
+  const appName = 'Trello Kanban Analysis Tool';
+
   return {
+    authorize$: Observable.create((observer) => {
+      input$
+      .filter(R.propEq('type', 'authorize'))
+      .subscribe(() => {
+        Trello.authorize({
+          type: 'popup',
+          name: appName,
+          scope: { read: true },
+          persist: true,
+          expiration: 'never',
+          success: () => {
+            observer.onNext();
+            observer.onCompleted();
+          },
+          error: observer.onError.bind(observer),
+        });
+      });
+    }),
+
     boards$: Observable.create((observer) => {
       input$
         .filter(R.propEq('type', 'getBoards'))
