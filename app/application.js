@@ -15,13 +15,67 @@ import Metrics from './components/Metrics/Metrics';
 import { getDisplayedLists } from './utils/trello';
 import { argsToArray } from './utils/function';
 
+function renderControls(isLogged$, vtree$) {
+  return Observable.combineLatest(
+    isLogged$,
+    vtree$.startWith(div()),
+    (isLogged, vtree) =>
+      div([
+        h1('.title.center-align.trello-blue.white-text', [
+          'TKAT ',
+          small('.trello-blue-100-text', '(Trello Kanban Analysis Tool)'),
+        ]),
+        R.ifElse(
+          R.identity,
+          R.always(vtree),
+          R.always(
+            div('.center-align', [
+              button(
+                '.auth-btn.btn.waves-effect.waves-light.trello-blue',
+                'Connect to Trello'
+              ),
+            ])
+          )
+        )(isLogged),
+      ])
+  );
+}
+
+function renderMetrics(isLogged$, vtree$) {
+  return vtree$.pausable(isLogged$).map(
+    (vtree) =>
+      div('.container', [
+        div('.center-align', [
+          button(
+            '.download-btn.btn.waves-effect.waves-light.trello-blue',
+            'Download .csv'
+          ),
+        ]),
+        div('.m-top.m-bottom', [vtree]),
+      ])
+  );
+}
+
 function main({ DOMControls, DOMMetrics, Trello, Storage }) {
+  const publishedTrelloAuthorize$ = Trello.authorize$.publish();
   const publishedTrelloLists$ = Trello.lists$.publish();
   const publishedTrelloActions$ = Trello.actions$.publish();
   const publishedTrelloCardsActions$$ = Trello.cardsActions$$.publish();
 
   const trelloLists$ = publishedTrelloLists$.startWith([]);
   const trelloActions$ = publishedTrelloActions$.startWith([]);
+
+  // Authorization (= Trello login).
+
+  const isLogged$ = publishedTrelloAuthorize$.map(true).startWith(false);
+  const authorize$ = DOMControls.select('.auth-btn')
+    .events('click')
+    .map(R.always({ type: 'authorize' }));
+
+  // Get Trello boards when logged in.
+
+  const getBoards$ = isLogged$.filter(R.identity)
+    .map(R.always({ type: 'getBoards' }));
 
   // Controls that configure the analysis.
 
@@ -34,9 +88,9 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 
   // Determine when we need to fetch board data from controls.
 
-  const fetchBoard$ = Observable.combineLatest(
+  const fetch$ = Observable.combineLatest(
     controls.selectedBoard$,
-    controls.refreshClicks$,
+    controls.refreshClicks$.startWith(false).pausable(isLogged$),
     (boardId) => ({ type: 'fetch', boardId })
   );
 
@@ -76,34 +130,20 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
   const downloadClicks$ = DOMMetrics.select('.download-btn').events('click');
 
   // Connect
+  publishedTrelloAuthorize$.connect();
   publishedTrelloLists$.connect();
   publishedTrelloActions$.connect();
   publishedTrelloCardsActions$$.connect();
 
   return {
-    DOMControls: controls.DOM.map(
-      (controlsVTree) =>
-        div([
-          h1('.title.center-align.trello-blue.white-text', [
-            'TKAT ',
-            small('.trello-blue-100-text', '(Trello Kanban Analysis Tool)'),
-          ]),
-          controlsVTree,
-        ])
+    DOMControls: renderControls(isLogged$, controls.DOM),
+    DOMMetrics: renderMetrics(isLogged$, metrics.DOM),
+    Trello: Observable.merge(
+      authorize$,
+      getBoards$,
+      fetch$,
+      metrics.Trello
     ),
-    DOMMetrics: metrics.DOM.map(
-      (metricsVTree) =>
-        div('.container', [
-          div('.center-align', [
-            button(
-              '.download-btn.btn.waves-effect.waves-light.trello-blue',
-              'Download .csv'
-            ),
-          ]),
-          div('.m-top.m-bottom', [metricsVTree]),
-        ])
-    ),
-    Trello: Observable.merge(fetchBoard$, metrics.Trello),
     Graph: cumulativeFlowDiagram.Graph,
     ExportToCSV: downloadClicks$.withLatestFrom(
       cumulativeFlowDiagram.CSV,
@@ -122,14 +162,4 @@ const drivers = {
   ExportToCSV: exportToCSVDriver,
 };
 
-Trello.authorize({
-  type: 'popup',
-  name: 'Trello Kanban Analysis Tool',
-  scope: { read: true },
-  persist: true,
-  expiration: 'never',
-  success: () => {
-    Cycle.run(main, drivers);
-  },
-  error: () => console.log("Can't connect to Trello"),
-});
+Cycle.run(main, drivers);
