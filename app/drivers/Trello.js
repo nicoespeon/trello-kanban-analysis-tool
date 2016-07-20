@@ -81,38 +81,42 @@ function createBoards$(input$) {
   });
 }
 
+function createActions$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetch'))
+      .subscribe(({ boardId }) => {
+        Trello.get(
+          `/boards/${boardId}/actions`,
+          {
+            filter: actionsFilter,
+            fields: actionsFields,
+            limit: 1000,
+          },
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
 function trelloSinkDriver(input$) {
   const appName = 'Trello Kanban Analysis Tool';
 
   const factories = {
     authorize: createAuthorize$(appName, input$).publish(),
     boards: createBoards$(input$),
+    actions: createActions$(input$).publish(),
   };
 
   // Connect hot observables so they start emitting.
   factories.authorize.connect();
+  factories.actions.connect();
 
   return {
     get(type) {
       return factories[type];
     },
-
-    actions$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetch'))
-        .subscribe(({ boardId }) => {
-          Trello.get(
-            `/boards/${boardId}/actions`,
-            {
-              filter: actionsFilter,
-              fields: actionsFields,
-              limit: 1000,
-            },
-            observer.onNext.bind(observer),
-            observer.onError.bind(observer)
-          );
-        });
-    }),
 
     lists$: Observable.create((observer) => {
       input$
