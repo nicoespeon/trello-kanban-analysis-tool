@@ -139,8 +139,7 @@ function Controls({ DOM, boards$, lists$, Storage }) {
 
   const refreshClicks$ = DOM
     .select('.refresh-button')
-    .events('click')
-    .startWith(false);
+    .events('click');
 
   // Compute selected dates from controls values.
 
