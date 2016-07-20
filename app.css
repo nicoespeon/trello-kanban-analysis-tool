@@ -1,0 +1,9 @@
+.trello-blue{background-color:#0079BF !important}.trello-green{background-color:#61BD4F !important}
+
+@font-face{font-family:'Facit';font-style:normal;font-weight:400;src:url(./fonts/facit-regular-opentype.woff) format("woff")}
+
+.trello-blue-100-text{color:#BCD9EA !important}
+
+
+body,.nvd3 text{font-family:"Facit", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;color:#4D4D4D}label{color:#8C8C8C}.title{margin-top:0;height:80px;line-height:80px}.title>small{font-size:50%}.center-align-around{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around}.chart{height:30rem}.m-top{margin-top:2rem}.m-bottom{margin-bottom:2rem}.d{border:1px red solid}.github-corner:hover .octo-arm{-webkit-animation:octocat-wave 560ms ease-in-out;animation:octocat-wave 560ms ease-in-out}@-webkit-keyframes octocat-wave{0%,100%{-webkit-transform:rotate(0);transform:rotate(0)}20%,60%{-webkit-transform:rotate(-25deg);transform:rotate(-25deg)}40%,80%{-webkit-transform:rotate(10deg);transform:rotate(10deg)}}@keyframes octocat-wave{0%,100%{-webkit-transform:rotate(0);transform:rotate(0)}20%,60%{-webkit-transform:rotate(-25deg);transform:rotate(-25deg)}40%,80%{-webkit-transform:rotate(10deg);transform:rotate(10deg)}}@media (max-width: 500px){.github-corner:hover .octo-arm{-webkit-animation:none;animation:none}.github-corner .octo-arm{-webkit-animation:octocat-wave 560ms ease-in-out;animation:octocat-wave 560ms ease-in-out}}
+
