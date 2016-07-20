@@ -138,28 +138,28 @@ function createCardsActions$$(input$) {
   });
 }
 
-function trelloSinkDriver(input$) {
-  const appName = 'Trello Kanban Analysis Tool';
+function makeTrelloSinkDriver(appName) {
+  return (input$) => {
+    const factories = {
+      authorize: createAuthorize$(appName, input$).publish(),
+      boards: createBoards$(input$),
+      actions: createActions$(input$).publish(),
+      lists: createLists$(input$).publish(),
+      cardsActions: createCardsActions$$(input$).publish(),
+    };
 
-  const factories = {
-    authorize: createAuthorize$(appName, input$).publish(),
-    boards: createBoards$(input$),
-    actions: createActions$(input$).publish(),
-    lists: createLists$(input$).publish(),
-    cardsActions: createCardsActions$$(input$).publish(),
-  };
+    // Connect hot observables so they start emitting.
+    factories.authorize.connect();
+    factories.actions.connect();
+    factories.lists.connect();
+    factories.cardsActions.connect();
 
-  // Connect hot observables so they start emitting.
-  factories.authorize.connect();
-  factories.actions.connect();
-  factories.lists.connect();
-  factories.cardsActions.connect();
-
-  return {
-    get(type) {
-      return factories[type];
-    },
+    return {
+      get(type) {
+        return factories[type];
+      },
+    };
   };
 }
 
-export { trelloSinkDriver };
+export { makeTrelloSinkDriver };

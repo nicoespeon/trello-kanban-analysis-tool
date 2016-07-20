@@ -4,7 +4,7 @@ import storageDriver from '@cycle/storage';
 import { Observable } from 'rx';
 import R from 'ramda';
 
-import { trelloSinkDriver } from './drivers/Trello';
+import { makeTrelloSinkDriver } from './drivers/Trello';
 import { makeGraphDriver } from './drivers/Graph';
 import { exportToCSVDriver } from './drivers/ExportToCSV';
 
@@ -146,7 +146,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 const drivers = {
   DOMControls: makeDOMDriver('#controls'),
   DOMMetrics: makeDOMDriver('#metrics'),
-  Trello: trelloSinkDriver,
+  Trello: makeTrelloSinkDriver('Trello Kanban Analysis Tool'),
   Graph: makeGraphDriver('#chart svg'),
   Storage: storageDriver,
   ExportToCSV: exportToCSVDriver,
