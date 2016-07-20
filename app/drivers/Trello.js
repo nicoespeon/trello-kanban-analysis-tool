@@ -100,6 +100,25 @@ function createActions$(input$) {
   });
 }
 
+function createLists$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetch'))
+      .subscribe(({ boardId }) => {
+        Trello.get(
+          `/boards/${boardId}/lists`,
+          {
+            fields: 'name',
+            cards: 'open',
+            card_fields: '',
+          },
+          observer.onNext.bind(observer),
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
 function trelloSinkDriver(input$) {
   const appName = 'Trello Kanban Analysis Tool';
 
@@ -107,33 +126,18 @@ function trelloSinkDriver(input$) {
     authorize: createAuthorize$(appName, input$).publish(),
     boards: createBoards$(input$),
     actions: createActions$(input$).publish(),
+    lists: createLists$(input$).publish(),
   };
 
   // Connect hot observables so they start emitting.
   factories.authorize.connect();
   factories.actions.connect();
+  factories.lists.connect();
 
   return {
     get(type) {
       return factories[type];
     },
-
-    lists$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetch'))
-        .subscribe(({ boardId }) => {
-          Trello.get(
-            `/boards/${boardId}/lists`,
-            {
-              fields: 'name',
-              cards: 'open',
-              card_fields: '',
-            },
-            observer.onNext.bind(observer),
-            observer.onError.bind(observer)
-          );
-        });
-    }),
 
     cardsActions$$: Observable.create((observer) => {
       input$
