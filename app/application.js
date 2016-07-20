@@ -81,7 +81,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
 
   const controls = Controls({
     DOM: DOMControls,
-    boards$: Trello.boards$,
+    boards$: Trello.get('boards'),
     lists$: trelloLists$,
     Storage,
   });

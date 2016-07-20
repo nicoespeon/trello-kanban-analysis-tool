@@ -60,11 +60,33 @@ function createAuthorize$(appName, input$) {
   });
 }
 
+function createBoards$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'getBoards'))
+      .subscribe(() => {
+        Trello.get(
+          '/members/me/boards',
+          {
+            filter: 'open',
+            fields: 'name,shortLink',
+          },
+          (data) => {
+            observer.onNext(data);
+            observer.onCompleted();
+          },
+          observer.onError.bind(observer)
+        );
+      });
+  });
+}
+
 function trelloSinkDriver(input$) {
   const appName = 'Trello Kanban Analysis Tool';
 
   const factories = {
     authorize: createAuthorize$(appName, input$).publish(),
+    boards: createBoards$(input$),
   };
 
   // Connect hot observables so they start emitting.
@@ -74,25 +96,6 @@ function trelloSinkDriver(input$) {
     get(type) {
       return factories[type];
     },
-
-    boards$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'getBoards'))
-        .subscribe(() => {
-          Trello.get(
-            '/members/me/boards',
-            {
-              filter: 'open',
-              fields: 'name,shortLink',
-            },
-            (data) => {
-              observer.onNext(data);
-              observer.onCompleted();
-            },
-            observer.onError.bind(observer)
-          );
-        });
-    }),
 
     actions$: Observable.create((observer) => {
       input$
