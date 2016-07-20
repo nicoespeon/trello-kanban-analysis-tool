@@ -42,9 +42,10 @@ function trelloSinkDriver(input$) {
     authorize$: Observable.create((observer) => {
       input$
       .filter(R.propEq('type', 'authorize'))
-      .subscribe(() => {
+      .subscribe(({ interactive = true }) => {
         Trello.authorize({
           type: 'popup',
+          interactive,
           name: appName,
           scope: { read: true },
           persist: true,
@@ -53,7 +54,10 @@ function trelloSinkDriver(input$) {
             observer.onNext();
             observer.onCompleted();
           },
-          error: observer.onError.bind(observer),
+          error: (error) => R.when(
+            R.identity,
+            observer.onError.bind(observer, error)
+          )(interactive),
         });
       });
     }),

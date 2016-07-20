@@ -70,7 +70,8 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
   const isLogged$ = publishedTrelloAuthorize$.map(true).startWith(false);
   const authorize$ = DOMControls.select('.auth-btn')
     .events('click')
-    .map(R.always({ type: 'authorize' }));
+    .map(R.always({ type: 'authorize' }))
+    .startWith({ type: 'authorize', interactive: false });
 
   // Get Trello boards when logged in.
 
