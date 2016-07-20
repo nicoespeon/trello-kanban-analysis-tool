@@ -57,8 +57,6 @@ function renderMetrics(isLogged$, vtree$) {
 }
 
 function main({ DOMControls, DOMMetrics, Trello, Storage }) {
-  const publishedTrelloCardsActions$$ = Trello.cardsActions$$.publish();
-
   const trelloLists$ = Trello.get('lists').startWith([]);
   const trelloActions$ = Trello.get('actions').startWith([]);
 
@@ -117,7 +115,7 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
     actions$: trelloActions$,
     dates$: controls.selectedDates$,
     lists$: trelloDisplayedLists$,
-    complementaryActions$: publishedTrelloCardsActions$$
+    complementaryActions$: Trello.get('cardsActions')
       .switch()
       .startWith([])
       .scan(R.concat),
@@ -126,9 +124,6 @@ function main({ DOMControls, DOMMetrics, Trello, Storage }) {
   // Download button clicks
 
   const downloadClicks$ = DOMMetrics.select('.download-btn').events('click');
-
-  // Connect
-  publishedTrelloCardsActions$$.connect();
 
   return {
     DOMControls: renderControls(isLogged$, controls.DOM),

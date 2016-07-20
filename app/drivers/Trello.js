@@ -15,26 +15,6 @@ const actionsFilter = [
 ].join(',');
 const actionsFields = 'data,date,type';
 
-// cardActions$ :: String -> Observable
-function cardActions$(cardId) {
-  return Observable.create((observer) => {
-    Trello.get(
-      `/cards/${cardId}/actions`,
-      {
-        filter: actionsFilter,
-        limit: 1000,
-        fields: actionsFields,
-        memberCreator: false,
-      },
-      (data) => {
-        observer.onNext(data);
-        observer.onCompleted();
-      },
-      observer.onError.bind(observer)
-    );
-  });
-}
-
 function createAuthorize$(appName, input$) {
   return Observable.create((observer) => {
     input$
@@ -119,6 +99,45 @@ function createLists$(input$) {
   });
 }
 
+// cardActions$ :: String -> Observable
+function cardActions$(cardId) {
+  return Observable.create((observer) => {
+    Trello.get(
+      `/cards/${cardId}/actions`,
+      {
+        filter: actionsFilter,
+        limit: 1000,
+        fields: actionsFields,
+        memberCreator: false,
+      },
+      (data) => {
+        observer.onNext(data);
+        observer.onCompleted();
+      },
+      observer.onError.bind(observer)
+    );
+  });
+}
+
+function createCardsActions$$(input$) {
+  return Observable.create((observer) => {
+    input$
+      .filter(R.propEq('type', 'fetchMissing'))
+      .map(R.prop('cardIds'))
+      .filter(R.compose(R.not, R.isEmpty))
+      .subscribe((cardIds) => {
+        observer.onNext(
+          Observable.zip.apply(
+            null,
+            cardIds
+              .map(cardActions$)
+              .concat(argsToArray)
+          )
+        );
+      });
+  });
+}
+
 function trelloSinkDriver(input$) {
   const appName = 'Trello Kanban Analysis Tool';
 
@@ -127,34 +146,19 @@ function trelloSinkDriver(input$) {
     boards: createBoards$(input$),
     actions: createActions$(input$).publish(),
     lists: createLists$(input$).publish(),
+    cardsActions: createCardsActions$$(input$).publish(),
   };
 
   // Connect hot observables so they start emitting.
   factories.authorize.connect();
   factories.actions.connect();
   factories.lists.connect();
+  factories.cardsActions.connect();
 
   return {
     get(type) {
       return factories[type];
     },
-
-    cardsActions$$: Observable.create((observer) => {
-      input$
-        .filter(R.propEq('type', 'fetchMissing'))
-        .map(R.prop('cardIds'))
-        .filter(R.compose(R.not, R.isEmpty))
-        .subscribe((cardIds) => {
-          observer.onNext(
-            Observable.zip.apply(
-              null,
-              cardIds
-                .map(cardActions$)
-                .concat(argsToArray)
-            )
-          );
-        });
-    }),
   };
 }
 
