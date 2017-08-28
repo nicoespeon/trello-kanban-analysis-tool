@@ -9,7 +9,7 @@ Here is [the online application](http://www.nicoespeon.com/trello-kanban-analysi
 ![TKAT - Cycle Times](https://cdn-images-1.medium.com/max/1600/1*w013ZiO5dqFOxUwFXBOwVA.png)
 ![TKAT - CFD](https://cdn-images-1.medium.com/max/1600/1*Vrh8lfC_u58NwMmK1OElCw.png)
 
-## What it is
+## What it is
 
 This started as a side project for practicing functional programming using:
 
@@ -22,7 +22,7 @@ To make this side project interesting, I aimed to ease manual repetitive work: g
 
 If you are curious about the context and Trello-Kanban stuff, [I wrote a whole post about it](https://medium.com/@nicoespeon/kanban-and-game-development-with-trello-8819b33f83dc#.qmfuy8pev).
 
-## How to use it
+## How to use it
 
 As a user, you can simply go with [the online application](http://www.nicoespeon.com/trello-kanban-analysis-tool/).
 
@@ -33,7 +33,7 @@ If you want to run it locally, let's suppose you've got [node.js](https://nodejs
 - Ensure you've got [brunch](http://brunch.io/) installed globally: `npm install -g brunch`
 - Run `brunch watch --server` to get a running application
 
-### Available commands
+### Available commands
 
 Basically, all [brunch commands](https://github.com/brunch/brunch/blob/master/docs/commands.md).
 
@@ -41,7 +41,7 @@ You will probably want to use `brunch watch --server` to serve the app locally.
 
 In case of doubt, you can run `npm test` to check if anything is wrong with source code.
 
-#### `npm run lint`
+#### `npm run lint`
 
 Lint JavaScript through [ESLint](http://eslint.org/).
 
@@ -53,13 +53,13 @@ Launch unit tests with [Babel tape runner](https://github.com/wavded/babel-tape-
 
 Launch unit tests through [tap-diff reporter](https://www.npmjs.com/package/tap-diff).
 
-### Contributing
+### Contributing
 
 That would be amazing :metal:
 
 Please have a look at [the CONTRIBUTING.md file](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/CONTRIBUTING.md) before you do so.
 
-## Versioning
+## Versioning
 
 This project uses [SemVer](http://semver.org/) as a guideline for versioning.
 
@@ -69,9 +69,9 @@ That mean releases will be numbered with `<major>.<minor>.<patch>` format, regar
 - New additions without breaking backward compatibility bumps the `<minor>` (and resets the `<patch>`)
 - Bug fixes and misc. changes bumps the `<patch>`
 
-## Inspiration & Readings
+## Inspiration & Readings
 
-### Organisational things
+### Organisational things
 
 - [7 lean metrics to improve flow](http://leankit.com/learn/kanban/lean-flow-metrics/)
 - [One day in Kanban land](http://blog.crisp.se/2009/06/26/henrikkniberg/1246053060000)
@@ -79,7 +79,7 @@ That mean releases will be numbered with `<major>.<minor>.<patch>` format, regar
 - [Kanban Development Oversimplified](http://jpattonassociates.com/kanban_oversimplified/)
 - [Versions: Release Names vs Version Numbers](https://github.com/cloverfield-tools/cf-package/blob/master/template/docs/contributing/versions/index.md#versions-release-names-vs-version-numbers)
 
-### Technical stuff
+### Technical stuff
 
 - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
 - [Cycle.js - Getting started](http://cycle.js.org/getting-started.html)
@@ -87,7 +87,7 @@ That mean releases will be numbered with `<major>.<minor>.<patch>` format, regar
 - [Why I use Tape Instead of Mocha & So Should You](https://medium.com/javascript-scene/why-i-use-tape-instead-of-mocha-so-should-you-6aa105d8eaf4#.o6d9u4azh)
 - [The Brunch.io Guide](https://github.com/brunch/brunch-guide#readme)
 
-## Copyright and License
+## Copyright and License
 
 Copyright (c) 2016 [Nicolas CARLO](https://twitter.com/nicoespeon) under [the MIT license](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/LICENSE.md).
 
