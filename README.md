@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/nicoespeon/trello-kanban-analysis-tool.svg?branch=develop)](https://travis-ci.org/nicoespeon/trello-kanban-analysis-tool)
 
+> :point_up: I no longer maintain this project as I'm not using Trello anymore. It could change in the future, but no guarantee. If you'd like to contribute, reach me out <nicolascarlo.espeon@gmail.com>. Otherwise, feel free to fork.
+
 # TKAT (Trello Kanban Analysis Tool)
 
 A JavaScript library to analyze Kanban metrics from a Trello board.
@@ -91,4 +93,4 @@ That mean releases will be numbered with `<major>.<minor>.<patch>` format, regar
 
 Copyright (c) 2016 [Nicolas CARLO](https://twitter.com/nicoespeon) under [the MIT license](https://github.com/nicoespeon/trello-kanban-analysis-tool/blob/master/LICENSE.md).
 
-:confused: [What does that mean?](http://choosealicense.com/licenses/mit/)
+🤔 [What does that mean?](http://choosealicense.com/licenses/mit/)
